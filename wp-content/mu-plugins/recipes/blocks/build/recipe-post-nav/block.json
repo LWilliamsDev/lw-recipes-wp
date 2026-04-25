@@ -1,0 +1,19 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "lw-recipes/recipe-post-nav",
+  "version": "0.1.0",
+  "title": "Recipe Post Nav",
+  "category": "theme",
+  "icon": "smiley",
+  "description": "Display a recipe overview",
+  "example": {},
+  "supports": {
+    "html": false,
+    "inserter": false
+  },
+  "textdomain": "lw-recipes",
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "render": "file:./render.php"
+}

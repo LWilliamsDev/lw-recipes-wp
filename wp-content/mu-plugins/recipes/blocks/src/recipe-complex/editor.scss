@@ -1,0 +1,52 @@
+/**
+ * The following styles get applied inside the editor only.
+ *
+ * Replace them with your own styles or remove the file completely.
+ */
+
+.wp-block-lw-recipes-recipe-complex {
+	border: 1px dotted #f00;
+	padding: 10px;
+	font-family: 'Roboto', sans-serif;
+
+	h2 {
+		font-family: 'Roboto Condensed', sans-serif;
+		text-transform: uppercase;
+		color: #008000;
+		font-size: 30px;
+
+	}
+
+	h3 {
+		font-size: 18px;
+		color: #BC6C25;
+		font-weight: 500;
+	}
+	.wp-block-lw-recipes-recipe-complex-instructions {
+		border: 1px dotted green;
+		padding: 10px;
+	}
+
+	.wp-block-lw-recipes-recipe-complex-ingredients {
+		border: 1px dotted blue;
+		padding: 10px;
+
+		> .block-editor-inner-blocks > .block-editor-block-list__layout {
+			display: flex;
+			flex-wrap: wrap;
+
+			> h1, h2, h3, h4, h5, h6 {
+				width: 100%;
+			}
+
+			> div {
+				width: 50%;
+			}
+		}
+	}
+	
+
+
+	@import '../../assets/error.scss';
+
+}

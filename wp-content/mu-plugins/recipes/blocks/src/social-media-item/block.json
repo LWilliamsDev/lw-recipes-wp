@@ -1,0 +1,29 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "lw-recipes/social-media-item",
+	"version": "0.1.0",
+	"category": "theme",
+	"title": "Social Media Item",
+	"parent": ["lw-recipes/social-media"],
+	"icon": "smiley",
+	"description": "Add social media links with icons",
+	"example": {},
+	"supports": {
+		"html": false
+	},
+	"attributes": {
+		"item": {
+			"type": "object",
+			"default": {
+				"icon": "",
+				"site": ""
+			}
+		}
+	},
+	"textdomain": "lw-recipes",
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"render": "file:./render.php",
+	"viewScript": "file:./view.js"
+}

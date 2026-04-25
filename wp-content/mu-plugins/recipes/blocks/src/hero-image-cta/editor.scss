@@ -1,0 +1,68 @@
+/**
+ * The following styles get applied inside the editor only.
+ *
+ * Replace them with your own styles or remove the file completely.
+ */
+
+.wp-block-lw-recipes-hero-image2{
+	border: 1px dotted #f00;
+
+	.hero-image {
+		overflow: hidden;
+		display: grid;
+		position: relative;
+
+		img {
+			width: 100%;
+			height: auto;
+			object-fit: cover;
+			grid-column: 1 / 1;
+			grid-row: 1 / 1;
+		}
+		.bg-color {
+			width: 100%;
+			height: 100%;
+			grid-column: 1 / 1;
+			grid-row: 1 / 1;
+			background: #FEFAE0;
+			opacity: 80%;
+		}
+		.text {
+			grid-column: 1 / 1;
+			grid-row: 1 / 1;
+			align-self: center;
+			text-align: center;
+			z-index: 1;
+
+			h1 {
+				font-family: 'Roboto Condensed', sans-serif;
+				font-size: 60px;
+				color: #008000;
+				text-transform: uppercase;
+				margin-bottom: 10px;
+			}
+			p {
+				font-family: 'Roboto', sans-serif;
+				font-size: 24px;
+				margin-top: 0;
+			}
+			p:first-of-type {
+				margin-bottom: 20px;
+			}
+			a {
+				font-weight: 500;
+				font-family: 'Roboto', sans-serif;
+				background: #Bc6c25;
+				color: white;
+				border-radius: 0.25rem;
+				display: inline-block;
+				font-size: 24px;
+				padding: 10px;
+				text-decoration: none;
+			}
+		}
+	}
+
+	@import '../../assets/error.scss';
+
+}

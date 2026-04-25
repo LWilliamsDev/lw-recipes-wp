@@ -1,0 +1,55 @@
+/**
+ * The following styles get applied inside the editor only.
+ *
+ * Replace them with your own styles or remove the file completely.
+ */
+
+.wp-block-lw-recipes-latest-recipes {
+	border: 1px dotted #f00;
+
+	.grid {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		column-gap: 20px;
+		font-family: 'Roboto', sans-serif;
+
+		h2 {
+			grid-column: 1 / end;
+			grid-row: 1 / 1;
+			font-family: 'Roboto Condensed', sans-serif;
+			color: #008000;
+			margin-bottom: 32px;
+			text-transform: uppercase;
+			font-size: 48px;
+		}
+
+		div {
+			grid-row: 2 / 2;
+		}
+
+		h3 {
+			font-size: 24px;
+			color: #606C38;
+			margin-bottom: 0;
+			margin-top: 0;
+		}
+		p {
+			color: #283618;
+			margin-top: 0;
+		}
+		ul {
+			display: flex;
+			list-style-type: none;
+			gap: 10px;
+			padding-left: 0;
+		}
+		li {
+			background: #BC6C25;
+			padding: 10px;
+			font-weight: 500;
+			color: white;
+			border-radius: 0.25rem;
+		}
+	}
+
+}

@@ -1,0 +1,33 @@
+/* Global Block Editor Styles */
+*:required:invalid, .editor-post-featured-image__preview {
+	border: 1px solid #cc1818;
+}
+label:has(+ *:required):after, .recipes-required:after {
+	content: '*';
+	color: #cc1818;
+}
+.editor-post-featured-image__toggle:has(img) {
+	height: auto;
+}
+.recipes-group {
+	margin-bottom: 16px;
+}
+.recipes-label {
+	font-size: 11px;
+	font-weight: 500;
+	line-height: 1.4;
+	text-transform: uppercase;
+	display: block;
+	margin-bottom: 8px;
+	padding: 0px;
+}
+.recipes-help-text {
+	margin-top: 8px;
+	font-size: 12px;
+	font-style: normal;
+	color: rgb(117, 117, 117);
+	margin-bottom: revert;
+}
+.is-link.is-destructive {
+	margin-top: 10px;
+}

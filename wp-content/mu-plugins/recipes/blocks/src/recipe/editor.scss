@@ -1,0 +1,16 @@
+/**
+ * The following styles get applied inside the editor only.
+ *
+ * Replace them with your own styles or remove the file completely.
+ */
+
+.wp-block-lw-recipes-recipe {
+	border: 1px dotted #f00;
+	padding: 10px;
+	margin-bottom: 30px;
+	margin-top: 30px;
+
+
+	@import '../../assets/error.scss';
+
+}

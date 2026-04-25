@@ -1,0 +1,21 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "lw-recipes/recipe-complex-ingredient",
+	"version": "0.1.0",
+	"title": "Complex Recipe: Ingredient",
+	"category": "theme",
+	"icon": "smiley",
+	"description": "Display ingredients for a complex recipe",
+	"parent": ["lw-recipes/recipe-complex-ingredients"],
+	"example": {},
+	"supports": {
+		"html": false,
+		"layout": true
+	},
+	"textdomain": "lw-recipes",
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"render": "file:./render.php",
+	"viewScript": "file:./view.js"
+}

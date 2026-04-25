@@ -1,0 +1,49 @@
+/**
+ * The following styles get applied inside the editor only.
+ *
+ * Replace them with your own styles or remove the file completely.
+ */
+
+.wp-block-lw-recipes-header {
+	border: 1px dotted #f00;
+	display: grid;
+	grid-template-columns: 0.5fr 1fr;
+	align-items: center;
+	font-family: 'Roboto', sans-serif;
+
+	.logo {
+		width: 196px;
+		height: auto;
+	}
+
+	.menu-area { 
+
+		justify-self: end;
+		display: grid;
+		grid-template-columns: calc(100% - 64px) 24px;
+		column-gap: 32px;
+		align-items: center;
+
+		ul {
+			display: flex;
+			list-style-type: none;
+			padding-left: 0px;
+			column-gap: 32px;
+
+			a { 
+				color: rgb(96,108,56);
+				text-decoration: none;
+
+			}
+
+		}
+
+		.search {
+			width: 24px;
+			height: auto;
+			padding-right: 16px;
+		}
+	}
+	
+}
+

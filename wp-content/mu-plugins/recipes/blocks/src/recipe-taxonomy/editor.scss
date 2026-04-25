@@ -1,0 +1,57 @@
+/**
+ * The following styles get applied inside the editor only.
+ *
+ * Replace them with your own styles or remove the file completely.
+ */
+
+.wp-block-lw-recipes-recipe-taxonomy {
+	border: 1px dotted #f00;
+
+	.cards {
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		column-gap: 20px;
+		font-family: 'Roboto', sans-serif;
+
+		h2 {
+			grid-column: 1 / span 2;
+			grid-row: 1 / 1;
+			text-transform: uppercase;
+			font-family: 'Roboto Condensed', sans-serif;
+			margin: 0 0 32px 0;
+			color: #008000;
+			font-size: 48px;
+		}
+
+		> div {
+			margin-bottom: 32px;
+
+			h3 {
+				display: grid;	
+				position: relative;
+			}
+
+			img {
+				grid-column: 1 / 1;
+				grid-row: 1 / 1;
+				width: 100%;
+				height: auto;
+			}
+
+			.bg {
+				opacity: 90%;
+				background: #FEFAE0;
+				padding: 16px;
+				align-self: end;
+				grid-column: 1 / 1;
+				grid-row: 1 / 1;
+				z-index: 1;
+
+				.title {
+					font-size: 24px;
+					color: #BC6C25;
+				}
+			}
+		}
+	}
+}

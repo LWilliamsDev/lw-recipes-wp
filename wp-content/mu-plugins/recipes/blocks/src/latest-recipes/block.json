@@ -1,0 +1,25 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "lw-recipes/latest-recipes",
+	"version": "0.1.0",
+	"title": "Latest Recipes",
+	"category": "theme",
+	"icon": "smiley",
+	"description": "Display the 3 latest recipes",
+	"example": {},
+	"supports": {
+		"html": false
+	},
+	"attributes": {
+		"title" : {
+			"type": "string"
+		}
+
+	},
+	"textdomain": "lw-recipes",
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"render": "file:./render.php",
+	"viewScript": "file:./view.js"
+}

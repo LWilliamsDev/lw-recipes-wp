@@ -1,0 +1,5 @@
+@import "tailwindcss" source("./");
+
+.test {
+	color: black;
+}
