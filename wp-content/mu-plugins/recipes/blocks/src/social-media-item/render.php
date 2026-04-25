@@ -16,7 +16,7 @@ if (!$is_block_editor && !defined('REST_REQUEST') && !(wp_doing_ajax())) {
 			'alt' => 'Instagram icon'
 		),
 		'linkedin' => array(
-			'img' => get_template_directory_uri() . '/assets/img/linkedin.svg',
+			'img' => get_template_directory_uri() . '/assets/img/linked-in.svg',
 			'alt' => 'LinkedIn icon'
 		),
 		'youtube' => array(
@@ -28,7 +28,7 @@ if (!$is_block_editor && !defined('REST_REQUEST') && !(wp_doing_ajax())) {
 	$icon = $attributes['item']['icon'];
 	?>
 	
-	<li><a href="<?php echo $attributes['item']['site']; ?>"><img src="<?php echo $social_media[$icon]['img']; ?>" alt="<?php echo $social_media[$icon]['alt'];?>"></a>
+	<li><a href="<?php echo $attributes['item']['site']; ?>" target="_blank"><img src="<?php echo $social_media[$icon]['img']; ?>" alt="<?php echo $social_media[$icon]['alt'];?>"></a>
 
 <?php } ?>
 

@@ -31,3 +31,6 @@ label:has(+ *:required):after, .recipes-required:after {
 .is-link.is-destructive {
 	margin-top: 10px;
 }
+.components-base-control:has(label[for="social-icon-selector"]) .components-button.is-primary {
+ background: rgb(254, 250, 224);
+}
