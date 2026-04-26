@@ -3,6 +3,7 @@
  */
 
 import { TaxonomyItems } from '../Recipes';
+import { buildArray } from '../utils';
 
 
 interface ChosenRefinersProps {
@@ -12,63 +13,79 @@ interface ChosenRefinersProps {
 
 }
 
-const ChosenRefiners: React.FC<ChosenRefinersProps> = ({currentRefiners, updateRefiners, taxonomyMap}) => {
-
-  //Convert currentRefiners to an object like courses: ['5', '7'] for easier manipulation
-  //Exclude the page parameter because page numbers should not be in the chosen refiners component
-
-  const paramsObject: { [key: string]: string[] }  = Object.fromEntries(
-      Array.from(currentRefiners.entries())
-      .filter(([key]) => key !== 'pg')
-      .map(([key, value]) => [key, value.split('+')])
-        );
-
+const ChosenRefiners: React.FC<ChosenRefinersProps> = ({ 
+  currentRefiners, 
+  updateRefiners, 
+  taxonomyMap 
+}) => {
 
   const handleChange = (event: React.MouseEvent<HTMLButtonElement>) => {
-    const button = event.currentTarget as HTMLButtonElement;
-    const refiner = button.getAttribute("data-refiner");
-    const id = button.getAttribute("data-id");
+    const button = event.currentTarget;
+    const refiner = button.getAttribute("data-refiner") as RefinerKeys;
+    const idAttr = button.getAttribute("data-id");
 
-    if (!refiner) return; // exit early if refiner is null
+    if (!refiner) return;
 
-    if (refiner == 'search') {
-      updateRefiners(refiner, null);
-      return; 
+    // Handle Search specifically
+    if (refiner === 'search') {
+      updateRefiners('search', null);
+      return;
     }
-    else {
-      if (!id) return; // exit early if id is null
 
-      // Get current values for this refiner (e.g. ["1", "2", "3"])
-      const currentValues = paramsObject[refiner] ?? [];
+    // Handle Taxonomy IDs
+    if (!idAttr) return;
+    const id = parseInt(idAttr, 10);
 
-      // Filter out the ID the user clicked (removing the tag)
-      const updatedValues = currentValues.filter((v) => v !== id);
+    // Use our buildArray helper to remove the value (add = false)
+    const currentValues = (currentRefiners[refiner] as number[]) || [];
 
-      // If no values left, remove the query param; else, join and update
-      const newValue = updatedValues.length > 0 ? updatedValues.join('+') : null;
+    const updatedValues = buildArray(currentValues, refiner, id, false);
 
-      updateRefiners(refiner, newValue);
-    }
+    // Update with the new array or null if empty
+    updateRefiners(refiner, updatedValues?.length ? updatedValues : null);
   };
 
   return (
-  <ul className="pt-5 flex flex-wrap gap-x-5">
-    {Object.entries(paramsObject).map(([key, values]) => (
-      values.map((value, index) => {        
-        const taxonomyData = taxonomyMap[key] || [];
-        const taxonomyTerm = taxonomyData.find(term => term.id.toString() === value);
+    <ul className="pt-5 flex flex-wrap gap-x-5">
+      {Object.entries(currentRefiners).map(([key, val]) => {
+        // Skip pagination and null values
+        if (key === 'pg' || !val) return null;
 
-        return (
-          <li key={`${key}-${index}`}>
-            <button data-refiner={key} data-id={value} onClick={handleChange} className="chosen-refiner cursor-pointer rounded-sm border-1 text-(--color-brown) p-[5px]">
-              {taxonomyTerm ? taxonomyTerm.name : value}
-            </button>
-          </li>
-        );
-      })
-    ))}
-  </ul>
-);
+        // If it's the search string
+        if (key === 'search' && typeof val === 'string') {
+          return (
+            <li key="search-pill">
+              <button data-refiner="search" onClick={handleChange} className="chosen-refiner cursor-pointer rounded-sm border-1 border-(--color-brown) text-(--color-brown) p-[5px]">
+                {val} ✕
+              </button>
+            </li>
+          );
+        }
 
-}
+        // If it's a taxonomy array
+        if (Array.isArray(val)) {
+          return val.map((id) => {
+            const taxonomyData = taxonomyMap[key] || [];
+            const term = taxonomyData.find(t => t.id === id);
+
+            return (
+              <li key={`${key}-${id}`}>
+                <button 
+                  data-refiner={key} 
+                  data-id={id} 
+                  onClick={handleChange} 
+                  className="chosen-refiner cursor-pointer rounded-sm border-1 border-(--color-brown) text-(--color-brown) p-[5px]"
+                >
+                  {term ? term.name : id} ✕
+                </button>
+              </li>
+            );
+          });
+        }
+
+        return null;
+      })}
+    </ul>
+  );
+};
 export default ChosenRefiners;

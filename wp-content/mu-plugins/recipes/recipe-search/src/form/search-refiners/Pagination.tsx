@@ -32,15 +32,15 @@ const Pagination: React.FC<PaginationProps> = ({updatePage, isPending, error, da
 
     if (page == 'back') {
       const prevPage = currentPageInt - 1;
-      updatePage("pg", prevPage.toString(), false);
+      updatePage("pg", prevPage, false);
     }
     else if (page == 'next') {
       const nextPage = currentPageInt + 1;
-      updatePage("pg", nextPage.toString(), false);
+      updatePage("pg", nextPage, false);
     }
     else {
       if (!page) return;
-      updatePage("pg", page.toString(), false);
+      updatePage("pg", page, false);
     }
 
     shouldScrollToResults.current = true; 

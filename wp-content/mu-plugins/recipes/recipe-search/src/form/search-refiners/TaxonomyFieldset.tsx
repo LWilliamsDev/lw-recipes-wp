@@ -7,9 +7,10 @@
 
 import { useState } from 'react';
 import {decode} from 'html-entities';
+import { buildArray } from "../../utils"
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
-import { TaxonomyItems } from '../../Recipes';
+import type { RefinerKeys, TaxonomyItems } from '../../Recipes';
 
 interface TaxonomyFieldSetProps {
   name: string;
@@ -28,30 +29,35 @@ const [accordionIsActive, setAccordionIsActive] = useState<boolean>(false);
 
 // Handling checkbox changes
 const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  const { value, checked } = event.target;
-  const slug = event.target.getAttribute('data-slug');
+  const { checked } = event.target;
+  
+  // 1. Get the ID (nuqs is configured for integers)
+  const id = parseInt(event.target.value, 10);
+  
+  // 2. Get the slug (e.g., 'diet', 'course') to know which state key to update
+  const slug = event.target.getAttribute('data-slug') as keyof typeof refiners;
 
-  // Parse the current paramValue ("1+2+3") into an array
-  const currentValues = paramValue ? paramValue.split('+') : [];
+  if (!slug) {
+    console.warn("Missing data-slug attribute");
+    return;
+  }
 
-  let updatedValues: string[];
+  // 3. Get the current array from refiners (or empty array if null)
+  const currentValues = (paramValue as number[]) ?? [];
+
+  let updatedValues: number[];
 
   if (checked) {
-    // Add the value if not already present
-    updatedValues = Array.from(new Set([...currentValues, value]));
+    // Add the value
+    updatedValues = [...currentValues, id];
   } else {
     // Remove the value
-    updatedValues = currentValues.filter((v) => v !== value);
+    updatedValues = currentValues.filter((v) => v !== id);
   }
 
-   // Join back into + separated string or null if empty
-  const newParamValue = updatedValues.length > 0 ? updatedValues.join('+') : null;
-
-  if (slug) {  // slug is string, not null
-    onChange(slug, newParamValue); // propagate the change to parent component
-  } else {
-    console.warn("Missing slug attribute");
-  }
+  // 4. Update the state
+  // Pass null if the array is empty to clear the URL param
+  onChange(slug, updatedValues.length > 0 ? updatedValues : null);
 
 };
 
@@ -86,7 +92,7 @@ const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       {accordionIsActive &&
       <div className="checkboxes rounded-b-sm border-x border-b p-2 md:rounded-b-none md:border-none md:p-0" id={`${slug}--container`}>
 
-				{ data.map((tax) => <div className="refiner-checkbox" key={tax.id}><input id={tax.id.toString()} data-slug={slug} value={tax.id} type="checkbox" checked={!!paramValue?.includes(tax.id.toString())} onChange={handleCheckboxChange} />
+				{ data.map((tax) => <div className="refiner-checkbox" key={tax.id}><input id={tax.id.toString()} data-slug={slug} value={tax.id} type="checkbox" checked={!!paramValue?.includes(tax.id)} onChange={handleCheckboxChange} />
           <label htmlFor={tax.id.toString()} className="pl-2 text-(--color-dark-green)">{decode(tax.name)}</label></div>) }
         </div> }
 

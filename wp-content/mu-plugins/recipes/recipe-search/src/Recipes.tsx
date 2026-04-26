@@ -5,14 +5,14 @@
 
 
 import {useState, useEffect} from 'react';
-import { useSearchParams, useLocation } from 'react-router';
-//import { useNavigationType } from 'react-router';
+import { useQueryStates, parseAsString, parseAsArrayOf, parseAsInteger } from 'nuqs';
 import ChosenRefiners from "./chosen-refiners/ChosenRefiners";
 import { useQuery } from '@tanstack/react-query';
 import Pagination from "./form/search-refiners/Pagination";
 import SearchInput from './form/search-refiners/SearchInput';
 import TaxonomyFieldset from './form/search-refiners/TaxonomyFieldset';
 import ResultsItems from './results/ResultsItems';
+import { hasVisibleFilters } from './utils';
 
 
 /* Check if user is logged in, in order to show a component that allows the user to
@@ -113,32 +113,43 @@ export interface TaxonomyItem {
 
 export type TaxonomyItems = TaxonomyItem[];
 
+export const refinersSchema = {
+  search: parseAsString,
+  course: parseAsArrayOf(parseAsInteger, '+'),
+  diet: parseAsArrayOf(parseAsInteger, '+'),
+  allergen: parseAsArrayOf(parseAsInteger, '+'),
+  pg: parseAsInteger,
+};
+
+export type RefinerValues = InferValues<typeof refinersSchema>;
+export type RefinerKeys = keyof RefinerValues;
+
+
 /* Main Recipes component */
 
 const Recipes: React.FC = () => {
 
   //**-- Global State and Function Setup --*//
 
-  const [searchParams, setSearchParams] = useSearchParams({}); //Set Main Search Parameters state
+  const [refiners, setRefiners] = useQueryStates(refinersSchema,
+  {
+    history: 'push'
+  });
+
+
 
   //Reusable function to update the search parameters
-  const updateRefiners = (name: string, value: string | null, resetPage: boolean = true) => {
-   const newParams = searchParams;
-   
-  if (resetPage) {
-    newParams.delete("pg");
-  }
+  const updateRefiners = (
+    name: RefinerKeys,
+    value: string | number[] | number | null,
+    resetPage: boolean = true
+    ) => {
+    setRefiners({
+      [name]: value,
+      ...(resetPage ? { pg: null } : {})
+    })
 
-
-  if (value) {
-    newParams.set(name, value);
-  }
-  else {
-    newParams.delete(name);
-  }
-
-  setSearchParams(newParams);
-};
+  };
 
   
 
@@ -147,16 +158,12 @@ const Recipes: React.FC = () => {
   /* Local state to sync HTML text input with the search URL parameter. Without this, the user is not able to type 
      in the search box because the text keeps getting replaced with the search attribute in searchParams.
   */
-  const [searchInputValue, setSearchInputValue] = useState<string>(searchParams.get('search') || '');
+  const [searchInputValue, setSearchInputValue] = useState<string>(refiners.search ?? '');
 
   // Sync local state of search box with browser back/forth navigation
-  const location = useLocation();
   useEffect(() => {
-    const searchQuery = searchParams.get('search');
-    if (searchQuery !== searchInputValue) {
-      setSearchInputValue(searchQuery || '');
-    }
-  }, [location, searchParams]);
+    setSearchInputValue(refiners.search ?? '');
+  }, [refiners.search]);
 
   /* Since the searchParams state is tied to the button, a "local" state is needed to sync the value of 
       the search input to the searchParams state.
@@ -168,17 +175,22 @@ const Recipes: React.FC = () => {
   const searchInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchInputValue(event.target.value); // Allow user to type freely
   };
-  const btnSearch = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleSearchSubmit = (event: React.MouseEvent<HTMLButtonElement>) => {
       event.preventDefault();
-      updateRefiners('search', searchInputValue);
+
+      setRefiners({
+        search: searchInputValue || null,
+        pg: null
+      })
   };
+
 
 
   //**-- Fetch URL setup --**//
   //Todo: Replace with WP apiFetch package
 
   // Build the query string for fetch requests
-   const hostname: string = window.location.hostname;
+   const hostname: string = 'recipes.staging';
   const endpoint: string = '/wp-json/lw-recipes/v1/recipes';
   const queryPath: string = `https://${hostname}${endpoint}`;
 
@@ -198,18 +210,33 @@ const Recipes: React.FC = () => {
     }
   : null;
 
-  // Fetch results data
-  const queryString: string = searchParams.toString() ? `?${searchParams.toString()}` : '';
-
 
   // Get results
   const { isPending: isResultsPending, error: resultsError, data: resultsData } = useQuery({
-    queryKey: ['results', searchParams, queryString],
-    queryFn: () =>
-      fetch(queryPath+queryString).then((res) =>
-        res.json(),
-      ),
+    queryKey: ['results', refiners],
+    queryFn: async () => {
+      const params = new URLSearchParams();
+
+      // Loop through refiners to build the string
+      Object.entries(refiners).forEach(([key, value]) => {
+        if (value !== null && value !== undefined) {
+          // Handle arrays with '+' and everything else normally
+          const formattedValue = Array.isArray(value) ? value.join('+') : value;
+          params.append(key, String(formattedValue));
+        }
+      });
+
+      // Use .decodeURIComponent to prevent '+' from becoming '%2B' 
+      const queryString = params.toString().replaceAll('%2B', '+');
+      const fullUrl = `${queryPath}${queryString ? `?${queryString}` : ''}`;
+
+      const res = await fetch(fullUrl);
+      if (!res.ok) throw new Error('Network response was not ok');
+      return res.json();
+    }
   });
+
+  const hasFilters: boolean = hasVisibleFilters(refiners);
 
 
 
@@ -239,27 +266,18 @@ const Recipes: React.FC = () => {
 
 
   //UNCOMMENT FOR DEBUGGING
-
-  //Debug History - uncomment import statement for useNavigationType
-  /*const navigationType = useNavigationType();
-
-  useEffect(() => {
-    console.log(`[History Logger] Navigation Type: ${navigationType}`);
-    console.log(`[History Logger] Current Location: ${location.pathname}${location.search}`);
-  }, [location, navigationType]);
-
-  //Debug searchParams state
+  //Debug refiners state
    useEffect(() => {
-      console.log("Refiners updated:", searchParams);
-    }, [searchParams]);*/
+      console.log("Refiners updated:", refiners);
+    }, [refiners]);
 
 
 return (
   <div className="recipes-search mx-auto px-4 md:px-12">
     <div className="form mt-8 mb-8 md:mt-12 md:mb-12">
-      { (isLoggedIn && searchParams.size > 0) ? (
+      { (isLoggedIn && hasFilters) ? (
         <>
-          <input type="text" id="refiner-url-params" className="rounded-sm border border-(--color-mid-green) border-solid p-2 mb-8" value={searchParams.size > 0 ? window.location.href : ""} 
+          <input type="text" id="refiner-url-params" className="rounded-sm border border-(--color-mid-green) border-solid p-2 mb-8" value={window.location.href} 
           disabled /> 
           <button onClick={copyUrl} className="button p-[10px] inline-block rounded-sm text-(--color-white) font-medium cursor-pointer ml-2" disabled={copied}>{copied ? "Copied!" : "Copy URL"}</button>
         </>
@@ -267,25 +285,25 @@ return (
         : 
         null
       }
-      <form role="search" className="grid grid-cols-[1fr_40px] gap-x-2">
-        <SearchInput id="search" label="Search" machineName="search" placeholder="Search Recipes..." searchInputValue={searchInputValue} onChange={searchInputChange} btnChange={btnSearch} buttonText="Go" />
+      <form role="search" className="grid grid-cols-[1fr_40px] gap-x-2" onSubmit={handleSearchSubmit}>
+        <SearchInput id="search" label="Search" machineName="search" placeholder="Search Recipes..." searchInputValue={searchInputValue} onChange={searchInputChange} buttonText="Go" />
       </form>
         {
         (taxonomyMap && 
-        [...searchParams.entries()].length > 0) ? 
-     <ChosenRefiners currentRefiners={searchParams} updateRefiners={updateRefiners} taxonomyMap={taxonomyMap} /> : null }
+        hasFilters) ? 
+     <ChosenRefiners currentRefiners={refiners} updateRefiners={updateRefiners} taxonomyMap={taxonomyMap} /> : null }
     </div>
     <div className="results-container md:grid md:grid-cols-[0.5fr_2fr] md:gap-4">
       <div className="refiners mb-8 md:mb-0">
-        <TaxonomyFieldset name="Courses" slug="course" isLoading={isCourseOptionsLoading} data={courseOptionsData} onChange={updateRefiners} paramValue={searchParams.get('course')} error={courseOptionsError} />
-        <TaxonomyFieldset name="Diet" slug="diet" isLoading={isDietOptionsLoading} data={dietOptionsData} onChange={updateRefiners} paramValue={searchParams.get('diet')} error={dietOptionsError} />
-        <TaxonomyFieldset name="Allergen" slug="allergen" isLoading={isAllergenOptionsLoading} data={allergenOptionsData} onChange={updateRefiners} paramValue={searchParams.get('allergen')} error={allergenOptionsError} />
+        <TaxonomyFieldset name="Courses" slug="course" isLoading={isCourseOptionsLoading} data={courseOptionsData} onChange={updateRefiners} paramValue={refiners.course} error={courseOptionsError} />
+        <TaxonomyFieldset name="Diet" slug="diet" isLoading={isDietOptionsLoading} data={dietOptionsData} onChange={updateRefiners} paramValue={refiners.diet} error={dietOptionsError} />
+        <TaxonomyFieldset name="Allergen" slug="allergen" isLoading={isAllergenOptionsLoading} data={allergenOptionsData} onChange={updateRefiners} paramValue={refiners.allergen} error={allergenOptionsError} />
       </div>
      <div className="results">
-        <ResultsItems isPending={isResultsPending} error={resultsError} data={resultsData} updateRefiners={updateRefiners} />
+        <ResultsItems isPending={isResultsPending} error={resultsError} data={resultsData} updateRefiners={updateRefiners} currentFilters={refiners} />
       </div>
        <div className="pagination md:col-start-2 pb-5">
-        <Pagination isPending={isResultsPending} error={resultsError} data={resultsData} updatePage={updateRefiners} currentPage={searchParams.get('pg')} />
+        <Pagination isPending={isResultsPending} error={resultsError} data={resultsData} updatePage={updateRefiners} currentPage={refiners.pg} />
       </div>
     </div>
   </div>

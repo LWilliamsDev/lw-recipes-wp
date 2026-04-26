@@ -6,6 +6,7 @@
 
 import { Results, Recipe, Term } from '../Recipes';
 import ResultItemSkeleton from './ResultItemSkeleton';
+import { buildArray } from '../utils';
 
 interface ResultsItemsProps {
     data: Results;
@@ -15,17 +16,22 @@ interface ResultsItemsProps {
     error: any;
 }
 
-const ResultsItems: React.FC<ResultsItemsProps> = ({data, isPending, error, updateRefiners}) => {
+const ResultsItems: React.FC<ResultsItemsProps> = ({data, isPending, error, updateRefiners, currentFilters}) => {
   
-  //Each result row displays the item's taxonomy terms.
-  //This list is clickable, and clicking refines the results by the taxonomy term the user clicked on.
+    //Each result row displays the item's taxonomy terms.
+    //This list is clickable, and clicking refines the results by the taxonomy term the user clicked on.
     const handleChange = (event: React.MouseEvent<HTMLButtonElement>) => {
-    const button = event.target as HTMLButtonElement;
+    const button = event.currentTarget as HTMLButtonElement;
     const type = button.getAttribute("data-type");
-    const id = button.getAttribute("data-id");
+    const idAttr = button.getAttribute("data-id");
 
-    if (!type || !id) return;
-    updateRefiners(type, id);
+    if (!type || !idAttr) return;
+
+    const id = parseInt(idAttr, 10);
+    const currentValues = currentFilters?.[type] || [];
+    const newValues = buildArray(currentValues, type, id);
+
+    updateRefiners(type, newValues);
   };
 
     
