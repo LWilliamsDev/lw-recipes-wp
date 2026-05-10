@@ -1,4 +1,4 @@
-import type {RefinerValues} from './Recipes'
+import type {RefinerValues} from './types'
 
 export function buildArray(currentFilters: number[], slug: string, value: number, add: boolean = true) {
 	if (!currentFilters || !slug || !value) { 

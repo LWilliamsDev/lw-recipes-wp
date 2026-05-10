@@ -7,7 +7,7 @@
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 
-const ResultItemSkeleton: React.FC = () => {
+export default function ResultItemSkeleton() {
 
    return (
         <>
@@ -23,6 +23,4 @@ const ResultItemSkeleton: React.FC = () => {
        </>
    );
 
-
 }
-export default ResultItemSkeleton;

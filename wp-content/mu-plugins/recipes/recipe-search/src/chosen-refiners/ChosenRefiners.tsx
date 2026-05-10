@@ -2,22 +2,17 @@
  * Chosen Refiners component
  */
 
-import { TaxonomyItems } from '../Recipes';
 import { buildArray } from '../utils';
-
+import { RefinerKeys, RefinerValues, TaxonomyItems } from '../types';
 
 interface ChosenRefinersProps {
-  currentRefiners: URLSearchParams;
-  updateRefiners: (name: string, value: string | null, resetPage?: boolean) => void;
-  taxonomyMap: {[key: string]: TaxonomyItems};
+  currentRefiners: RefinerValues;
+  updateRefiners: (name: RefinerKeys, value: string | number[] | number | null, resetPage?: boolean) => void;
+  taxonomyMap: Partial<Record<RefinerKeys, TaxonomyItems>> | null;
 
 }
 
-const ChosenRefiners: React.FC<ChosenRefinersProps> = ({ 
-  currentRefiners, 
-  updateRefiners, 
-  taxonomyMap 
-}) => {
+export default function ChosenRefiners({currentRefiners, updateRefiners, taxonomyMap }: ChosenRefinersProps){ 
 
   const handleChange = (event: React.MouseEvent<HTMLButtonElement>) => {
     const button = event.currentTarget;
@@ -65,7 +60,9 @@ const ChosenRefiners: React.FC<ChosenRefinersProps> = ({
         // If it's a taxonomy array
         if (Array.isArray(val)) {
           return val.map((id) => {
-            const taxonomyData = taxonomyMap[key] || [];
+            if (!taxonomyMap) return null;
+            
+            const taxonomyData = taxonomyMap[key as RefinerKeys] || [];
             const term = taxonomyData.find(t => t.id === id);
 
             return (
@@ -88,4 +85,3 @@ const ChosenRefiners: React.FC<ChosenRefinersProps> = ({
     </ul>
   );
 };
-export default ChosenRefiners;

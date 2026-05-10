@@ -10,11 +10,10 @@ interface SearchInputProps {
   searchInputValue: string;
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void; 
   buttonText: string;
-  btnChange: (event: React.MouseEvent<HTMLButtonElement>) => void;
   disabled: boolean;
 }
 
-const SearchInput: React.FC<SearchInputProps> = ({label, id, machineName, placeholder, searchInputValue, onChange, buttonText, btnChange, disabled}) => {
+export default function SearchInput ({label, id, machineName, placeholder, searchInputValue, onChange, buttonText, disabled}: SearchInputProps){
 
 	return (
 		<>
@@ -25,4 +24,3 @@ const SearchInput: React.FC<SearchInputProps> = ({label, id, machineName, placeh
 		)
 
 }
-export default SearchInput;
