@@ -5,18 +5,14 @@
  */
 
 import { Results, Recipe, Term } from '../Recipes';
-import ResultItemSkeleton from './ResultItemSkeleton';
 import { buildArray } from '../utils';
 
 interface ResultsItemsProps {
     data: Results;
     updateRefiners: (name: string, value: string | null, resetPage?: boolean) => void;
-    /*resetRefiners: () => void;*/
-    isPending: boolean;
-    error: any;
 }
 
-const ResultsItems: React.FC<ResultsItemsProps> = ({data, isPending, error, updateRefiners, currentFilters}) => {
+const ResultsItems: React.FC<ResultsItemsProps> = ({data, updateRefiners, currentFilters}) => {
   
     //Each result row displays the item's taxonomy terms.
     //This list is clickable, and clicking refines the results by the taxonomy term the user clicked on.
@@ -36,33 +32,6 @@ const ResultsItems: React.FC<ResultsItemsProps> = ({data, isPending, error, upda
 
     
 
-    if (isPending)
-    // show skeleton layout if we are waiting for results
-    return (
-      <>
-        <ResultItemSkeleton />
-        <ResultItemSkeleton />
-        <ResultItemSkeleton />
-        <ResultItemSkeleton />
-        <ResultItemSkeleton />
-        <ResultItemSkeleton />
-        <ResultItemSkeleton />
-        <ResultItemSkeleton />
-        <ResultItemSkeleton />
-        <ResultItemSkeleton />
-      </>
-    )
-
-  if (error) {
-    
-    console.warn(error);
-
-    return (
-        <p>Sorry, something went wrong while loading results. Please try again.</p>
-     )
-    }
-
-  if (data) {
     const results: Recipe[] = data.result.data;
     
 
@@ -93,7 +62,6 @@ const ResultsItems: React.FC<ResultsItemsProps> = ({data, isPending, error, upda
 
    );
 
-    }
 }
 
 function alphabetizeTerms(allTerms: Term[]) {

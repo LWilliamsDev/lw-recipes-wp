@@ -13,6 +13,10 @@ import SearchInput from './form/search-refiners/SearchInput';
 import TaxonomyFieldset from './form/search-refiners/TaxonomyFieldset';
 import ResultsItems from './results/ResultsItems';
 import { hasVisibleFilters } from './utils';
+import ResultItemSkeleton from './results/ResultItemSkeleton';
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
+import TaxonomyFieldsetSkeleton from "./form/search-refiners/TaxonomyFieldsetSkeleton";
 
 
 /* Check if user is logged in, in order to show a component that allows the user to
@@ -24,7 +28,7 @@ export const getLoginStatus = () => {
 /* Reusable function to fetch taxonomy data. We assume that the data does not
    change frequently, therefore we give a high cache time of 30 mins. */
 export const fetchTaxonomyData = (queryKey: string, url: string) => {
-  const { isLoading, error, data } = useQuery<TaxonomyItems>({
+  const { isLoading, error, data, refetch } = useQuery<TaxonomyItems>({
     queryKey: [queryKey],
     queryFn: () => fetch(url).then((res) => res.json()),
     staleTime: 1000 * 60 * 30, // Cache data for 30 minutes
@@ -32,7 +36,7 @@ export const fetchTaxonomyData = (queryKey: string, url: string) => {
     refetchOnWindowFocus: false, // Don't refetch when window is focused
   });
 
-  return { isLoading, error, data };
+  return { isLoading, error, data, refetch };
 
 };
 
@@ -190,16 +194,38 @@ const Recipes: React.FC = () => {
   //Todo: Replace with WP apiFetch package
 
   // Build the query string for fetch requests
-   const hostname: string = 'recipes.staging';
+  const currentHostname: string = window.location.hostname;
+  let hostname:string;
+
+  if (currentHostname == 'localhost') { //if it is localhost (local dev environment), hardcode to the staging URL
+    hostname = 'recipes.staging'
+  }
+  else {
+    hostname = currentHostname;
+  }
+
   const endpoint: string = '/wp-json/lw-recipes/v1/recipes';
   const queryPath: string = `https://${hostname}${endpoint}`;
 
   //**-- Run Queries --**// 
   
   // Get all taxonomy term data to pass into the refiners
-  const { isLoading: isCourseOptionsLoading, data: courseOptionsData, error: courseOptionsError } = fetchTaxonomyData('courseOptions', `https://${hostname}/wp-json/wp/v2/course?per_page=100`);
-  const { isLoading: isDietOptionsLoading, data: dietOptionsData, error: dietOptionsError } = fetchTaxonomyData('dietOptions', `https://${hostname}/wp-json/wp/v2/diet?per_page=100`);
-  const { isLoading: isAllergenOptionsLoading, data: allergenOptionsData, error: allergenOptionsError } = fetchTaxonomyData('allergenOptions', `https://${hostname}/wp-json/wp/v2/allergen?per_page=100`);
+  const { isLoading: isCourseOptionsLoading, data: courseOptionsData, error: courseOptionsError, refetch: refetchCourse } = fetchTaxonomyData('courseOptions', `https://${hostname}/wp-json/wp/v2/course?per_page=100`);
+  const { isLoading: isDietOptionsLoading, data: dietOptionsData, error: dietOptionsError, refetch: refetchDiet } = fetchTaxonomyData('dietOptions', `https://${hostname}/wp-json/wp/v2/diet?per_page=100`);
+  const { isLoading: isAllergenOptionsLoading, data: allergenOptionsData, error: allergenOptionsError, refetch: refetchAllergen } = fetchTaxonomyData('allergenOptions', `https://${hostname}/wp-json/wp/v2/allergen?per_page=100`);
+
+  const isFormLoading = isCourseOptionsLoading || isDietOptionsLoading || isAllergenOptionsLoading;
+  const formError = courseOptionsError || dietOptionsError || allergenOptionsError;
+  const formData = courseOptionsData || dietOptionsData || allergenOptionsData;
+
+  const handleRetryFilters = async () => {
+  // This fires them all off simultaneously
+  await Promise.all([
+    refetchCourse(),
+    refetchDiet(),
+    refetchAllergen()
+  ]);
+};
 
   // Create a lookup map for taxonomy options for each category
    const taxonomyMap: { [key: string]: TaxonomyItems } | null = (courseOptionsData && dietOptionsData && allergenOptionsData)
@@ -212,7 +238,7 @@ const Recipes: React.FC = () => {
 
 
   // Get results
-  const { isPending: isResultsPending, error: resultsError, data: resultsData } = useQuery({
+  const { isPending: isResultsPending, error: resultsError, data: resultsData, refetch } = useQuery({
     queryKey: ['results', refiners],
     queryFn: async () => {
       const params = new URLSearchParams();
@@ -286,7 +312,7 @@ return (
         null
       }
       <form role="search" className="grid grid-cols-[1fr_40px] gap-x-2" onSubmit={handleSearchSubmit}>
-        <SearchInput id="search" label="Search" machineName="search" placeholder="Search Recipes..." searchInputValue={searchInputValue} onChange={searchInputChange} buttonText="Go" />
+        <SearchInput id="search" label="Search" machineName="search" placeholder="Search Recipes..." searchInputValue={searchInputValue} onChange={searchInputChange} buttonText="Go" disabled={isFormLoading} />
       </form>
         {
         (taxonomyMap && 
@@ -295,16 +321,68 @@ return (
     </div>
     <div className="results-container md:grid md:grid-cols-[0.5fr_2fr] md:gap-4">
       <div className="refiners mb-8 md:mb-0">
-        <TaxonomyFieldset name="Courses" slug="course" isLoading={isCourseOptionsLoading} data={courseOptionsData} onChange={updateRefiners} paramValue={refiners.course} error={courseOptionsError} />
-        <TaxonomyFieldset name="Diet" slug="diet" isLoading={isDietOptionsLoading} data={dietOptionsData} onChange={updateRefiners} paramValue={refiners.diet} error={dietOptionsError} />
-        <TaxonomyFieldset name="Allergen" slug="allergen" isLoading={isAllergenOptionsLoading} data={allergenOptionsData} onChange={updateRefiners} paramValue={refiners.allergen} error={allergenOptionsError} />
+        {isFormLoading ? ( 
+          <>
+            {Array.from({ length: 3 }).map((_, i) => (
+              <TaxonomyFieldsetSkeleton key={i} />
+            ))}
+          </>
+        ) : formError ? ( 
+          <>
+            <p className="mb-[8px]">Sorry, something went wrong while loading filters. Please try again.</p>
+            <button onClick={() => handleRetryFilters()} className="button p-[10px] mb-[8px] inline-block rounded-sm text-(--color-white) font-medium cursor-pointer" type="button">Try again.</button>
+            <p>Please <a href="mailto:support@example.com">contact us</a> if you continue having issues.</p>
+          </>
+        ) : (
+          <>
+            <TaxonomyFieldset name="Courses" slug="course" isLoading={isCourseOptionsLoading} data={courseOptionsData} onChange={updateRefiners} paramValue={refiners.course} error={courseOptionsError} />
+            <TaxonomyFieldset name="Diet" slug="diet" isLoading={isDietOptionsLoading} data={dietOptionsData} onChange={updateRefiners} paramValue={refiners.diet} error={dietOptionsError} />
+            <TaxonomyFieldset name="Allergen" slug="allergen" isLoading={isAllergenOptionsLoading} data={allergenOptionsData} onChange={updateRefiners} paramValue={refiners.allergen} error={allergenOptionsError} />
+          </>
+        )}
       </div>
-     <div className="results">
-        <ResultsItems isPending={isResultsPending} error={resultsError} data={resultsData} updateRefiners={updateRefiners} currentFilters={refiners} />
+      <div className="sr-only" role="status" aria-live="polite" aria-atomic="true">
+        {formError || resultsError ? "There was an error loading the page content." : 
+        isFormLoading ? "Loading filters..." :
+        isResultsPending ? "Updating recipe results..." : 
+        resultsData ? "Recipe list updated." : ""}
       </div>
-       <div className="pagination md:col-start-2 pb-5">
-        <Pagination isPending={isResultsPending} error={resultsError} data={resultsData} updatePage={updateRefiners} currentPage={refiners.pg} />
-      </div>
+      {isResultsPending ? (
+        <>
+          <div className="results">
+            {Array.from({ length: 10 }).map((_, i) => (
+              <ResultItemSkeleton key={i} />
+            ))}
+          </div>
+          <div className="pagination md:col-start-2 pb-5">
+            <ul className="pagination-numbers">
+              <li><Skeleton /></li>
+              <li><Skeleton /></li>
+              <li><Skeleton /></li>
+              <li><Skeleton /></li>
+              <li><Skeleton /></li>
+              <li><Skeleton /></li>
+              <li><Skeleton /></li>
+              <li><Skeleton /></li>
+            </ul>
+          </div>
+        </>
+        ) : resultsError ? ( 
+          <div className="results">
+            <p className="mb-[8px]">Sorry, something went wrong while loading results.</p>
+            <button onClick={() => refetch()} className="button p-[10px] mb-[8px] inline-block rounded-sm text-(--color-white) font-medium cursor-pointer" type="button">Try again.</button>
+            <p>Please <a href="mailto:support@example.com">contact us</a> if you continue having issues.</p>
+          </div>
+        ) : ( 
+        <>
+          <div className="results">
+            <ResultsItems isPending={isResultsPending} error={resultsError} data={resultsData} updateRefiners={updateRefiners} currentFilters={refiners} />
+          </div>
+          <div className="pagination md:col-start-2 pb-5">
+            <Pagination isPending={isResultsPending} error={resultsError} data={resultsData} updatePage={updateRefiners} currentPage={refiners.pg} />
+          </div>
+        </>
+        )}
     </div>
   </div>
   )

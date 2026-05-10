@@ -56,7 +56,7 @@ const ChosenRefiners: React.FC<ChosenRefinersProps> = ({
           return (
             <li key="search-pill">
               <button data-refiner="search" onClick={handleChange} className="chosen-refiner cursor-pointer rounded-sm border-1 border-(--color-brown) text-(--color-brown) p-[5px]">
-                {val} ✕
+                {val}
               </button>
             </li>
           );
@@ -76,7 +76,7 @@ const ChosenRefiners: React.FC<ChosenRefinersProps> = ({
                   onClick={handleChange} 
                   className="chosen-refiner cursor-pointer rounded-sm border-1 border-(--color-brown) text-(--color-brown) p-[5px]"
                 >
-                  {term ? term.name : id} ✕
+                  {term ? term.name : id}
                 </button>
               </li>
             );

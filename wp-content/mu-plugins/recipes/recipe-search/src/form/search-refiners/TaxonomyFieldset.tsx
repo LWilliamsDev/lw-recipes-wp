@@ -15,15 +15,13 @@ import type { RefinerKeys, TaxonomyItems } from '../../Recipes';
 interface TaxonomyFieldSetProps {
   name: string;
   slug: string;
-  isLoading: boolean;
   data?: TaxonomyItems;
   onChange: (name: string, value: string | null, resetPage?: boolean) => void;
   paramValue: string | null;
-  error: any;
   
 }
 
-const TaxonomyFieldset: React.FC<TaxonomyFieldSetProps> = ({name, slug, isLoading, data, onChange, paramValue, error}) => {
+const TaxonomyFieldset: React.FC<TaxonomyFieldSetProps> = ({name, slug, data, onChange, paramValue}) => {
 
 const [accordionIsActive, setAccordionIsActive] = useState<boolean>(false);
 
@@ -62,27 +60,6 @@ const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 };
 
 
-  if (isLoading) return (
-    <div className="refiner-fieldset mb-4">
-      <fieldset>
-      <legend>{ name }</legend>
-        <Skeleton />
-      </fieldset>
-    </div>
-  )
-
-  if (error) {
-
-    console.warn(error); 
-
-    return (
-      <p>Sorry, something went wrong while loading filters. Please try again.</p>
-    )
-  }
-
-  if (data) { 
-
-
 
 	return (
 		<div className="refiner-fieldset mb-4">
@@ -99,7 +76,6 @@ const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       </fieldset>
 	</div>
 		)
-}
 
 }
 

@@ -16,7 +16,7 @@ interface PaginationProps {
   currentPage: string | null;
 }
 
-const Pagination: React.FC<PaginationProps> = ({updatePage, isPending, error, data, currentPage}) => {
+const Pagination: React.FC<PaginationProps> = ({updatePage, data, currentPage}) => {
 
   const shouldScrollToResults = useRef(false); //used to scroll to top of results when user clicks on pagination button
 
@@ -59,32 +59,6 @@ const Pagination: React.FC<PaginationProps> = ({updatePage, isPending, error, da
 
 
 
-  if (isPending) return (
-    <nav className="pagination" aria-label="Pagination">
-    <ul className="pagination-numbers">
-      <li><Skeleton /></li>
-      <li><Skeleton /></li>
-       <li><Skeleton /></li>
-        <li><Skeleton /></li>
-         <li><Skeleton /></li>
-          <li><Skeleton /></li>
-           <li><Skeleton /></li>
-            <li><Skeleton /></li>
-
-    </ul>
-    </nav>
-  )
-
-  if (error) { 
-    console.warn(error);
-
-    return (
-      <p>Sorry, something went wrong while loading pagination. Please try again.</p>
-    )
-  }
-
-  if (data) {
-
 
 
     if (currentPage) {
@@ -117,7 +91,6 @@ const Pagination: React.FC<PaginationProps> = ({updatePage, isPending, error, da
 		</ul>
     </nav>
 		)
-  }
 
 }
 
