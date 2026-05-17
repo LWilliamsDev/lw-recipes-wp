@@ -3,8 +3,6 @@
  *
  */
 
-import { useRef, useEffect } from 'react';
-
 import { RefinerKeys, Results as ResultsType } from '../../types';
 
 interface PaginationProps {
@@ -37,8 +35,6 @@ function getPageNumbers(currentPage: number, totalPages: number, pagesToShow: nu
 
 export default function Pagination ({updatePage, data, currentPage}: PaginationProps){
 
-  const shouldScrollToResults = useRef(false); //used to scroll to top of results when user clicks on pagination button
-
   const pagesToShow:number = 6;
   const totalPages: number = data?.total_pages ? data.total_pages : 1;
   const activePage = currentPage ?? 1;
@@ -68,19 +64,7 @@ export default function Pagination ({updatePage, data, currentPage}: PaginationP
       }
     }
 
-    shouldScrollToResults.current = true; 
-
   };
-
-  useEffect(() => {
-    if (data && shouldScrollToResults.current) {
-      const resultsContainer = document.querySelector(".results-container");
-      if (resultsContainer) {
-        resultsContainer.scrollIntoView({ behavior: "smooth" });
-      }
-      shouldScrollToResults.current = false; // Reset after scrolling
-    }
-  }, [data]);
  
 
   const numbers = getPageNumbers(activePage, totalPages, pagesToShow);

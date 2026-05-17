@@ -3,7 +3,7 @@
  *
  */
 
-import {useState, useEffect} from 'react';
+import {useState, useEffect, useRef} from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useQueryStates } from 'nuqs';
 
@@ -51,6 +51,8 @@ export default function Recipes() {
     history: 'push'
   });
 
+  const listingContainer = useRef<HTMLDivElement | null>(null);
+  const shouldScrollRef = useRef(false);
 
 
   //Reusable function to update the search parameters
@@ -59,6 +61,9 @@ export default function Recipes() {
     value: string | number[] | number | null,
     resetPage: boolean = true
     ) => {
+    
+    shouldScrollRef.current = true;
+
     setRefiners({
       [name]: value,
       ...(resetPage ? { pg: null } : {})
@@ -175,17 +180,32 @@ export default function Recipes() {
   const hasFilters: boolean = hasVisibleFilters(refiners);
 
 
+  //Scroll to top of the component whenever results are loaded
+  useEffect(() => {
+
+    //Only scroll to the top if the user specifically interacted with a filter
+    //This prevents scrolling to top on initial page load, which is awkward from a UX standpoint
+
+    if (!shouldScrollRef.current) return; 
+    shouldScrollRef.current = false;
+
+    if (listingContainer.current) {
+        listingContainer.current.scrollIntoView({ behavior: "smooth" });
+     }
+  }, [refiners]);
+
+
 
 
   //UNCOMMENT FOR DEBUGGING
   //Debug refiners state
-  /* useEffect(() => {
+  useEffect(() => {
       console.log("Refiners updated:", refiners);
-    }, [refiners]);*/
+    }, [refiners]);
 
 
   return (
-    <div className="recipes-search mx-auto px-4 md:px-12">
+    <div className="recipes-search mx-auto px-4 md:px-12" ref={listingContainer}>
       <div className="form mt-8 mb-8 md:mt-12 md:mb-12">
         <form role="search" className="grid grid-cols-[1fr_40px] gap-x-2" onSubmit={handleSearchSubmit}>
           <SearchInput id="search" label="Search" machineName="search" placeholder="Search Recipes..." searchInputValue={searchInputValue} onChange={searchInputChange} buttonText="Go" disabled={isFormLoading} />
