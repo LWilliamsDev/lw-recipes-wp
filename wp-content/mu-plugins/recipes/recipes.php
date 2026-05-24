@@ -75,9 +75,7 @@ function custom_post_type()  {
 			'allergen'
 		],
 		'template' => array(
-			array( 'lw-recipes/recipe-content'),
-			array( 'lw-recipes/recipe-post-nav'),
-			array( 'lw-recipes/recipe-related')
+			array( 'lw-recipes/recipe-template')
 		),
 		'template_lock' => 'all',
 		'labels' => $labels
@@ -492,6 +490,7 @@ function lw_recipes_lw_recipes_block_init() {
 	register_block_type( __DIR__ . '/blocks/build/recipe-simple-ingredients');
 	register_block_type( __DIR__ . '/blocks/build/recipe-simple-instructions');
 	register_block_type( __DIR__ . '/blocks/build/recipe-taxonomy');
+	register_block_type( __DIR__ . '/blocks/build/recipe-template');
 	register_block_type( __DIR__ . '/blocks/build/header');
 	register_block_type( __DIR__ . '/blocks/build/social-media-item');
 	register_block_type( __DIR__ . '/blocks/build/social-media');

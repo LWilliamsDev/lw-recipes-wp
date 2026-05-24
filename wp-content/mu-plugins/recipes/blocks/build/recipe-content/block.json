@@ -6,6 +6,9 @@
   "title": "Recipe Content",
   "category": "theme",
   "icon": "smiley",
+  "parent": [
+    "lw-recipes/recipe-template"
+  ],
   "description": "Display a recipe",
   "example": {},
   "supports": {

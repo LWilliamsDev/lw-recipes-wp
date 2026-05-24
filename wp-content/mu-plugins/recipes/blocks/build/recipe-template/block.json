@@ -1,15 +1,17 @@
 {
   "$schema": "https://schemas.wp.org/trunk/block.json",
   "apiVersion": 3,
-  "name": "lw-recipes/recipe-post-nav",
+  "name": "lw-recipes/recipe-template",
   "version": "0.1.0",
-  "title": "Recipe Post Nav",
+  "title": "Recipe Template",
   "category": "theme",
   "icon": "smiley",
-  "description": "Display a recipe overview",
-  "parent": [
-    "lw-recipes/recipe-template"
-  ],
+  "attributes": {
+    "version": {
+      "type": "number",
+      "default": 1
+    }
+  },
   "supports": {
     "html": false,
     "inserter": false
