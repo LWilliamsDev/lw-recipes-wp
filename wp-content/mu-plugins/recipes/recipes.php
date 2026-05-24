@@ -475,13 +475,16 @@ function lw_recipes_lw_recipes_block_init() {
 	register_block_type( __DIR__ . '/blocks/build/hero-image-heading' );
 	register_block_type( __DIR__ . '/blocks/build/hero-image-subtitle' );
 	register_block_type( __DIR__ . '/blocks/build/hero-image-cta' );
+	register_block_type( __DIR__ . '/blocks/build/home-template');
 	register_block_type( __DIR__ . '/blocks/build/latest-recipes');
+	register_block_type( __DIR__ . '/blocks/build/page-template');
 	register_block_type( __DIR__ . '/blocks/build/recipe');
 	register_block_type( __DIR__ . '/blocks/build/recipe-complex');
 	register_block_type( __DIR__ . '/blocks/build/recipe-complex-ingredient');
 	register_block_type( __DIR__ . '/blocks/build/recipe-complex-ingredients');
 	register_block_type( __DIR__ . '/blocks/build/recipe-complex-instructions');
 	register_block_type( __DIR__ . '/blocks/build/recipe-content');
+	register_block_type( __DIR__ . '/blocks/build/recipe-listing');
 	register_block_type( __DIR__ . '/blocks/build/recipe-overview');
 	register_block_type( __DIR__ . '/blocks/build/recipe-post-nav');
 	register_block_type( __DIR__ . '/blocks/build/recipe-related');
@@ -604,3 +607,31 @@ function remove_core_template_part_wrapper( $block_content, $block ) {
 }
 
 add_filter( 'render_block_core/template-part', 'remove_core_template_part_wrapper', 10, 2 );
+
+/**
+ * Add Page template block to Page post type
+ */
+function page_template() {
+    // Get the existing post type object for 'page'
+    $post_type_object = get_post_type_object( 'page' );
+
+    if ( $post_type_object ) {
+        /**
+         * Define your block template array.
+         * Structure: [ 'block/name', [ attributes ], [ child_blocks ] ]
+         */
+        $post_type_object->template = [
+            [ 'lw-recipes/page-template']
+        ];
+
+        /**
+         * Lock the template down.
+         * Options:
+         * 'all'     - Prevents adding new blocks, moving existing ones, or deleting them.
+         * 'insert'  - Allows moving blocks around, but prevents adding or deleting them.
+         * false     - (Default) Allows full editing freedom; the template is just a starting point.
+         */
+        $post_type_object->template_lock = 'all';
+    }
+}
+add_action( 'init', 'page_template', 20 );

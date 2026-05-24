@@ -16,7 +16,8 @@
 			"type": "string"
 		},
 		"taxonomy" : {
-			"type": "string"
+			"type": "string",
+			"default": "diet"
 		}
 
 	},

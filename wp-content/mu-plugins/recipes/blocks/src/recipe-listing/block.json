@@ -1,0 +1,23 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "lw-recipes/recipe-listing-template",
+	"version": "0.1.0",
+	"title": "Recipe Listing Template",
+	"category": "theme",
+	"icon": "smiley",
+	"parent": ["lw-recipes/page-template"],
+	"attributes": {
+		"version": {
+			"type": "number",
+			"default": 1
+		}
+	},
+	"supports": {
+		"html": false
+	},
+	"textdomain": "lw-recipes",
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"render": "file:./render.php"
+}

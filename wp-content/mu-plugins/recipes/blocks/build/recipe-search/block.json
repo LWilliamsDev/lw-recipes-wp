@@ -11,6 +11,9 @@
   "supports": {
     "html": false
   },
+  "parent": [
+    "lw-recipes/recipe-listing-template"
+  ],
   "textdomain": "lw-recipes",
   "editorScript": "file:./index.js",
   "editorStyle": "file:./index.css",
