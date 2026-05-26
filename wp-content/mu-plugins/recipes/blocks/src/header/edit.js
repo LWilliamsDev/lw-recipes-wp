@@ -32,7 +32,9 @@ import { useEffect, useState } from '@wordpress/element';
  */
 export default function Edit({attributes, setAttributes, clientId}) {
 
-		const blockProps = useBlockProps();
+		const blockProps = useBlockProps({
+			className: 'grid grid-cols-[3fr_1fr] md:grid-cols-[0.5fr_1fr] items-center px-4 py-8 md:px-12 md:py-8'
+		});
 
 
 	const [menuItems, setMenuItems] = useState([]);
@@ -60,18 +62,22 @@ export default function Edit({attributes, setAttributes, clientId}) {
 
 
 	return (
-		<div { ...blockProps}>
-			<div className="logo"><img src={`${protocol}//${domain}/wp-content/themes/lw-recipes/assets/img/recipes-logo.svg`} alt="Fit and Flavor Logo" /></div>
-			<div className="menu-area">
-				<div className="menu">
-				{ menuItems ? <ul>{ menuItems.map((item) => <li><a href="#">{item.title}</a></li>)}</ul>
+		<header { ...blockProps}>
+		    <div className="w-1/2 md:w-49">
+		    	<a href="/">
+		    		<img src={`${protocol}//${domain}/wp-content/themes/lw-recipes/assets/img/recipes-logo.svg`} alt="Fit and Flavor Logo" />
+		    	</a>
+		    </div>
+			<div className="col-span-full row-start-3 mt-[15px] md:row-start-1 md:col-start-2 md:justify-self-end md:flex">
+				<nav className="-mx-4 md:mx-0">
+				{ menuItems ? <ul className="nav hidden md:flex text-left md:gap-x-8">{ menuItems.map((item) => <li className="py-1 flex flex-wrap border-b border-solid border-(--color-mid-green) md:border-b-0 md:relative md:hover:bg-(--color-tan) md:p-4"><a href="#">{item.title}</a></li>)}</ul>
 				: <p>Menu not found</p>}
-				</div>
-				<div className="search">
-					<img src={`${protocol}//${domain}/wp-content/themes/lw-recipes/assets/img/search-icon.svg`} />
-				</div>
+				</nav>
+				<button className="search-btn cursor-pointer hidden md:block p-4 ml-4">
+					<img src={`${protocol}//${domain}/wp-content/themes/lw-recipes/assets/img/search-icon.svg`} className="w-[24px] h-[24px" />
+				</button>
 			</div>
-		</div>
+		</header>
 				
 	);
 }
