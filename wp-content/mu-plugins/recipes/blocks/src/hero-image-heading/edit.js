@@ -61,7 +61,7 @@ export default function Edit({attributes, setAttributes, clientId}) {
 					</ToolbarGroup>
 				</BlockControls>
 			
-							<RichText identifier="title" tagName={tagName} value={heading} onChange={ heading => setAttributes({heading})} placeholder={__('My Hero Title', 'lw-recipes')} />
+							<RichText identifier="title" className="font-roboto-condensed text-4xl md:text-6xl uppercase text-(--color-green) mb-[10px] md:mb-[20px] is-layout-flow wp-block-lw-recipes-hero-image-heading-is-layout-flow" tagName={tagName} value={heading} onChange={ heading => setAttributes({heading})} placeholder={__('My Hero Title', 'lw-recipes')} />
 					
 				
 			

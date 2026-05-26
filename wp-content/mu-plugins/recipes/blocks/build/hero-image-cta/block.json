@@ -8,12 +8,12 @@
   "version": "0.1.0",
   "title": "Hero Image CTA",
   "category": "theme",
-  "icon": "smiley",
+  "icon": "editor-textcolor",
   "description": "Display a hero image",
   "example": {},
   "supports": {
     "html": false,
-    "layout": true
+    "inserter": false
   },
   "attributes": {
     "cta": {

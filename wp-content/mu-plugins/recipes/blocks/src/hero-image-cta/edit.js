@@ -38,7 +38,7 @@ export default function Edit({attributes, setAttributes, clientId}) {
 
 	return (
 		<div { ...useBlockProps() }>
-			<RichText tagName="p" allowedFormats={['core/link', 'core/subscript', 'core/superscript', 'core/italic', 'core/strikethrough']} value={cta} onChange={cta => setAttributes({cta})} className="hero-image__cta" placeholder={__('CTA', 'lw-recipes')} />	
+			<RichText tagName="p" className="hero-image__cta is-layout-flow wp-block-lw-recipes-hero-image-cta-is-layout-flow" allowedFormats={['core/link', 'core/subscript', 'core/superscript', 'core/italic', 'core/strikethrough']} value={cta} onChange={cta => setAttributes({cta})} className="hero-image__cta" placeholder={__('CTA', 'lw-recipes')} />	
 		</div>
 	);
 }

@@ -39,7 +39,7 @@ export default function Edit({attributes, setAttributes, clientId}) {
 
 	return (
 		<div { ...useBlockProps() }>
-			<RichText tagName="p" allowedFormats={['core/bold', 'core/italic', 'core/subscript', 'core/superscript', 'core/strikethrough', 'core/underline']} value={subtitle} onChange={(newContent) => setAttributes({subtitle: newContent})} className="text-color(--color-dark-green) text-sm md:text-2xl mb-[15px] md:mb-[20px]" placeholder={__('Subtitle', 'lw-recipes')} />		
+			<RichText tagName="p" className="text-color(--color-dark-green) text-sm md:text-2xl mb-[15px] md:mb-[20px]" allowedFormats={['core/bold', 'core/italic', 'core/subscript', 'core/superscript', 'core/strikethrough', 'core/underline']} value={subtitle} onChange={(newContent) => setAttributes({subtitle: newContent})} className="text-color(--color-dark-green) text-sm md:text-2xl mb-[15px] md:mb-[20px]" placeholder={__('Subtitle', 'lw-recipes')} />		
 		</div>
 	);
 }

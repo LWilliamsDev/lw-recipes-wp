@@ -123,13 +123,15 @@ export default function Edit({attributes, setAttributes, clientId}) {
 					</div>
 				)}
 				
-					<div className="hero-image">
-						{imageID ? <img src={imageUrl} /> : null }
-						<div className="bg-color"></div>
-						<div className="text">
+					<section className="hero grid h-[358px] md:h-[717px]">
+						<div className="hero row-span-full col-span-full relative">
+							{imageID ? <img src={imageUrl} className="col-span-full row-span-full absolute top-0 left-0 w-full h-full object-cover"/> : null }
+							<div className="bg-(--color-tan) block w-full h-full opacity-80 absolute left-0 top-0"></div>
+						</div>
+						<div className="row-span-full col-span-full relative z-2 text-center self-center">
 							<InnerBlocks allowedBlocks={ALLOWED_BLOCKS} template={template} templateLock="all" />
 						</div>
-					</div>
+					</section>
 			
 		</div>
 	);
