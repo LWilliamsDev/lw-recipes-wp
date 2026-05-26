@@ -558,7 +558,7 @@ add_action( 'rest_api_init', function () {
 } );
 
 function recipes_block_editor_assets() {
-  wp_enqueue_style('recipes-block-editor-styles', plugin_dir_url( __FILE__ ) . 'blocks/assets/block-editor.css');
+  wp_enqueue_style('recipes-block-editor-styles', plugin_dir_url( __FILE__ ) . 'blocks/assets/block-sidebar.css');
   wp_enqueue_script('recipes-metabox', plugin_dir_url( __FILE__ ) . 'metabox/dist/editor-panel.js',  [ 'wp-plugins', 'wp-editor', 'wp-components', 'wp-element', 'wp-data' ], '1.0.0', true);
 
 }
@@ -635,3 +635,27 @@ function page_template() {
     }
 }
 add_action( 'init', 'page_template', 20 );
+
+function recipes_plugin_iframe_assets($editor_settings, $block_editor_context) {
+  // 1. Ensure the 'styles' array exists so we don't accidentally throw a warning
+    if ( ! isset( $editor_settings['styles']  ) ) {
+        $editor_settings['styles'] = array();
+    }
+
+
+    // 2. Directly push your validation file into the styles array using an inline CSS @import string
+    // This safely bypasses the local file path server checks!
+    $editor_settings['styles'][] = array(
+        'css' => '@import url("https://recipes.staging/wp-content/mu-plugins/recipes/blocks/assets/block-editor.css");'
+    );
+
+    if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+        error_log( '================ GUTENBERG EDITOR SETTINGS START ================' );
+        error_log( print_r( $editor_settings, true ) );
+        error_log( '================= GUTENBERG EDITOR SETTINGS END =================' );
+    }
+
+    // 3. CRITICAL: You must return the settings back to WordPress so the theme styles still load
+    return $editor_settings;
+}
+add_action( 'block_editor_settings_all', 'recipes_plugin_iframe_assets', 10, 2 );

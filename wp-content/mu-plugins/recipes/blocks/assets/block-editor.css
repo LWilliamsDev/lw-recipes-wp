@@ -1,17 +1,13 @@
-/* Global Block Editor Sidebar Styles */
-.recipes-required:invalid, .editor-post-featured-image__preview {
-	border: 1px solid #cc1818;
-}
-label:has(+ *:required):after, .recipes-required .components-base-control__label:after {
-	content: '*';
-	color: #cc1818;
-}
-.editor-post-featured-image__toggle:has(img) {
-	height: auto;
-}
-.is-link.is-destructive {
-	margin-top: 10px;
-}
-.components-base-control:has(label[for="social-icon-selector"]) .components-button.is-primary {
- background: rgb(254, 250, 224);
+/* Global Block Editor Iframe Styles */
+
+/*Error styles*/
+.recipes-error {
+	border: 1px solid red;
+	padding: 15px;
+	color: #D8000c;
+	background: #FFBABA;
+	margin: 10px;
+	font-family: 'Roboto', sans-serif;
+	font-weight: bold;
+	font-size: 18px;
 }

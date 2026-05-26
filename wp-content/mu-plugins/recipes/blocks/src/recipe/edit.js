@@ -75,7 +75,7 @@ export default function Edit({attributes, setAttributes, clientId}) {
 	return (
 		<div { ...useBlockProps() }>
 			{!isValid && ( 
-					<div className="error">
+					<div className="recipes-error">
 						{ (__('Only 1 recipe block is allowed.', 'lw-recipes')) }
 					</div>
 			)}

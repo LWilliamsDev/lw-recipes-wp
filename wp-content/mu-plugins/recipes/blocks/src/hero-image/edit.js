@@ -20,7 +20,7 @@ import { __ } from '@wordpress/i18n';
  */
 import './editor.scss';
 import { useBlockProps, InspectorControls, InnerBlocks, MediaUpload, MediaUploadCheck } from '@wordpress/block-editor';
-import {Panel, PanelBody, Button } from '@wordpress/components';
+import {BaseControl, Panel, PanelBody, Button } from '@wordpress/components';
 import { useSelect, dispatch, useDispatch } from '@wordpress/data';
 import { useEffect, useState } from '@wordpress/element';
 
@@ -93,9 +93,8 @@ export default function Edit({attributes, setAttributes, clientId}) {
 	return (
 		<div { ...useBlockProps() }>
 				<InspectorControls key="setting">
-				<PanelBody title={__('Hero Image Text', 'lw-recipes')}>
-					<div className="recipes-group">
-					<span className="recipes-label recipes-required">{__('Hero Image', 'lw-recipes')}</span>
+				<PanelBody title={__('Hero Image', 'lw-recipes')}>
+					<BaseControl label={__('Image', 'lw-recipes')} className="recipes-required">
 					<MediaUploadCheck>
 						<MediaUpload
 							onSelect={onSelectMedia}
@@ -115,11 +114,11 @@ export default function Edit({attributes, setAttributes, clientId}) {
 								<Button onClick={removeMedia} isLink isDestructive>{__('Remove image', 'lw-recipes')}</Button>
 							</MediaUploadCheck> : null
 						}
-					</div>
+					</BaseControl>
 				</PanelBody>
 				</InspectorControls>
 				{!isValid && ( 
-					<div className="error">
+					<div className="recipes-error">
 						{ (__('The image field is required.', 'lw-recipes')) }
 					</div>
 				)}
