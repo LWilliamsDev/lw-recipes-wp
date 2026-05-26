@@ -72,22 +72,22 @@ const relatedPosts = useSelect((select) => {
 
 
 	return (
-		<div { ...blockProps }>
+		<aside { ...blockProps }>
 			{relatedPosts ? (
-				<>
-					<h2>{__('You Might Also Like', 'lw-recipes')}</h2>
-					<ul>
+				<div>
+					<h2 className="text-3xl font-roboto-condensed uppercase text-(--color-green) mb-[10px]">{__('You Might Also Like', 'lw-recipes')}</h2>
+					<ul className="md:grid md:grid-cols-[1fr_1fr_1fr] md:gap-x-5">
 						{ relatedPosts.map((post) => (
-							<li key={post.id}>
+							<li key={post.id} className="mb-5 md:mb-0">
 								<a href="#">
-									{post.imageUrl && <img src={post.imageUrl} />}
-									<h3>{post.title}</h3>
+									{post.imageUrl && <img src={post.imageUrl} className="w-full wp-post-image" />}
+									<h3 className="text-xl font-medium mt-2">{post.title}</h3>
 								</a>
 							</li>
 						))}
 					</ul>
-				</>
+				</div>
 			) : null }
-		</div>
+		</aside>
 	);
 }
