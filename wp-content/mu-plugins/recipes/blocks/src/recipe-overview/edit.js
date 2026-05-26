@@ -60,7 +60,7 @@ export default function Edit({attributes, setAttributes, clientId}) {
  
    const getFeaturedMediaUrl = useSelect( ( select ) => {
    const getFeaturedMediaId = select( 'core/editor' ).getEditedPostAttribute( 'featured_media' );
-   const getMedia = select( 'core' ).getMedia( getFeaturedMediaId );
+   const getMedia = select( 'core' ).getEntityRecord( 'postType', 'attachment', getFeaturedMediaId );
 
     return (
         getMedia?.media_details?.sizes?.large?.source_url ||

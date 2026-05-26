@@ -36,7 +36,7 @@ export default function Edit({attributes, setAttributes, clientId}) {
 
 const relatedPosts = useSelect((select) => {
 		const { getEditedPostAttribute, getCurrentPostId } = select('core/editor');
-		const { getEntityRecords, getMedia } = select('core');
+		const { getEntityRecords, getEntityRecord } = select('core');
 
 		const dietIds = getEditedPostAttribute('diet');
 		const currentPostId = getCurrentPostId();
@@ -53,7 +53,7 @@ const relatedPosts = useSelect((select) => {
 
 		// Add featured media data
 		const postsWithImages = posts.map((post) => {
-			const media = post.featured_media ? getMedia(post.featured_media) : null;
+			const media = post.featured_media ? getEntityRecord('postType', 'attachment', post.featured_media) : null;
 			const imageUrl = media?.source_url || null;
 
 			return {
