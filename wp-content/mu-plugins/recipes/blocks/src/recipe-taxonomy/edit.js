@@ -57,21 +57,25 @@ export default function Edit({attributes, setAttributes}) {
 					<SelectControl label={__('Taxonomy', 'lw-recipes')} options={options} value={taxonomy} help={__('If no taxonomy is selected, it will default to diet.', 'lw-recipes')} onChange={ taxonomy => setAttributes({taxonomy})} />
 				</PanelBody>
 			</InspectorControls>
-			<div className="cards">
-				<h2>{ title ? title : __(`Browse by ${taxonomy}`, 'lw-recipes') }</h2>
-				{ terms && terms.map((term) => (
-					<div>
-						<h3>
-						   { term?.acf?.featured_image ? <img src={term.acf.featured_image.url} /> : null }
-						    <div className="bg">
-								<span className="title">
-									{term.name}
-								</span>
-							</div>
-						</h3>
-					</div>
-				))}
+			<section className="px-4 py-8 md:px-12 md:py-12">
+				<h2 className="font-roboto-condensed text-5xl color-green text-(--color-green) mb-8 uppercase">{ title ? title : __(`Browse by ${taxonomy}`, 'lw-recipes') }</h2>
+				<div className="cards sm:grid sm:grid-cols-[1fr_1fr] sm:gap-x-5">
+					{ terms && terms.map((term) => (
+						<div className="card mb-8" key={term.id}>
+							<h3>
+								<a href="#" className="grid block">
+						   			{ term?.acf?.featured_image ? <img src={term.acf.featured_image.url} className="w-full h-auto col-start-1 row-start-1 rounded-sm" /> : null }
+						    		<div className="bg-(--color-tan) col-start-1 row-start-1 opacity-90 self-end p-4">
+										<span className="text-2xl font-medium text-(--color-brown) hover:text-(--color-mid-green)">
+											{term.name}
+										</span>
+									</div>
+								</a>
+							</h3>
+						</div>
+					))}
 				</div>
+			</section>
 		</div>
 	);
 }

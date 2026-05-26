@@ -5,7 +5,7 @@
 	"version": "0.1.0",
 	"title": "Recipe Taxonomy",
 	"category": "theme",
-	"icon": "smiley",
+	"icon": "list-view",
 	"description": "Display all terms of the selected taxonomy for the recipe post type",
 	"example": {},
 	"supports": {
@@ -24,6 +24,5 @@
 	"textdomain": "lw-recipes",
 	"editorScript": "file:./index.js",
 	"editorStyle": "file:./index.css",
-	"render": "file:./render.php",
-	"viewScript": "file:./view.js"
+	"render": "file:./render.php"
 }

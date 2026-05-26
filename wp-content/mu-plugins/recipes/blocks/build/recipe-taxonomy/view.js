@@ -1,1 +1,0 @@
-console.log("Hello World! (from lw-recipes-lw-recipes block)");
