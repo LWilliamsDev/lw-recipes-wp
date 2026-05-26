@@ -33,7 +33,9 @@ export default function Edit({attributes, setAttributes, clientId}) {
 
 	
 
-	const blockProps = useBlockProps();
+	const blockProps = useBlockProps({
+		className: 'pb-8 md:pb-12'
+	});
 
 
 
@@ -46,8 +48,10 @@ export default function Edit({attributes, setAttributes, clientId}) {
 
 
 	return (
-		<div { ...useBlockProps() }>
-			<InnerBlocks allowedBlocks={ALLOWED_BLOCKS} template={template} templateLock="all" />
-		</div>
+		<article { ...blockProps }>
+			<div>
+				<InnerBlocks allowedBlocks={ALLOWED_BLOCKS} template={template} templateLock="all" />
+			</div>
+		</article>
 	);
 }

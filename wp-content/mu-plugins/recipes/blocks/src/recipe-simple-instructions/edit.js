@@ -33,7 +33,9 @@ export default function Edit({attributes, setAttributes, clientId}) {
 
 	
 
-	const blockProps = useBlockProps();
+	const blockProps = useBlockProps({
+		className: 'order-2 md:order-none'
+	});
 
 
 
@@ -47,8 +49,8 @@ export default function Edit({attributes, setAttributes, clientId}) {
 
 
 	return (
-		<div { ...useBlockProps() }>
-			<h2>{__('Instructions', 'lw-recipes')}</h2>
+		<div { ...blockProps }>
+			<h2 className="text-3xl font-roboto-condensed uppercase text-(--color-green)">{__('Instructions', 'lw-recipes')}</h2>
 			<InnerBlocks allowedBlocks={SIMPLE_RECIPE_INSTRUCTIONS_ALLOWED_BLOCKS} template={simple_recipe_instructions_template} />
 		</div>
 	);

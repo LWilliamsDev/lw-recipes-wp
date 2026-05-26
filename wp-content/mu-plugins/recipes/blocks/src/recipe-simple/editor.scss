@@ -6,34 +6,15 @@
 
 .wp-block-lw-recipes-recipe-simple {
 	border: 1px dotted #f00;
-	padding: 10px;
-	font-family: 'Roboto', sans-serif;
 
-	.wp-block-lw-recipes-recipe-simple-instructions {
-		border: 1px dotted blue;
-		padding: 10px;
-	}
 
-	.wp-block-lw-recipes-recipe-simple-ingredients {
-		border: 1px dotted blue;
-		padding: 10px;
-	}
-
-	h2 {
-		font-family: 'Roboto Condensed', sans-serif;
-		text-transform: uppercase;
-		color: #008000;
-		font-size: 30px;
-
-	}
-
-	> .block-editor-inner-blocks > .block-editor-block-list__layout {
+	/*> .block-editor-inner-blocks > .block-editor-block-list__layout {
 		display: flex;
 
 		> div {
 			width: 50%;
 		}
-	}
+	}*/
 
 
 }

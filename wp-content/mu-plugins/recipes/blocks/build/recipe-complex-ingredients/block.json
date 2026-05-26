@@ -5,7 +5,7 @@
   "version": "0.1.0",
   "title": "Complex Recipe: Ingredients",
   "category": "theme",
-  "icon": "smiley",
+  "icon": "editor-ul",
   "description": "Display ingredients for a complex recipe",
   "parent": [
     "lw-recipes/recipe-complex"

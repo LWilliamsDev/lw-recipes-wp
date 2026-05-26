@@ -33,7 +33,9 @@ export default function Edit({attributes, setAttributes, clientId}) {
 
 	
 
-	const blockProps = useBlockProps();
+	const blockProps = useBlockProps({
+		className: 'text-(--color-dark-green) recipe__complex'
+	});
 
 
 
@@ -48,7 +50,7 @@ export default function Edit({attributes, setAttributes, clientId}) {
 
 
 	return (
-		<div { ...useBlockProps() }>
+		<div { ...blockProps }>
 			<InnerBlocks allowedBlocks={ALLOWED_BLOCKS} template={template} templateLock="all" />
 		</div>
 	);

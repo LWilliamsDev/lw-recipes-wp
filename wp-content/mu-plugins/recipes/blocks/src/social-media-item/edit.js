@@ -43,7 +43,7 @@ export default function Edit({ attributes, setAttributes }) {
 
 
         return (
-            <div { ...useBlockProps()}>
+            <div { ...blockProps}>
                 <InspectorControls key="setting">
                     <PanelBody title={__('Social Media Item', 'lw-recipes')}>
                        <TextControl label={__('Website Link', 'lw-recipes')} value={item.site || ''} onChange={(val) => updateItem('site', val)} />

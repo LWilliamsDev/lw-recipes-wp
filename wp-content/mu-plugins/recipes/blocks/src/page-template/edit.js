@@ -41,7 +41,7 @@ export default function Edit({attributes, setAttributes, clientId}) {
 
 
 	return (
-		<div { ...useBlockProps() }>
+		<div { ...blockProps }>
 			<InnerBlocks allowedBlocks={ALLOWED_BLOCKS} templateLock={false} placeholder={__('Choose a template', 'lw-recipes')} />
 		</div>
 	);

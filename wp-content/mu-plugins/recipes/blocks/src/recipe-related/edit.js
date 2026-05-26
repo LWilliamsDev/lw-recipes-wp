@@ -72,7 +72,7 @@ const relatedPosts = useSelect((select) => {
 
 
 	return (
-		<div { ...useBlockProps() }>
+		<div { ...blockProps }>
 			{relatedPosts ? (
 				<>
 					<h2>{__('You Might Also Like', 'lw-recipes')}</h2>

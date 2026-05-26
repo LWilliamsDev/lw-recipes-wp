@@ -50,8 +50,8 @@ export default function Edit({attributes, setAttributes, clientId}) {
 
 
 	return (
-		<div { ...useBlockProps() }>
-			<h2>{__('Instructions', 'lw-recipes')}</h2>
+		<div { ...blockProps }>
+			<h2 className="text-3xl font-roboto-condensed uppercase text-(--color-green)">{__('Instructions', 'lw-recipes')}</h2>
 			<InnerBlocks allowedBlocks={ALLOWED_BLOCKS} template={template} templateLock={false} />
 		</div>
 	);

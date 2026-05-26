@@ -19,7 +19,7 @@ import { __ } from '@wordpress/i18n';
  * @see https://www.npmjs.com/package/@wordpress/scripts#using-css
  */
 import './editor.scss';
-import { useBlockProps, InnerBlocks } from '@wordpress/block-editor';
+import { useBlockProps, useInnerBlocksProps  } from '@wordpress/block-editor';
 
 /**
  * The edit function describes the structure of your block in the context of the
@@ -43,13 +43,24 @@ export default function Edit({attributes, setAttributes, clientId}) {
 		['lw-recipes/recipe-simple-ingredients']
 	];
 
+	const innerBlocksProps = useInnerBlocksProps(
+		{
+			className: 'grid grid-cols-[1fr] md:grid-cols-[2fr_1fr] md:gap-x-5 text-(--color-dark-green) recipe__simple'
+		},
+		{
+			allowedBlocks: SIMPLE_RECIPE_ALLOWED_BLOCKS,
+			template: simple_recipe_allowed_template,
+			templateLock: "all"
+		}
+	);
+
 
 
 
 
 	return (
-		<div { ...useBlockProps() }>
-			<InnerBlocks allowedBlocks={SIMPLE_RECIPE_ALLOWED_BLOCKS} template={simple_recipe_allowed_template} templateLock="all" />
+		<div { ...blockProps }>
+			<div { ...innerBlocksProps } />
 		</div>
 	);
 }

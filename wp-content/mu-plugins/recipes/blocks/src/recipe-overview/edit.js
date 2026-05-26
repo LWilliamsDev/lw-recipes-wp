@@ -73,7 +73,7 @@ export default function Edit({attributes, setAttributes, clientId}) {
 
 
 	return (
-		<div { ...useBlockProps() }>
+		<div { ...blockProps }>
 			<InspectorControls key="setting">
 				<PanelBody title={__('Recipe Data', 'lw-recipes')}>
 					<div className="recipes-group">
@@ -83,23 +83,27 @@ export default function Edit({attributes, setAttributes, clientId}) {
 					</div>
 				</PanelBody>
 				</InspectorControls>
-			<hr />
-			<ul class="breadcrumbs">
-				<li><a href="#">Recipes</a></li>
-				<li><a href="#">{course ? course : 'Course Here'}</a></li>
-				<li><a href="#">{diet ? diet : 'Diet Here'}</a></li>
-			</ul>
-			<h1>{title ? title : 'H1 Title Here' }</h1>
-			<p>{excerpt ? excerpt : 'Recipe Excerpt Here' }</p>
-			{getFeaturedMediaUrl ? <img src={getFeaturedMediaUrl} /> : <div class="placeholder"><p>Featured Media Here</p></div>}
-			{serves || prepTime || totalTime ?
-				<ul>
-				 	{serves ? <li><span class="brown"><strong>Serves:</strong></span> {serves}</li> : null}
-				 	{prepTime ? <li><span class="brown"><strong>Prep Time:</strong></span> {prepTime}</li> : null}
-				 	{totalTime ? <li><span class="brown"><strong>Total Time:</strong></span> {totalTime}</li> : null}
+			<div className="mb-[10px] md:mb-[20px] pt-[5px] border-t border-solid border-(--color-mid-green)">
+				<ul class="flex flex-wrap breadcrumbs gap-[10px]">
+					<li><a href="#">Recipes</a></li>
+					<li><a href="#">{course ? course : 'Course Here'}</a></li>
+					<li><a href="#">{diet ? diet : 'Diet Here'}</a></li>
 				</ul>
-			: null}
-
+			</div>
+			<div className="mb-[20px]">
+				<h1 className="font-roboto-condensed mb-[5px] text-3xl md:mb-[10px] md:text-5xl uppercase text-(--color-green)">{title ? title : 'H1 Title Here' }</h1>
+				<p className="text-base md:text-2xl text-(--color-brown)">{excerpt ? excerpt : 'Recipe Excerpt Here' }</p>
+			</div>
+			<div className="mb-[20px] md:mb-[30px]">
+				{getFeaturedMediaUrl ? <img src={getFeaturedMediaUrl} className="w-full wp-post-image" /> : <div className="placeholder"><p>{__('Add a featured image, and it will appear here.', 'lw-recipes')}</p></div>}
+			</div>
+			{serves || prepTime || totalTime ?
+					<ul className="flex flex-wrap gap-[10px] text-(--color-dark-green)">
+				 		{serves ? <li><span className="text-(--color-brown)"><strong>Serves:</strong></span> {serves}</li> : null}
+				 		{prepTime ? <li><span className="text-(--color-brown)"><strong>Prep Time:</strong></span> {prepTime}</li> : null}
+				 		{totalTime ? <li><span className="text-(--color-brown)"><strong>Total Time:</strong></span> {totalTime}</li> : null}
+					</ul>
+				: null}
 		</div>
 	);
 }

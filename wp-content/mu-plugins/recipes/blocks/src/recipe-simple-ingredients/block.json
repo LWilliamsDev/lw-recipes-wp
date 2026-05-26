@@ -5,13 +5,12 @@
 	"version": "0.1.0",
 	"title": "Simple Recipe: Ingredients",
 	"category": "theme",
-	"icon": "smiley",
+	"icon": "editor-ul",
 	"description": "Display ingredients for a simple recipe",
 	"parent": ["lw-recipes/recipe-simple"],
 	"example": {},
 	"supports": {
-		"html": false,
-		"layout": true
+		"html": false
 	},
 	"textdomain": "lw-recipes",
 	"editorScript": "file:./index.js",

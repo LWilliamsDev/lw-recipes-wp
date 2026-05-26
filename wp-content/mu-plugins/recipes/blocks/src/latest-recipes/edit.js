@@ -56,7 +56,7 @@ export default function Edit({attributes, setAttributes}) {
 
         
 	return (
-		<div { ...useBlockProps() }>
+		<div { ...blockProps }>
 				<InspectorControls key="setting">
 				<PanelBody title={__('Latest Recipes', 'lw-recipes')}>
 					<TextControl label={__('Title', 'lw-recipes')} help={ __('Section Title; will default to Latest Recipes if left blank', 'lw-recipes')} value={title} onChange={ title => setAttributes({title})} />

@@ -5,7 +5,7 @@
   "version": "0.1.0",
   "title": "Recipe Content",
   "category": "theme",
-  "icon": "smiley",
+  "icon": "text",
   "parent": [
     "lw-recipes/recipe-template"
   ],

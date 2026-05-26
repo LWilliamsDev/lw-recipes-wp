@@ -44,7 +44,7 @@ export default function Edit({attributes, setAttributes, clientId}) {
 
 
 	return (
-		<div { ...useBlockProps() }>
+		<div { ...blockProps }>
 			<InnerBlocks allowedBlocks={ALLOWED_BLOCKS} template={template} templateLock="all" />
 		</div>
 	);

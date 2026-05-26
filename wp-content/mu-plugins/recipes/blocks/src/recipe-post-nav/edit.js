@@ -36,13 +36,13 @@ export default function Edit({attributes, setAttributes, clientId}) {
 
 
 	return (
-		<div { ...useBlockProps() }>
-			<div class="post-nav">
-				<ul>
-					<li><a href="#">Previous</a></li>
-					<li><a href="#">Next</a></li>
+		<aside { ...blockProps }>
+			<div className="border-t border-b border-solid border-(--color-mid-green)">
+				<ul className="flex flex-wrap justify-between pt-2 pb-2">
+					<li><a href="#">« Previous</a></li>
+					<li><a href="#">Next</a> »</li>
 				</ul>
 			</div>
-		</div>
+		</aside>
 	);
 }

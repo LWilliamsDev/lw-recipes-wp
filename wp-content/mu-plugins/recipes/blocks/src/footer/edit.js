@@ -63,7 +63,7 @@ export default function Edit({attributes, setAttributes, clientId}) {
 
 
 	return (
-		<div { ...useBlockProps()}>
+		<div { ...blockProps}>
 
 			<div className="logo"><img src={`${protocol}//${domain}/wp-content/themes/lw-recipes/assets/img/recipes-logo.svg`} alt="Fit and Flavor Logo" />
 			<InnerBlocks

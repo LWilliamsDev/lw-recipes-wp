@@ -5,7 +5,7 @@
 	"version": "0.1.0",
 	"title": "Recipe",
 	"category": "theme",
-	"icon": "smiley",
+	"icon": "text-page",
 	"description": "Display a recipe",
 	"parent": ["lw-recipes/recipe-content"],
 	"example": {},

@@ -19,7 +19,7 @@ import { __ } from '@wordpress/i18n';
  * @see https://www.npmjs.com/package/@wordpress/scripts#using-css
  */
 import './editor.scss';
-import { useBlockProps, InnerBlocks } from '@wordpress/block-editor';
+import { useBlockProps, useInnerBlocksProps } from '@wordpress/block-editor';
 
 /**
  * The edit function describes the structure of your block in the context of the
@@ -33,8 +33,9 @@ export default function Edit({attributes, setAttributes, clientId}) {
 
 	
 
-	const blockProps = useBlockProps();
-
+	const blockProps = useBlockProps({
+		className: 'mb-[30px]'
+	});
 
 
 	const ALLOWED_BLOCKS = ['lw-recipes/recipe-complex-ingredient'];
@@ -43,14 +44,25 @@ export default function Edit({attributes, setAttributes, clientId}) {
 		['lw-recipes/recipe-complex-ingredient']
 	];
 
+	const innerBlocksProps = useInnerBlocksProps(
+		{
+			className: 'md:grid gap-x-5 md:grid-cols-[1fr_1fr] md:gap-y-5'
+		},
+		{
+			allowedBlocks: ALLOWED_BLOCKS,
+			template: template,
+			templateLock: false
+		}
+	);
+
 
 
 
 
 	return (
-		<div { ...useBlockProps() }>
-			<h2>{__('Ingredients', 'lw-recipes')}</h2>
-			<InnerBlocks allowedBlocks={ALLOWED_BLOCKS} template={template} templateLock={false} />
+		<div { ...blockProps }>
+			<h2 className="text-3xl font-roboto-condensed uppercase text-(--color-green)">{__('Ingredients', 'lw-recipes')}</h2>
+			<div { ...innerBlocksProps } />
 		</div>
 	);
 }

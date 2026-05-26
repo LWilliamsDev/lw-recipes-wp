@@ -91,7 +91,7 @@ export default function Edit({attributes, setAttributes, clientId}) {
 
 
 	return (
-		<div { ...useBlockProps() }>
+		<div { ...blockProps }>
 				<InspectorControls key="setting">
 				<PanelBody title={__('Hero Image', 'lw-recipes')}>
 					<BaseControl label={__('Image', 'lw-recipes')} className="recipes-required">
