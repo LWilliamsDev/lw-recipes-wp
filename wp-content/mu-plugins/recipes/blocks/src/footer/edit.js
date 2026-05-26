@@ -32,7 +32,9 @@ import { useEffect, useState } from '@wordpress/element';
  */
 export default function Edit({attributes, setAttributes, clientId}) {
 
-		const blockProps = useBlockProps();
+		const blockProps = useBlockProps({
+			className: 'px-4 pb-8 pt-8 md:grid md:grid-cols-[1fr_1fr] md:px-12 md:pt-8'
+		});
 
 
 	const [menuItems, setMenuItems] = useState([]);
@@ -63,21 +65,19 @@ export default function Edit({attributes, setAttributes, clientId}) {
 
 
 	return (
-		<div { ...blockProps}>
-
-			<div className="logo"><img src={`${protocol}//${domain}/wp-content/themes/lw-recipes/assets/img/recipes-logo.svg`} alt="Fit and Flavor Logo" />
-			<InnerBlocks
-				allowedBlocks={ALLOWED_BLOCKS}
-				template={template}
-			/>
+		<footer { ...blockProps}>
+			<div>
+				<a href="#"><img src={`${protocol}//${domain}/wp-content/themes/lw-recipes/assets/img/recipes-logo.svg`} alt="Fit and Flavor Logo" className="w-1/2 sm:w-1/3" /></a>
+				<InnerBlocks
+					allowedBlocks={ALLOWED_BLOCKS}
+					template={template}
+				/>
 			</div>
-			<div className="menu-area">
-				<div className="menu">
-				{ menuItems ? <ul>{ menuItems.map((item) => <li><a href="#">{item.title}</a></li>)}</ul>
+			<div className="md:justify-self-end">
+				{ menuItems ? <ul className="nav md:flex md:gap-x-24">{ menuItems.map((item) => <li key={item.id}><a href="#">{item.title}</a></li>)}</ul>
 				: <p>Menu not found</p>}
-				</div>
 			</div>
-		</div>
+		</footer>
 				
 	);
 }

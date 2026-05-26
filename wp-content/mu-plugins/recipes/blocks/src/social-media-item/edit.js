@@ -43,7 +43,7 @@ export default function Edit({ attributes, setAttributes }) {
 
 
         return (
-            <div { ...blockProps}>
+            <li { ...blockProps}>
                 <InspectorControls key="setting">
                     <PanelBody title={__('Social Media Item', 'lw-recipes')}>
                        <TextControl label={__('Website Link', 'lw-recipes')} value={item.site || ''} onChange={(val) => updateItem('site', val)} />
@@ -83,18 +83,14 @@ export default function Edit({ attributes, setAttributes }) {
                 </InspectorControls>
 
               {/* Editor Preview */}
-            <div className="social-item-preview">
                 {item.site && selectedIcon ? (
-                    <div className="flex items-center gap-2">
                         <span style={{ width: '24px' }}>{selectedIcon.svg}</span>
-                    </div>
                 ) : (
                     <p className="placeholder-text">
                         {__('Please configure social link in sidebar.', 'lw-recipes')}
                     </p>
                 )}
-            </div>
-            </div>
+            </li>
         );
 }
 

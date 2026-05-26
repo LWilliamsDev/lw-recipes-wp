@@ -64,13 +64,13 @@ export default function Edit({attributes, setAttributes, clientId}) {
 	return (
 		<header { ...blockProps}>
 		    <div className="w-1/2 md:w-49">
-		    	<a href="/">
+		    	<a href="#">
 		    		<img src={`${protocol}//${domain}/wp-content/themes/lw-recipes/assets/img/recipes-logo.svg`} alt="Fit and Flavor Logo" />
 		    	</a>
 		    </div>
 			<div className="col-span-full row-start-3 mt-[15px] md:row-start-1 md:col-start-2 md:justify-self-end md:flex">
 				<nav className="-mx-4 md:mx-0">
-				{ menuItems ? <ul className="nav hidden md:flex text-left md:gap-x-8">{ menuItems.map((item) => <li className="py-1 flex flex-wrap border-b border-solid border-(--color-mid-green) md:border-b-0 md:relative md:hover:bg-(--color-tan) md:p-4"><a href="#">{item.title}</a></li>)}</ul>
+				{ menuItems ? <ul className="nav hidden md:flex text-left md:gap-x-8">{ menuItems.map((item) => <li key={item.id} className="py-1 flex flex-wrap border-b border-solid border-(--color-mid-green) md:border-b-0 md:relative md:hover:bg-(--color-tan) md:p-4"><a href="#">{item.title}</a></li>)}</ul>
 				: <p>Menu not found</p>}
 				</nav>
 				<button className="search-btn cursor-pointer hidden md:block p-4 ml-4">

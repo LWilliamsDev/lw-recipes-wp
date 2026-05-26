@@ -19,7 +19,7 @@ import { __ } from '@wordpress/i18n';
  * @see https://www.npmjs.com/package/@wordpress/scripts#using-css
  */
 import './editor.scss';
-import { useBlockProps, InnerBlocks } from '@wordpress/block-editor';
+import { useBlockProps, useInnerBlocksProps } from '@wordpress/block-editor';
 
 /**
  * The edit function describes the structure of your block in the context of the
@@ -34,16 +34,22 @@ export default function Edit({attributes, setAttributes, clientId}) {
 	const blockProps = useBlockProps();
 
 	const ALLOWED_BLOCKS = ['lw-recipes/social-media-item'];
+	const innerBlocksProps = useInnerBlocksProps(
+		{
+			className: 'social-icons flex gap-6 items-center mt-5 mb-5 md:mb-0'
+		},
+		{
+			allowedBlocks: ALLOWED_BLOCKS,
+			templateLock: false,
+			placeholder: __('Add a social media link', 'lw-recipes')
+		}
+	);
 
 
 	return (
 		<div { ...blockProps}>
-		<InnerBlocks
-				allowedBlocks={ALLOWED_BLOCKS}
-				templateLock={false}
-				placeholder={__('Add a social media link', 'lw-recipes')}
-			/>
-			
+			<ul {...innerBlocksProps} />
+		
 		</div>
 				
 	);
