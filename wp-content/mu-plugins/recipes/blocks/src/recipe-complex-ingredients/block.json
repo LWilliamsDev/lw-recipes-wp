@@ -10,8 +10,7 @@
 	"parent": ["lw-recipes/recipe-complex"],
 	"example": {},
 	"supports": {
-		"html": false,
-		"layout": true
+		"html": false
 	},
 	"textdomain": "lw-recipes",
 	"editorScript": "file:./index.js",

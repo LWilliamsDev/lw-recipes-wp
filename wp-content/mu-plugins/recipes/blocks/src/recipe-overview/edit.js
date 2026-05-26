@@ -92,11 +92,13 @@ export default function Edit({attributes, setAttributes, clientId}) {
 			<h1>{title ? title : 'H1 Title Here' }</h1>
 			<p>{excerpt ? excerpt : 'Recipe Excerpt Here' }</p>
 			{getFeaturedMediaUrl ? <img src={getFeaturedMediaUrl} /> : <div class="placeholder"><p>Featured Media Here</p></div>}
-			<ul>
-				 <li><span class="brown"><strong>Serves:</strong></span> {serves ? serves : null}</li>
-				 <li><span class="brown"><strong>Prep Time:</strong></span> {prepTime ? prepTime : null}</li>
-				 <li><span class="brown"><strong>Total Time:</strong></span> {totalTime ? totalTime : null}</li>
-			</ul>
+			{serves || prepTime || totalTime ?
+				<ul>
+				 	{serves ? <li><span class="brown"><strong>Serves:</strong></span> {serves}</li> : null}
+				 	{prepTime ? <li><span class="brown"><strong>Prep Time:</strong></span> {prepTime}</li> : null}
+				 	{totalTime ? <li><span class="brown"><strong>Total Time:</strong></span> {totalTime}</li> : null}
+				</ul>
+			: null}
 
 		</div>
 	);
