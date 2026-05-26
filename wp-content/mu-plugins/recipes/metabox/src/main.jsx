@@ -79,8 +79,8 @@ const DietSingleSelectPanel = () => {
   );
 };
 
-wp.data.dispatch( 'core/edit-post' ).removeEditorPanel( 'taxonomy-panel-course' );
-wp.data.dispatch( 'core/edit-post' ).removeEditorPanel( 'taxonomy-panel-diet' );
+wp.data.dispatch( 'core/editor' ).removeEditorPanel( 'taxonomy-panel-course' );
+wp.data.dispatch( 'core/editor' ).removeEditorPanel( 'taxonomy-panel-diet' );
 
 registerPlugin('course-single-select', {
   render: CourseSingleSelectPanel,

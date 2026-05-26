@@ -559,7 +559,14 @@ add_action( 'rest_api_init', function () {
 
 function recipes_block_editor_assets() {
   wp_enqueue_style('recipes-block-editor-styles', plugin_dir_url( __FILE__ ) . 'blocks/assets/block-sidebar.css');
-  wp_enqueue_script('recipes-metabox', plugin_dir_url( __FILE__ ) . 'metabox/dist/editor-panel.js',  [ 'wp-plugins', 'wp-editor', 'wp-components', 'wp-element', 'wp-data' ], '1.0.0', true);
+
+  //Only load the Recipes metabox script on the recipe post type edit page
+  $screen = get_current_screen();
+
+  if ( $screen && 'recipe' === $screen->post_type ) {
+
+  	wp_enqueue_script('recipes-metabox', plugin_dir_url( __FILE__ ) . 'metabox/dist/editor-panel.js',  [ 'wp-plugins', 'wp-editor', 'wp-components', 'wp-element', 'wp-data' ], '1.0.0', true);	
+  }
 
 }
 add_action( 'enqueue_block_editor_assets', 'recipes_block_editor_assets' );
