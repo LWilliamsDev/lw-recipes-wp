@@ -16,6 +16,7 @@ export default defineConfig({
   },
   build: {
     outDir: '../blocks/assets', 
+    cssCodeSplit: true,
     
     rollupOptions: {
       output: {
@@ -23,7 +24,7 @@ export default defineConfig({
         entryFileNames: 'recipe-search.js',
         
         // This keeps the generated CSS file neatly named in the same folder
-        assetFileNames: '[name].[ext]',
+        assetFileNames: '[name].[ext]'
       },
     },
   },

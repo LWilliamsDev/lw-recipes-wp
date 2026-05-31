@@ -21,8 +21,6 @@ import TaxonomyFieldsetSkeleton from "./form/search-refiners/TaxonomyFieldsetSke
 import TaxonomyFieldset from './form/search-refiners/TaxonomyFieldset';
 
 
-import 'react-loading-skeleton/dist/skeleton.css';
-
 
 /* Reusable function to fetch taxonomy data. We assume that the data does not
    change frequently, therefore we give a high cache time of 30 mins. */
@@ -199,13 +197,13 @@ export default function Recipes() {
 
   //UNCOMMENT FOR DEBUGGING
   //Debug refiners state
-  useEffect(() => {
+  /*useEffect(() => {
       console.log("Refiners updated:", refiners);
-    }, [refiners]);
+    }, [refiners]);*/
 
 
   return (
-    <div className="recipes-search mx-auto px-4 md:px-12" ref={listingContainer}>
+    <div className="recipes-search mx-auto" ref={listingContainer}>
       <div className="form mt-8 mb-8 md:mt-12 md:mb-12">
         <form role="search" className="grid grid-cols-[1fr_40px] gap-x-2" onSubmit={handleSearchSubmit}>
           <SearchInput id="search" label="Search" machineName="search" placeholder="Search Recipes..." searchInputValue={searchInputValue} onChange={searchInputChange} buttonText="Go" disabled={isFormLoading} />
