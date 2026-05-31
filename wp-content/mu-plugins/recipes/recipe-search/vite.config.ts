@@ -13,6 +13,19 @@ export default defineConfig({
       cert: fs.readFileSync('/usr/local/etc/httpd/certs/recipes.staging+1.pem'),
     },
     allowedHosts: ['recipes.staging']
-  }
+  },
+  build: {
+    outDir: '../blocks/assets', 
+    
+    rollupOptions: {
+      output: {
+        // 2. This forces the primary JS file to be named exactly this
+        entryFileNames: 'recipe-search.js',
+        
+        // This keeps the generated CSS file neatly named in the same folder
+        assetFileNames: '[name].[ext]',
+      },
+    },
+  },
 
 })
