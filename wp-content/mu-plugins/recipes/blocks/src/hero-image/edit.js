@@ -101,7 +101,7 @@ export default function Edit({attributes, setAttributes, clientId}) {
 							label={__('Upload image', 'lw-recipes') }
 							render={({open}) => (
 								<Button
-									className={imageID ? 'editor-post-featured-image__toggle' : 'editor-post-featured-image__preview'}
+									className={imageID ? 'recipes-media-btn editor-post-featured-image__toggle' : 'recipes-media-btn editor-post-featured-image__preview'}
 									onClick={open}
 								>
 									{!imageID ? __('Choose or upload file', 'lw-recipes') : <img src={imageUrl} /> }
