@@ -3,7 +3,6 @@ import { createRoot } from 'react-dom/client'
 import { NuqsAdapter } from 'nuqs/adapters/react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import Recipes from './Recipes';
-import './index.css'
 
 const queryClient = new QueryClient();
 
