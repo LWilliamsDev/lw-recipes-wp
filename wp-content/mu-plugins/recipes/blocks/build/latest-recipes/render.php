@@ -11,6 +11,11 @@ $query = new WP_Query( array(
 	'post_type' => 'recipe',
 	'posts_per_page' => 3
 ));
+
+$options = get_option('lw_recipes_settings');
+$listing_page_id = $options['listing_page_id'] ?? 0;
+
+$link = $listing_page_id ? untrailingslashit(get_permalink($listing_page_id)) : null;
 ?>
 
 <section class="px-4 py-8 md:px-12 md:py-12">
@@ -30,13 +35,17 @@ $query = new WP_Query( array(
 					<?php endif; ?>
 					<h3 class="text-2xl font-medium text-(--color-brown)"><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h3>
 					<?php if (has_excerpt()) : ?>
-						<p class="text-(--color-dark-green)"><?php the_excerpt(); ?></p>
+						<p class="text-(--color-dark-green)"><?php echo get_the_excerpt(); ?></p>
 					<?php endif; ?>
 					<?php $terms = get_the_terms(get_the_ID(), 'diet'); 
 					if (!empty($terms)) : ?>
 					<ul class="categories mt-5 flex flex-wrap gap-[10px]">
 						<?php foreach ($terms as $term) : ?>
-						<li><a href="#" class="button p-[10px] inline-block rounded-sm text-(--color-white) font-medium"><?php echo $term->name; ?></a></li>
+						<?php if (!empty($link)) : ?>
+							<li><a href="<?php echo $link;?>?diet=<?php echo $term->term_id; ?>" class="button p-[10px] inline-block rounded-sm text-(--color-white) font-medium"><?php echo $term->name; ?></a></li>
+						<?php else : ?>
+							<li><span class="button p-[10px] inline-block rounded-sm text-(--color-white) font-medium"><?php echo $term->name; ?></span></li>
+						<?php endif; ?>
 					<?php endforeach; ?>
 					</ul>
 				<?php endif; ?>

@@ -7,6 +7,7 @@ use Recipes\Blocks\BlockAssets;
 use Recipes\PostType\Recipe;
 use Recipes\Rest\Menu;
 use Recipes\Rest\Recipe as RecipeEndpoint;
+use Recipes\Settings\RecipeSettings;
 use Recipes\Taxonomy\Allergen;
 use Recipes\Taxonomy\Course;
 use Recipes\Taxonomy\Diet;
@@ -40,6 +41,7 @@ final class Plugin {
 		new Course();
 		new Diet();
 		new Protein();
+		new RecipeSettings();
 
 	}
 

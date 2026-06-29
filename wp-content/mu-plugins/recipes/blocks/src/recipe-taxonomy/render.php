@@ -11,6 +11,10 @@ if (!$is_block_editor && !defined('REST_REQUEST') && !(wp_doing_ajax())) {
 
 
 $terms = get_terms(array( 'taxonomy' => $tax));
+
+$options = get_option('lw_recipes_settings');
+$listing_page_id = $options['listing_page_id'] ?? 0;
+$link = $listing_page_id ? untrailingslashit(get_permalink($listing_page_id)) : null;
 ?>
 
 <section class="px-4 py-8 md:px-12 md:py-12">
@@ -19,7 +23,11 @@ $terms = get_terms(array( 'taxonomy' => $tax));
 		<?php foreach ($terms as $term) : ?>
 			<div class="card mb-8">
 				<h3>
-					<a href="<?php echo get_term_link($term); ?>" class="grid block">
+					<?php if (!empty($link)) : ?>
+						<a href="<?php echo $link; ?>?<?php echo $term->taxonomy;?>=<?php echo $term->term_id; ?>" class="grid block">
+					<?php else :?>
+						<span class="grid block">
+					<?php endif; ?>
 						<?php $image_id = get_term_meta($term->term_id, 'featured_image', true); ?>
 						<?php if ($image_id) { 
 							$image = wp_get_attachment_image($image_id, 'full', false, array('class' => 'w-full h-auto col-start-1 row-start-1 rounded-sm')); 
@@ -30,7 +38,11 @@ $terms = get_terms(array( 'taxonomy' => $tax));
 							<span class="text-2xl font-medium text-(--color-brown) hover:text-(--color-mid-green)">
 								<?php echo $term->name; ?></span>
 						</div>
-				</a>
+				<?php if (!empty($link)) : ?>
+						</a>
+					<?php else :?>
+						</span>
+					<?php endif; ?>
 				</h3>
 			</div>
 		<?php endforeach; ?>
