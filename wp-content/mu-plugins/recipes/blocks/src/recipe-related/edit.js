@@ -21,6 +21,7 @@ import { __ } from '@wordpress/i18n';
 import './editor.scss';
 import { useBlockProps } from '@wordpress/block-editor';
 import { useSelect } from "@wordpress/data";
+import { decodeEntities } from '@wordpress/html-entities';
 
 /**
  * The edit function describes the structure of your block in the context of the
@@ -81,7 +82,7 @@ const relatedPosts = useSelect((select) => {
 							<li key={post.id} className="mb-5 md:mb-0">
 								<a href="#">
 									{post.imageUrl && <img src={post.imageUrl} className="w-full wp-post-image" />}
-									<h3 className="text-xl font-medium mt-2">{post.title}</h3>
+									<h3 className="text-xl font-medium mt-2">{decodeEntities(post.title)}</h3>
 								</a>
 							</li>
 						))}

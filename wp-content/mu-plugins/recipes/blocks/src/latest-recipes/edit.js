@@ -16,6 +16,7 @@ import './editor.scss';
 import { useBlockProps, InspectorControls, RichText } from '@wordpress/block-editor';
 import {Panel, PanelBody, PanelRow, TextControl } from '@wordpress/components';
 import { useSelect } from '@wordpress/data';
+import { decodeEntities } from '@wordpress/html-entities';
 
 /**
  * The edit function describes the structure of your block in the context of the
@@ -48,7 +49,7 @@ export default function Edit({attributes, setAttributes}) {
     		return termIds
       	.map((id) => {
         	const term = termData.find((term) => term.id === id);
-        	return term ? term.name : null;
+        	return term ? decodeEntities(term.name) : null;
       	})
       	.filter(Boolean); // Remove null values
       
@@ -73,14 +74,14 @@ export default function Edit({attributes, setAttributes}) {
                     		return (
                         		<div key={post.id} className="card mb-8">
                         		     {imageUrl ? (
-                    					<img src={imageUrl} alt={post.title.raw} className="mb-5 w-full h-auto wp-post-image" />
+                    					<img src={imageUrl} alt={post.title.rendered} className="mb-5 w-full h-auto wp-post-image" />
                 					) : null}
-                            		<h3 className="text-2xl font-medium text-(--color-brown)">{post.title.raw}</h3>
+                            		<h3 className="text-2xl font-medium text-(--color-brown)">{post.title.rendered}</h3>
                             		<p className="text-(--color-dark-green)">{post.excerpt.raw}</p>
                             		{post.diet && post.diet.length > 0 && (
                                			<ul className="categories mt-5 flex flex-wrap gap-[10px]">
                                     		{getTermNames(post.diet).map((termName, index) => (
-                                        	<li key={index}><a href="#" className="button p-[10px] inline-block rounded-sm text-(--color-white) font-medium">{termName}</a></li>
+                                        	<li key={index}><a href="#" className="button p-[10px] inline-block rounded-sm text-(--color-white) font-medium">{decodeEntities(termName)}</a></li>
                                     		))}
                                 		</ul>
                             		)}

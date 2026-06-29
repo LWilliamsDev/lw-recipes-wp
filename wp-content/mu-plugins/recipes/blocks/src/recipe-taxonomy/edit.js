@@ -18,6 +18,7 @@ import {Panel, PanelBody, PanelRow, TextControl, SelectControl } from '@wordpres
 import { useSelect } from '@wordpress/data';
 import { store as coreDataStore } from '@wordpress/core-data';
 import { useEffect } from '@wordpress/element';
+import { decodeEntities } from '@wordpress/html-entities';
 
 /**
  * The edit function describes the structure of your block in the context of the
@@ -37,7 +38,7 @@ export default function Edit({attributes, setAttributes}) {
 
 		let options = []
 		if( taxonomies ) {
-			options = taxonomies.map( (tax) => ({ label: tax.name, value: tax.slug }));
+			options = taxonomies.map( (tax) => ({ label: decodeEntities(tax.name), value: tax.slug }));
 		}
 
 
@@ -58,7 +59,7 @@ export default function Edit({attributes, setAttributes}) {
 				</PanelBody>
 			</InspectorControls>
 			<section className="px-4 py-8 md:px-12 md:py-12">
-				<h2 className="font-roboto-condensed text-5xl color-green text-(--color-green) mb-8 uppercase">{ title ? title : __(`Browse by ${taxonomy}`, 'lw-recipes') }</h2>
+				<h2 className="font-roboto-condensed text-5xl color-green text-(--color-green) mb-8 uppercase">{ title ? title : __(`Browse by ${decodeEntities(taxonomy)}`, 'lw-recipes') }</h2>
 				<div className="cards sm:grid sm:grid-cols-[1fr_1fr] sm:gap-x-5">
 					{ terms && terms.map((term) => (
 						<div className="card mb-8" key={term.id}>
@@ -67,7 +68,7 @@ export default function Edit({attributes, setAttributes}) {
 						   			{ term?.acf?.featured_image ? <img src={term.acf.featured_image.url} className="w-full h-auto col-start-1 row-start-1 rounded-sm" /> : null }
 						    		<div className="bg-(--color-tan) col-start-1 row-start-1 opacity-90 self-end p-4">
 										<span className="text-2xl font-medium text-(--color-brown) hover:text-(--color-mid-green)">
-											{term.name}
+											{decodeEntities(term.name)}
 										</span>
 									</div>
 								</a>
