@@ -1,6 +1,8 @@
 import { registerBlockType } from '@wordpress/blocks';
 import { useBlockProps, InspectorControls } from '@wordpress/block-editor';
 import { BaseControl, Button, Tooltip, TextControl, PanelBody } from '@wordpress/components';
+import { dispatch } from '@wordpress/data';
+import { useEffect, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 
 
@@ -24,7 +26,7 @@ const ICON_OPTIONS = [
 ];
 
 
-export default function Edit({ attributes, setAttributes }) {
+export default function Edit({ attributes, setAttributes, clientId }) {
         const { item } = attributes;
 
         const blockProps = useBlockProps();
@@ -40,6 +42,29 @@ export default function Edit({ attributes, setAttributes }) {
 
     // Helper to find current icon data
     const selectedIcon = ICON_OPTIONS.find(opt => opt.value === item.icon);
+    
+
+    const [isValid, setIsValid] = useState(false);
+
+
+    useEffect(() => {
+        if (item?.icon && item?.site) {
+            setIsValid(true);
+            dispatch('core/editor').unlockPostSaving(`recipe-social-media-item-${clientId}`);
+            dispatch('core/editor').unlockPostAutosaving(`recipe-social-media-item-${clientId}`);
+        }
+        else {
+            setIsValid(false);
+            dispatch('core/editor').lockPostSaving(`recipe-social-media-item-${clientId}`);
+            dispatch('core/editor').lockPostAutosaving(`recipe-social-media-item-${clientId}`);
+        }
+
+        
+        return () => {
+            dispatch('core/editor').unlockPostSaving(`recipe-social-media-item-${clientId}`);
+            dispatch('core/editor').unlockPostAutosaving(`recipe-social-media-item-${clientId}`);
+        }
+    }, [item]);
 
 
         return (
@@ -82,14 +107,15 @@ export default function Edit({ attributes, setAttributes }) {
                     </PanelBody>
                 </InspectorControls>
 
+              {!isValid && ( 
+                    <div className="recipes-error">
+                        { (__('The Website Link and Icon fields are required.', 'lw-recipes')) }
+                    </div>
+              )}      
               {/* Editor Preview */}
                 {item.site && selectedIcon ? (
                         <span style={{ width: '24px' }}>{selectedIcon.svg}</span>
-                ) : (
-                    <p className="placeholder-text">
-                        {__('Please configure social link in sidebar.', 'lw-recipes')}
-                    </p>
-                )}
+                ) : null}
             </li>
         );
 }

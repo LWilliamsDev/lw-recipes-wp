@@ -22,7 +22,7 @@ In order to preserve the design, the block was built in the following manner:
 
 - The block settings panel has a field to add a hero image. If this field is empty, a notice will appear in the block editor that an image is required. Post auto-saving and saving are locked until an image is added.
 - The 3 text elements are added as separate child blocks to enforce the placement and size of these elements.
-- The Hero Title is technically required. However, if it is empty, the front end will display placeholder text. 
+- The Hero Title is technically required. However, if it is empty, the front end will display placeholder text. This block does not restrict the available headings so that it can be reused on other templates and/or in other contexts, where perhaps it is not appropriate for it to be an H1 heading.
 - The Subtitle and Call To Action blocks are optional. Although they always appear in the editor, the front end only displays them if they have content.
 
 Extra formatting options like links, inline images, etc were removed since such elements are not part of the design for the hero image component.

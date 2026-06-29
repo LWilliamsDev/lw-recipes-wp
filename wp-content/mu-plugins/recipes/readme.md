@@ -5,6 +5,7 @@ This is the plugin that goes along with the Recipes theme. It is needed because 
 ## Features
 - [Custom blocks](blocks/readme.md)
 - [Custom Metabox](metabox/README.md)
+- [PHP Functions (Object Oriented)](src)
 - [Recipe Listing Component](recipe-seach/README.md)
 
 ## Architecture/Design Decisions

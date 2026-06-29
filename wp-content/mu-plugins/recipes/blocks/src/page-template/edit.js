@@ -20,6 +20,8 @@ import { __ } from '@wordpress/i18n';
  */
 import './editor.scss';
 import { useBlockProps, InnerBlocks } from '@wordpress/block-editor';
+import { useSelect, dispatch } from '@wordpress/data';
+import { useEffect, useState } from '@wordpress/element';
 
 /**
  * The edit function describes the structure of your block in the context of the
@@ -35,6 +37,33 @@ export default function Edit({attributes, setAttributes, clientId}) {
 	
 	const blockProps = useBlockProps();
 
+	const [isValid, setIsValid] = useState(false);
+
+	const innerBlockCount = useSelect((select) => {
+		const block = select('core/block-editor').getBlock(clientId);
+		return block?.innerBlocks?.length || 0;
+	}, [clientId]);
+
+
+	useEffect(() => {
+		if (innerBlockCount <= 1) {
+			setIsValid(true);
+			dispatch('core/editor').unlockPostSaving(`recipe-page-${clientId}`);
+			dispatch('core/editor').unlockPostAutosaving(`recipe-page-${clientId}`);
+		}
+		else {
+			setIsValid(false);
+			dispatch('core/editor').lockPostSaving(`recipe-page-${clientId}`);
+			dispatch('core/editor').lockPostAutosaving(`recipe-page-${clientId}`);
+		}
+
+		
+		return () => {
+			dispatch('core/editor').unlockPostSaving(`recipe-page-${clientId}`);
+			dispatch('core/editor').unlockPostAutosaving(`recipe-page-${clientId}`);
+		}
+	}, [innerBlockCount]);
+
 
 	const ALLOWED_BLOCKS = ['lw-recipes/home-template', 'lw-recipes/recipe-listing-template'];
 
@@ -42,6 +71,11 @@ export default function Edit({attributes, setAttributes, clientId}) {
 
 	return (
 		<div { ...blockProps }>
+		{!isValid && ( 
+					<div className="recipes-error">
+						{ (__('Only 1 template is allowed.', 'lw-recipes')) }
+					</div>
+			)}
 			<InnerBlocks allowedBlocks={ALLOWED_BLOCKS} templateLock={false} placeholder={__('Choose a template', 'lw-recipes')} />
 		</div>
 	);
