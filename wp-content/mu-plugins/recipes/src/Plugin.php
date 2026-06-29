@@ -2,6 +2,7 @@
 
 namespace Recipes;
 
+use Recipes\Assets\Assets;
 use Recipes\Blocks\Blocks;
 use Recipes\Blocks\BlockAssets;
 use Recipes\PostType\Recipe;
@@ -32,6 +33,7 @@ final class Plugin {
 
 
 	private function init(): void {
+		new Assets();
 		new Blocks();
 		new BlockAssets();
 		new Recipe();

@@ -81,6 +81,14 @@ In this scheme:
 2. I would create another block that would allow you to add a reusable block post.
 3. If the client requires further restrictions, we can add some kind of taxonomy to the reusable block post. Then in step 2, we can restrict it so that the user can only add reusable block posts in X category.
 
+### What if you need to update the InnerBlock template?
+Each page template block uses an InnerBlock template. If the user adds content and then afterwards, we add a new section to the InnerBlock template, that new section will not appear. 
+
+I have the following workaround to address this:
+
+1. All template blocks have a version attribute. The default is 1. This version attribute does exist on all template blocks in this project.
+2. If I would like to add a new section, I would add code that checks for the version. If the version does not equal a specific number, I would replace the existing InnerBlocks by mapping them into a variable that represents the new template (and contains the new section). Then I would use the replaceInnerBlocks function to replace the InnerBlocks. Alternatively, if the section is appearing at the very end of the InnerBlocks, we can just use the synchronizeBlocksWithTemplate function to add the new section if the versions don't match. This is the only suitable scenario for this function, as using it in any other circumstance will result in data loss.
+
 ### Why don't you use more core blocks?
 Where possible, I use core blocks. Generally, I find core blocks to be useful for elementary things like paragraphs, ordered and unordered lists, headings, etc.
 

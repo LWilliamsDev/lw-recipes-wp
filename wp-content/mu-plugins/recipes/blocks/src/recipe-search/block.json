@@ -15,6 +15,5 @@
 	"textdomain": "lw-recipes",
 	"editorScript": "file:./index.js",
 	"editorStyle": "file:../../assets/index.css",
-	"viewScript": "file:../../assets/recipe-search.js",
 	"render": "file:./render.php"
 }
