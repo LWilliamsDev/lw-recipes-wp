@@ -14,6 +14,7 @@ final class Menu {
     	register_rest_route( 'wp/v2', '/menu', array(
 		'methods'  => \WP_REST_SERVER::READABLE,
 		'callback' => [$this, 'rest_response'],
+		'permission_callback' => '__return true'
 		 ) );
 
 	}

@@ -14,6 +14,7 @@ final class Recipe {
     	register_rest_route( 'lw-recipes/v1', '/recipes', array(
 		'methods'  => \WP_REST_SERVER::READABLE,
 		'callback' => [$this, 'rest_response'],
+		'permission_callback' => '__return true'
 		 ) );
 
 	}
