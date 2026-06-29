@@ -8,7 +8,6 @@ final class BlockAssets {
 	public function __construct() {
 		add_action('enqueue_block_editor_assets', [$this, 'enqueue_editor_assets']);
 		add_filter( 'should_load_separate_core_block_assets', '__return_true' );
-		//add_action( 'block_editor_settings_all', [$this, 'enqueue_iframe_assets'], 10, 2 );
 		add_action('enqueue_block_assets', [$this, 'enqueue_iframe_assets']);
 	}
 
