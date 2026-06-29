@@ -1,9 +1,8 @@
 <?php
-/**
- * @see https://github.com/WordPress/gutenberg/blob/trunk/docs/reference-guides/block-api/block-metadata.md#render
- */
 
-$is_block_editor = is_in_block_editor();
+use Recipes\Blocks\BlockHelper;
+
+$is_block_editor = BlockHelper::is_in_block_editor();
 
 if (!$is_block_editor && !defined('REST_REQUEST') && !(wp_doing_ajax())) { 
 	$social_media = [

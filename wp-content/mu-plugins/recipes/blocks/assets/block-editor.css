@@ -1,7 +1,9 @@
 /* Global Block Editor Iframe Styles */
 
+/*All styles must be scoped to .editor-styles-wrapper */
+
 /*Error styles*/
-.recipes-error {
+.editor-styles-wrapper .recipes-error {
 	border: 1px solid red;
 	padding: 15px;
 	color: #D8000c;
@@ -12,7 +14,7 @@
 	font-size: 18px;
 }
 /*Adjustment for page title*/
-.wp-block-post-title  {
+.editor-styles-wrapper .wp-block-post-title  {
 	max-width: 1024px;
 	margin-left: auto;
 	margin-right: auto;

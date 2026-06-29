@@ -44,10 +44,12 @@ add_action( 'init', 'lw_recipes_menus' );
 
 require_once('MainMenuWalker.php');
 
+if ( ! function_exists( 'recipes_editor_iframe_assets' ) ) :
+
 function recipes_editor_iframe_assets() {
-	add_theme_support( 'editor-styles' );
+  add_theme_support( 'editor-styles' );
   add_editor_style('assets/css/style.css');
 }
-add_action( 'after_setup_theme', 'recipes_editor_iframe_assets' );
 
-add_filter( 'should_load_separate_core_block_assets', '__return_true' );
+endif;
+add_action( 'after_setup_theme', 'recipes_editor_iframe_assets' );

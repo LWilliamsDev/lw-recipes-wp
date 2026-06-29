@@ -6,6 +6,7 @@ export default defineConfig({
   plugins: [tailwindcss()],
   build: {
     outDir: resolve(__dirname, '../assets'),
+    emptyOutDir: false,
     // 1. Enables minification (Vite uses esbuild by default, which is incredibly fast)
     minify: 'esbuild', 
     rollupOptions: {
