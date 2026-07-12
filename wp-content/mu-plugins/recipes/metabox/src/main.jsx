@@ -18,7 +18,7 @@ const SingleSelectTaxonomyControl = ({ taxonomySlug }) => {
 
   const onChange = (termId) => {
      const id = parseInt(termId);
-    editPost({ [taxonomySlug]: termId > 0 ? [id] : [] });
+    editPost({ [taxonomySlug]: id > 0 ? [id] : [] });
   };
 
   return (
