@@ -217,6 +217,23 @@ export default function Recipes() {
     };
 
 
+  const handlePageChange = (event: React.MouseEvent<HTMLDivElement>) => {
+
+    const link = (event.target as Element).closest('a.filter-link') as HTMLAnchorElement | null;
+
+    if (link) {
+      event.preventDefault();
+
+      const page = link.getAttribute("data-page");
+      const pageInt = parseInt(page);
+
+       if (!isNaN(pageInt)) {
+        updateRefiners("pg", pageInt, false);
+      }
+    }
+  };
+
+
 
   //UNCOMMENT FOR DEBUGGING
   //Debug refiners state
@@ -294,7 +311,7 @@ export default function Recipes() {
           <>
             <div className="results" dangerouslySetInnerHTML={{__html: resultsData.result}} onClick={clickResultLinks}>
             </div>
-            <div className="pagination md:col-start-2 pb-5" dangerouslySetInnerHTML={{__html: resultsData.pagination}}>
+            <div className="pagination md:col-start-2 pb-5" dangerouslySetInnerHTML={{__html: resultsData.pagination}} onClick={handlePageChange}>
             </div>
           </>
           )}

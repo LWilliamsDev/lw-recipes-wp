@@ -97,7 +97,7 @@ final class Recipe {
 			'post_type' => 'recipe',
 			'tax_query' => $tax_query,
 			'paged' => $page,
-			'posts_per_page' => 1
+			'posts_per_page' => 10
 		);
 
 
@@ -186,29 +186,41 @@ final class Recipe {
 
 	public function build_pagination( $total_pages, $current_page = 1 ) {
     
-    // If there is only 1 page or no pages, we don't need pagination markup
     if ( $total_pages <= 1 ) {
         return '';
     }
 
-    $active_page  = max( 1, intval( $current_page ) );
-    $pages_to_show = 6;
+    $active_page   = max( 1, intval( $current_page ) );
+    $pages_to_show = 6; // Max number of intermediate pages to display
 
-    // Calculate prev/next values matching your React parameters
     $prev_page = max( 1, $active_page - 1 );
     $next_page = min( $total_pages, $active_page + 1 );
 
-    // --- Math mirror from your getPageNumbers() function ---
-    $start_page = floor( ( $active_page - 1 ) / $pages_to_show ) * $pages_to_show + 1;
-    $end_page   = min( $start_page + $pages_to_show - 1, $total_pages );
+    // --- Sliding Window Math Logic ---
+    // Calculate a window around the active page
+    $side_pages = floor( $pages_to_show / 2 );
+    $start_page = $active_page - $side_pages;
+    $end_page   = $active_page + $side_pages;
 
+    // Adjust boundaries if the window overflows left or right
+    if ( $start_page < 1 ) {
+        $end_page   = min( $total_pages, $end_page + ( 1 - $start_page ) );
+        $start_page = 1;
+    }
+    if ( $end_page > $total_pages ) {
+        $start_page = max( 1, $start_page - ( $end_page - $total_pages ) );
+        $end_page   = $total_pages;
+    }
+
+    // Build the middle page array, strictly excluding 1 and $total_pages
+    // since those are rendered explicitly as static anchor blocks.
     $numbers = array();
     for ( $i = $start_page; $i <= $end_page; $i++ ) {
         if ( $i > 1 && $i < $total_pages ) {
-            $numbers[] = $i;
+            $numbers[] = intval($i);
         }
     }
-    // --------------------------------------------------------
+    // ---------------------------------
 
     ob_start();
     ?>
@@ -219,33 +231,32 @@ final class Recipe {
             <?php if ( $active_page > 1 ) : ?>
                 <li>
                     <a href="<?php echo esc_url( add_query_arg( 'pg', $prev_page, '/' ) ); ?>" 
-                       data-page="back" 
-                       class="cursor-pointer rounded-sm border-1 p-[5px] text-(--color-brown)">Back</a>
+                       data-page="<?php echo esc_attr($prev_page); ?>" 
+                       class="filter-link cursor-pointer rounded-sm border-1 p-[5px] text-(--color-brown)">Back</a>
                 </li>
             <?php endif; ?>
 
-            <!-- First Page (Always visible if total pages >= 1) -->
-            <?php if ( $total_pages >= 1 ) : 
-                $is_current = ( $active_page === 1 );
-                $class = $is_current ? 'current-page cursor-pointer rounded-sm border-1 p-[5px] text-(--color-white)' : 'cursor-pointer rounded-sm border-1 p-[5px] text-(--color-brown)';
-                ?>
-                <li>
-                    <a href="<?php echo esc_url( add_query_arg( 'pg', 1, '/' ) ); ?>" 
-                       data-page="1" 
-                       class="<?php echo esc_attr( $class ); ?>"
-                       <?php echo $is_current ? 'aria-current="page"' : ''; ?>>1</a>
-                </li>
-            <?php endif; ?>
+            <!-- Page 1 Block -->
+            <?php 
+            $is_current = ( $active_page === 1 );
+            $class = $is_current ? 'filter-link current-page cursor-pointer rounded-sm border-1 p-[5px] text-(--color-white)' : 'filter-link cursor-pointer rounded-sm border-1 p-[5px] text-(--color-brown)';
+            ?>
+            <li>
+                <a href="<?php echo esc_url( add_query_arg( 'pg', 1, '/' ) ); ?>" 
+                   data-page="1" 
+                   class="<?php echo esc_attr( $class ); ?>"
+                   <?php echo $is_current ? 'aria-current="page"' : ''; ?>>1</a>
+            </li>
 
             <!-- Left Ellipsis (...) -->
-            <?php if ( ! empty( $numbers ) && $numbers[0] > 6 ) : ?>
+            <?php if ( ! empty( $numbers ) && $numbers[0] > 2 ) : ?>
                 <li class="p-[5px] text-(--color-mid-green)"><span> ... </span></li>
             <?php endif; ?>
 
             <!-- Middle Pages Loop -->
             <?php foreach ( $numbers as $number ) : 
                 $is_current = ( $number === $active_page );
-                $class = $is_current ? 'current-page cursor-pointer rounded-sm border-1 p-[5px] text-(--color-white)' : 'cursor-pointer rounded-sm border-1 p-[5px] text-(--color-brown)';
+                $class = $is_current ? 'filter-link current-page cursor-pointer rounded-sm border-1 p-[5px] text-(--color-white)' : 'filter-link cursor-pointer rounded-sm border-1 p-[5px] text-(--color-brown)';
                 ?>
                 <li>
                     <a href="<?php echo esc_url( add_query_arg( 'pg', $number, '/' ) ); ?>" 
@@ -256,14 +267,14 @@ final class Recipe {
             <?php endforeach; ?>
 
             <!-- Right Ellipsis (...) -->
-            <?php if ( ! empty( $numbers ) && end( $numbers ) < ( $total_pages - 6 ) ) : ?>
+            <?php if ( ! empty( $numbers ) && end( $numbers ) < ( $total_pages - 1 ) ) : ?>
                 <li class="p-[5px] text-(--color-mid-green)"><span> ... </span></li>
             <?php endif; ?>
 
-            <!-- Last Page -->
-            <?php if ( $active_page !== 1 && $active_page <= $total_pages ) : 
+            <!-- Last Page Block -->
+            <?php if ( $total_pages > 1 ) : 
                 $is_current = ( $active_page === $total_pages );
-                $class = $is_current ? 'current-page cursor-pointer rounded-sm border-1 p-[5px] text-(--color-white)' : 'cursor-pointer rounded-sm border-1 p-[5px] text-(--color-brown)';
+                $class = $is_current ? 'filter-link current-page cursor-pointer rounded-sm border-1 p-[5px] text-(--color-white)' : 'filter-link cursor-pointer rounded-sm border-1 p-[5px] text-(--color-brown)';
                 ?>
                 <li>
                     <a href="<?php echo esc_url( add_query_arg( 'pg', $total_pages, '/' ) ); ?>" 
@@ -277,8 +288,8 @@ final class Recipe {
             <?php if ( $active_page < $total_pages ) : ?>
                 <li>
                     <a href="<?php echo esc_url( add_query_arg( 'pg', $next_page, '/' ) ); ?>" 
-                       data-page="next" 
-                       class="cursor-pointer rounded-sm border-1 p-[5px] text-(--color-brown)">Next</a>
+                       data-page="<?php echo esc_attr($next_page); ?>" 
+                       class="filter-link cursor-pointer rounded-sm border-1 p-[5px] text-(--color-brown)">Next</a>
                 </li>
             <?php endif; ?>
 
