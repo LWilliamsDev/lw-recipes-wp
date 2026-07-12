@@ -9,7 +9,7 @@ import { useQueryStates } from 'nuqs';
 
 import Skeleton from 'react-loading-skeleton';
 
-import { hasVisibleFilters } from './utils';
+import { buildArray, hasVisibleFilters } from './utils';
 import { RefinerKeys, refinersSchema, TaxonomyItems } from "./types";
 
 import ChosenRefiners from "./chosen-refiners/ChosenRefiners";
@@ -192,6 +192,29 @@ export default function Recipes() {
      }
   }, [refiners]);
 
+  /* Take over taxonomy term filtering links in the result items */
+
+  const clickResultLinks = (event: React.MouseEvent<HTMLDivElement>) => {
+  
+        const link = (event.target as Element).closest('a.filter-link') as HTMLAnchorElement | null;
+
+        if (link) {
+             event.preventDefault();
+
+             const type = link.getAttribute("data-type") as RefinerKeys;
+             const idAttr = link.getAttribute("data-id");
+
+             if (!type || !idAttr) return;
+
+             const id = parseInt(idAttr, 10);
+             const currentValues = (refiners[type] as number[]) || [];
+             const newValues = buildArray(currentValues, type, id);
+
+             updateRefiners(type, newValues ?? null);
+
+        }
+        
+    };
 
 
 
@@ -269,11 +292,9 @@ export default function Recipes() {
           </div>
           ) : ( 
           <>
-            <div className="results">
-              <ResultsItems data={resultsData} updateRefiners={updateRefiners} currentFilters={refiners} />
+            <div className="results" dangerouslySetInnerHTML={{__html: resultsData.result}} onClick={clickResultLinks}>
             </div>
-            <div className="pagination md:col-start-2 pb-5">
-              <Pagination data={resultsData} updatePage={updateRefiners} currentPage={refiners.pg} />
+            <div className="pagination md:col-start-2 pb-5" dangerouslySetInnerHTML={{__html: resultsData.pagination}}>
             </div>
           </>
           )}

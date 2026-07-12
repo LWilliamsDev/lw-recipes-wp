@@ -14,12 +14,37 @@ final class Recipe {
     	register_rest_route( 'lw-recipes/v1', '/recipes', array(
 		'methods'  => \WP_REST_SERVER::READABLE,
 		'callback' => [$this, 'rest_response'],
-		'permission_callback' => '__return true'
+		'permission_callback' => '__return_true'
 		 ) );
 
 	}
 
 	public function rest_response($request) {
+
+		$query_args = $this->build_query($request);
+
+		$recipes = new \WP_Query( $query_args );
+
+		$result = $this->build_results($recipes);
+
+		if ($request->get_param( 'pg' )) {
+			$page = $request->get_param( 'pg' );
+		}
+		else {
+			$page = 1;
+		}
+
+		$total_pages = intval( $recipes->max_num_pages );
+
+		$pagination = $this->build_pagination($total_pages, $page);
+
+		return array(
+			'result'     => $result,
+			'pagination' => $pagination
+		);
+	}
+
+	public function build_query($request) {
 		$course = $request->get_param( 'course' );
 		$diet = $request->get_param( 'diet' );
 		$allergen = $request->get_param('allergen');
@@ -72,7 +97,7 @@ final class Recipe {
 			'post_type' => 'recipe',
 			'tax_query' => $tax_query,
 			'paged' => $page,
-			'posts_per_page' => 10
+			'posts_per_page' => 1
 		);
 
 
@@ -80,104 +105,187 @@ final class Recipe {
 			$query_args['s'] = sanitize_text_field($search_query); // Add the search query parameter to the query arguments
 		}
 
-		$recipes = new \WP_Query( $query_args );
+		return $query_args;
 
-		$result = array();
+	}
 
+	public function build_results($query) {
+		// If there are no posts, return early
+    	if ( empty($query->posts) ) {
+        	return '<p>No recipes found.</p>';
+    	}
+		
+		ob_start(); 
+		foreach ( $query->posts as $recipe ) {
 
-		foreach ( $recipes->posts as $recipe ) {
+    	// Setup global post data so standard WP template tags work correctly
+            setup_postdata( $recipe ); 
+            
+            // 1. Fetch all assigned terms from your target taxonomies
+            $taxonomies = array( 'course', 'diet', 'allergen' );
+            $all_terms  = wp_get_object_terms( $recipe->ID, $taxonomies );
+            
+            // 2. Sort the terms alphabetically by their name
+            if ( ! is_wp_error( $all_terms ) && ! empty( $all_terms ) ) {
+                usort( $all_terms, function( $a, $b ) {
+                    return strcasecmp( $a->name, $b->name );
+                });
+            } else {
+                $all_terms = array();
+            }
+            ?>
+            <div class="result-item mb-12 lg:mb-20 lg:flex lg:flex-wrap">
+                
+                <!-- Featured Image -->
+                <div class="lg:order-2 result-image lg:ml-auto mb-5 lg:mb-0">
+                    <?php if ( has_post_thumbnail( $recipe->ID ) ) : ?>
+                        <?php echo get_the_post_thumbnail( $recipe->ID, 'medium') ; ?>
+                    <?php endif; ?>
+                </div>
+                
+                <!-- Result Details -->
+                <div class="lg:order-1 result-details">
+                    <h2 class="text-2xl color-green text-(--color-green) mb-2">
+                        <a href="<?php echo esc_url( get_permalink( $recipe->ID ) ); ?>">
+                            <?php echo esc_html( get_the_title( $recipe->ID ) ); ?>
+                        </a>
+                    </h2>
+                    
+                    <p class="mb-4 text-(--color-dark-green)">
+                        <?php echo esc_html( get_the_excerpt( $recipe->ID ) ); ?>
+                    </p>
+                    
+                    <!-- Taxonomy Badges -->
+                    <?php if ( ! empty( $all_terms ) ) : ?>
+                        <ul class="flex gap-2 flex-wrap">
+                            <?php foreach ( $all_terms as $term ) : ?>
+                                <li>
+                                   <a href="<?php echo esc_url( add_query_arg( $term->taxonomy, $term->term_id, '/' ) ); ?>"
+                                       data-id="<?php echo esc_attr( $term->term_id ); ?>" 
+                                       data-type="<?php echo esc_attr( $term->taxonomy ); ?>" 
+                                       class="filter-link p-[5px] inline-block rounded-sm border-1 border-(--color-brown) text-(--color-brown) hover:text-(--color-white) hover:bg-(--color-brown) cursor-pointer">
+                                        <?php echo esc_html( $term->name ); ?>
+                                    </a>
+                                </li>
+                            <?php endforeach; ?>
+                        </ul>
+                    <?php endif; ?>
+                </div>
 
-			$data = [];
+            </div>
+            <?php 
+        } 
+        // Crucial: Clean up the global post object loop after we are finished
+        wp_reset_postdata(); 
+        ?>
+    </div>
 
-			//Create the fields
-			$data['id'] = $recipe->ID;
-			$data['title']['rendered'] = get_the_title($recipe->ID);
-			$data['link'] = get_permalink($recipe->ID);
-			$data['description'] = get_the_excerpt($recipe->ID);
+	<?php	
+	return ob_get_clean();
+	}
 
-			//Build the image field
-			$image_id = get_post_thumbnail_id($recipe->ID);
+	public function build_pagination( $total_pages, $current_page = 1 ) {
+    
+    // If there is only 1 page or no pages, we don't need pagination markup
+    if ( $total_pages <= 1 ) {
+        return '';
+    }
 
-			if (!empty($image_id)) {
-				$data['image'] = [];
-				$attachment_alt = get_post_meta( $image_id, '_wp_attachment_image_alt', true );
+    $active_page  = max( 1, intval( $current_page ) );
+    $pages_to_show = 6;
 
-				$attachment_metadata = wp_get_attachment_metadata( $image_id );
+    // Calculate prev/next values matching your React parameters
+    $prev_page = max( 1, $active_page - 1 );
+    $next_page = min( $total_pages, $active_page + 1 );
 
-				if ( $attachment_metadata ) {
-					// Get the base URL for the uploads directory
-					$uploads_dir = wp_get_upload_dir();
-					$base_url = $uploads_dir['baseurl'];
+    // --- Math mirror from your getPageNumbers() function ---
+    $start_page = floor( ( $active_page - 1 ) / $pages_to_show ) * $pages_to_show + 1;
+    $end_page   = min( $start_page + $pages_to_show - 1, $total_pages );
 
-					// Get the year/month from the main file
-					$year_month = substr( $attachment_metadata['file'], 0, 7 );
+    $numbers = array();
+    for ( $i = $start_page; $i <= $end_page; $i++ ) {
+        if ( $i > 1 && $i < $total_pages ) {
+            $numbers[] = $i;
+        }
+    }
+    // --------------------------------------------------------
 
-					// Loop through the image sizes in the metadata
-					foreach ( $attachment_metadata['sizes'] as $size => $data1 ) {
-						// Add the absolute URL to each image size
-						$filename = $year_month . '/' . $data1['file'];
-						$attachment_metadata['sizes'][$size]['url'] = $base_url . '/' . $filename;
-					}
-				}
-				$data['image']['width'] = $attachment_metadata['width'];
-				$data['image']['height'] = $attachment_metadata['height'];
-				$data['image']['file'] = $attachment_metadata['file'];
-				$data['image']['sizes'] = $attachment_metadata['sizes'];
-				$data['image']['alt'] = $attachment_alt;
+    ob_start();
+    ?>
+    <nav class="pagination" aria-label="Pagination">
+        <ul class="pagination-numbers flex gap-2">
+            
+            <!-- Back Button -->
+            <?php if ( $active_page > 1 ) : ?>
+                <li>
+                    <a href="<?php echo esc_url( add_query_arg( 'pg', $prev_page, '/' ) ); ?>" 
+                       data-page="back" 
+                       class="cursor-pointer rounded-sm border-1 p-[5px] text-(--color-brown)">Back</a>
+                </li>
+            <?php endif; ?>
 
-			}
+            <!-- First Page (Always visible if total pages >= 1) -->
+            <?php if ( $total_pages >= 1 ) : 
+                $is_current = ( $active_page === 1 );
+                $class = $is_current ? 'current-page cursor-pointer rounded-sm border-1 p-[5px] text-(--color-white)' : 'cursor-pointer rounded-sm border-1 p-[5px] text-(--color-brown)';
+                ?>
+                <li>
+                    <a href="<?php echo esc_url( add_query_arg( 'pg', 1, '/' ) ); ?>" 
+                       data-page="1" 
+                       class="<?php echo esc_attr( $class ); ?>"
+                       <?php echo $is_current ? 'aria-current="page"' : ''; ?>>1</a>
+                </li>
+            <?php endif; ?>
 
+            <!-- Left Ellipsis (...) -->
+            <?php if ( ! empty( $numbers ) && $numbers[0] > 6 ) : ?>
+                <li class="p-[5px] text-(--color-mid-green)"><span> ... </span></li>
+            <?php endif; ?>
 
-			// Build the data for taxonomies
-			$course_terms = get_the_terms($recipe->ID, 'course');
-			$diet_terms = get_the_terms($recipe->ID, 'diet');
-			$allergen_terms = get_the_terms($recipe->ID, 'allergen');
+            <!-- Middle Pages Loop -->
+            <?php foreach ( $numbers as $number ) : 
+                $is_current = ( $number === $active_page );
+                $class = $is_current ? 'current-page cursor-pointer rounded-sm border-1 p-[5px] text-(--color-white)' : 'cursor-pointer rounded-sm border-1 p-[5px] text-(--color-brown)';
+                ?>
+                <li>
+                    <a href="<?php echo esc_url( add_query_arg( 'pg', $number, '/' ) ); ?>" 
+                       data-page="<?php echo esc_attr( $number ); ?>" 
+                       class="<?php echo esc_attr( $class ); ?>"
+                       <?php echo $is_current ? 'aria-current="page"' : ''; ?>><?php echo esc_html( $number ); ?></a>
+                </li>
+            <?php endforeach; ?>
 
-			if (isset($course_terms) && !empty($course_terms)) {
+            <!-- Right Ellipsis (...) -->
+            <?php if ( ! empty( $numbers ) && end( $numbers ) < ( $total_pages - 6 ) ) : ?>
+                <li class="p-[5px] text-(--color-mid-green)"><span> ... </span></li>
+            <?php endif; ?>
 
-				foreach ($course_terms as $term) {
-					$data['course'][] = array(
-						'term_id' => $term->term_id,
-						'term_name' => html_entity_decode($term->name),
-						'taxonomy' => 'course'
-					);
-				}
-			}
+            <!-- Last Page -->
+            <?php if ( $active_page !== 1 && $active_page <= $total_pages ) : 
+                $is_current = ( $active_page === $total_pages );
+                $class = $is_current ? 'current-page cursor-pointer rounded-sm border-1 p-[5px] text-(--color-white)' : 'cursor-pointer rounded-sm border-1 p-[5px] text-(--color-brown)';
+                ?>
+                <li>
+                    <a href="<?php echo esc_url( add_query_arg( 'pg', $total_pages, '/' ) ); ?>" 
+                       data-page="<?php echo esc_attr( $total_pages ); ?>" 
+                       class="<?php echo esc_attr( $class ); ?>"
+                       <?php echo $is_current ? 'aria-current="page"' : ''; ?>><?php echo esc_html( $total_pages ); ?></a>
+                </li>
+            <?php endif; ?>
 
-			if (isset($diet_terms) && !empty($diet_terms)) {
-				foreach ($diet_terms as $term) {
-					$data['diet'][] = array(
-						'term_id' => $term->term_id,
-						'term_name' => html_entity_decode($term->name),
-						'taxonomy' => 'diet'
-					);
-				}
-			}
+            <!-- Next Button -->
+            <?php if ( $active_page < $total_pages ) : ?>
+                <li>
+                    <a href="<?php echo esc_url( add_query_arg( 'pg', $next_page, '/' ) ); ?>" 
+                       data-page="next" 
+                       class="cursor-pointer rounded-sm border-1 p-[5px] text-(--color-brown)">Next</a>
+                </li>
+            <?php endif; ?>
 
-
-			if (isset($allergen_terms) && !empty($allergen_terms)) {
-				foreach ($allergen_terms as $term) {
-					$data['allergen'][] = array(
-						'term_id' => $term->term_id,
-						'term_name' => html_entity_decode($term->name),
-						'taxonomy' => 'allergen'
-					);
-				}
-			}
-
-
-
-			$result['data'][] = $data;
-
-		}
-
-
-		$max_pages = $recipes->max_num_pages;
-
-		return array(
-			'result'     => $result,
-			'total_pages' => $max_pages
-		);
+        </ul>
+    </nav>
+    <?php
+    return ob_get_clean();
 	}
 
 }
