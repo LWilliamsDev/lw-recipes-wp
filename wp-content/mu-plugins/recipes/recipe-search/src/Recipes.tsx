@@ -13,11 +13,8 @@ import { buildArray, hasVisibleFilters } from './utils';
 import { RefinerKeys, refinersSchema, TaxonomyItems } from "./types";
 
 import ChosenRefiners from "./chosen-refiners/ChosenRefiners";
-import Pagination from "./form/search-refiners/Pagination";
 import ResultItemSkeleton from './results/ResultItemSkeleton';
-import ResultsItems from './results/ResultsItems';
 import SearchInput from './form/search-refiners/SearchInput';
-import TaxonomyFieldsetSkeleton from "./form/search-refiners/TaxonomyFieldsetSkeleton";
 import TaxonomyFieldset from './form/search-refiners/TaxonomyFieldset';
 
 
@@ -124,21 +121,12 @@ export default function Recipes() {
   //**-- Run Queries --**// 
   
   // Get all taxonomy term data to pass into the refiners
-  const { isLoading: isCourseOptionsLoading, data: courseOptionsData, error: courseOptionsError, refetch: refetchCourse } = fetchTaxonomyData('courseOptions', `https://${hostname}/wp-json/wp/v2/course?per_page=100`);
-  const { isLoading: isDietOptionsLoading, data: dietOptionsData, error: dietOptionsError, refetch: refetchDiet } = fetchTaxonomyData('dietOptions', `https://${hostname}/wp-json/wp/v2/diet?per_page=100`);
-  const { isLoading: isAllergenOptionsLoading, data: allergenOptionsData, error: allergenOptionsError, refetch: refetchAllergen } = fetchTaxonomyData('allergenOptions', `https://${hostname}/wp-json/wp/v2/allergen?per_page=100`);
+  const { isLoading: isCourseOptionsLoading, data: courseOptionsData, error: courseOptionsError } = fetchTaxonomyData('courseOptions', `https://${hostname}/wp-json/wp/v2/course?per_page=100`);
+  const { isLoading: isDietOptionsLoading, data: dietOptionsData, error: dietOptionsError } = fetchTaxonomyData('dietOptions', `https://${hostname}/wp-json/wp/v2/diet?per_page=100`);
+  const { isLoading: isAllergenOptionsLoading, data: allergenOptionsData, error: allergenOptionsError } = fetchTaxonomyData('allergenOptions', `https://${hostname}/wp-json/wp/v2/allergen?per_page=100`);
 
   const isFormLoading = isCourseOptionsLoading || isDietOptionsLoading || isAllergenOptionsLoading;
   const formError = courseOptionsError || dietOptionsError || allergenOptionsError;
-
-  const handleRetryFilters = async () => {
-  // This fires them all off simultaneously
-    await Promise.all([
-      refetchCourse(),
-      refetchDiet(),
-      refetchAllergen()
-    ]);
-  };
 
   // Create a lookup map for taxonomy options for each category
   const taxonomyMap: Partial<Record<RefinerKeys, TaxonomyItems>> | null  = (courseOptionsData && dietOptionsData && allergenOptionsData)
@@ -219,12 +207,14 @@ export default function Recipes() {
 
   const handlePageChange = (event: React.MouseEvent<HTMLDivElement>) => {
 
-    const link = (event.target as Element).closest('a.filter-link') as HTMLAnchorElement | null;
+    const link = (event.target as Element).closest('a.filter-link') as HTMLAnchorElement;
 
     if (link) {
       event.preventDefault();
 
       const page = link.getAttribute("data-page");
+      if (!page) return;
+      
       const pageInt = parseInt(page);
 
        if (!isNaN(pageInt)) {
@@ -255,25 +245,9 @@ export default function Recipes() {
       </div>
       <div className="results-container md:grid md:grid-cols-[0.5fr_2fr] md:gap-4">
         <div className="refiners mb-8 md:mb-0">
-          {isFormLoading ? ( 
-            <>
-              {Array.from({ length: 3 }).map((_, i) => (
-                <TaxonomyFieldsetSkeleton key={i} />
-              ))}
-            </>
-            ) : formError ? ( 
-            <>
-              <p className="mb-[8px]">Sorry, something went wrong while loading filters. Please try again.</p>
-              <button onClick={() => handleRetryFilters()} className="button p-[10px] mb-[8px] inline-block rounded-sm text-(--color-white) font-medium cursor-pointer" type="button">Try again.</button>
-              <p>Please <a href="mailto:support@example.com">contact us</a> if you continue having issues.</p>
-            </>
-            ) : (
-            <>
               <TaxonomyFieldset name="Courses" slug="course" data={courseOptionsData} onChange={updateRefiners} paramValue={refiners.course} />
               <TaxonomyFieldset name="Diet" slug="diet" data={dietOptionsData} onChange={updateRefiners} paramValue={refiners.diet} />
               <TaxonomyFieldset name="Allergen" slug="allergen" data={allergenOptionsData} onChange={updateRefiners} paramValue={refiners.allergen} />
-            </>
-          )}
         </div>
         <div className="sr-only" role="status" aria-live="polite" aria-atomic="true">
           {formError || resultsError ? "There was an error loading the page content." : 

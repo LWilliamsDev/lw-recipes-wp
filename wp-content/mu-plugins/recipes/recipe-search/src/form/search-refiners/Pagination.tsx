@@ -84,7 +84,7 @@ export default function Pagination ({updatePage, data, currentPage}: PaginationP
       { numbers[0] > 6 ? <li className="p-[5px] text-(--color-mid-green)"><span> ... </span></li> : null }
       { numbers.map((number) => <li><a href={`?pg=${number}`} data-page={number} className={number == activePage ? 'current-page cursor-pointer rounded-sm border-1 p-[5px] text-(--color-white)' : 'cursor-pointer rounded-sm border-1 p-[5px] text-(--color-brown)'} aria-current={number == activePage ? "page" : undefined}>{number}</a></li>)}
       { numbers.length > 0 && numbers.at(-1)! < totalPages - 6 ? (<li className="p-[5px] text-(--color-mid-green)"><span> ... </span></li>) : null }
-      { activePage <= totalPages ? <li><a href={`?pg=${totalPages.toString()}`} data-page={totalPages} className={activePage == totalPages ? 'current-page cursor-pointer rounded-sm border-1 p-[5px] text-(--color-white)' : 'cursor-pointer rounded-sm border-1 p-[5px] text-(--color-brown)'} aria-current={activePage == totalPages ? "page" : undefined}>{totalPages}</a></li> : null} 
+      { (activePage !== 1 && activePage <= totalPages) ? <li><a href={`?pg=${totalPages.toString()}`} data-page={totalPages} className={activePage == totalPages ? 'current-page cursor-pointer rounded-sm border-1 p-[5px] text-(--color-white)' : 'cursor-pointer rounded-sm border-1 p-[5px] text-(--color-brown)'} aria-current={activePage == totalPages ? "page" : undefined}>{totalPages}</a></li> : null} 
       { activePage < totalPages ? <li><a href={`?pg=${nextPage.toString()}`} data-page="next" className="cursor-pointer rounded-sm border-1 p-[5px] text-(--color-brown)">Next</a></li> : null}
 		</ul>
     </nav>
