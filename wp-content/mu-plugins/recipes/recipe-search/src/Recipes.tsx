@@ -160,6 +160,12 @@ export default function Recipes() {
       const res = await fetch(fullUrl);
       if (!res.ok) throw new Error('Network response was not ok');
       return res.json();
+    },
+    initialData: () => {
+      if (typeof window !== 'undefined' && (window as any).INITIAL_RECIPE_DATA) {
+        return (window as any).INITIAL_RECIPE_DATA;
+      }
+      return undefined;
     }
   });
 

@@ -12,6 +12,14 @@ if (!$is_block_editor && !defined('REST_REQUEST') && !(wp_doing_ajax())) {
 	foreach ( $_GET as $key => $value ) {
     	$mock_request->set_param( $key, sanitize_text_field( $value ) );
 	}
+	$has_active_filters = false;
+
+	$params = ['course', 'diet', 'allergen', 'search'];
+
+
+	if (!empty(array_intersect($params, array_keys($_GET)))) {
+		$has_active_filters = true;
+	}
 
 	$query_args = $recipe_rest->build_query( $mock_request );
 	$recipes    = new \WP_Query( $query_args );
@@ -25,12 +33,16 @@ $initial_pagination = $recipe_rest->build_pagination( $total_pages, $current_pag
 
 	<div id="root">
 		<div class="recipes-search mx-auto">
-			<div class="form mt-8 mb-8 md:md-12 md:mb-12">
-				<form role="search" class="grid grid-cols-[1fr_40px] gap-x-2">
+			<div class="form mt-8 mb-8 md:mt-12 md:mb-12">
+				<form role="search" class="grid grid-cols-[1fr_40px] gap-x-2" id="search-form" method="GET">
 					<label for="search" class="sr-only"><?php _e('Search', 'lw-recipes'); ?></label>
 					<input type="text" id="search" class="rounded-sm border border-(--color-mid-green) border-solid p-2" name="search" placeholder="Search Recipes...">
-					<button id="listing--search" class="button p-[10px] inline-block rounded-sm text-(--color-white font-medium cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"><?php _e('Go', 'lw-recipes'); ?></button>
+					<button id="listing--search" class="button p-[10px] inline-block rounded-sm text-(--color-white) font-medium cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"><?php _e('Go', 'lw-recipes'); ?></button>
 				</form>
+				<?php if ($has_active_filters) { ?>
+					<div class="pt-5 flex flex-wrap gap-x-5 min-h-[56px]">
+					</div>
+				<?php } ?>
 			</div>
 			<div class="results-container md:grid md:grid-cols-[0.5fr_2fr] md:gap-4">
 				<div class="refiners mb-8 md:mb-0">
@@ -46,7 +58,7 @@ $initial_pagination = $recipe_rest->build_pagination( $total_pages, $current_pag
 								<?php $courses = get_terms(array('taxonomy' => 'course')); 
 									foreach ($courses as $course) { ?>
 										<div class="refiner-checkbox">
-											<input id="<?php echo $course->term_id; ?>" data-slug="course" type="checkbox" value="<?php echo $course->term_id; ?>">
+											<input id="<?php echo $course->term_id; ?>" data-slug="course" type="checkbox" value="<?php echo $course->term_id; ?>" name="course" form="recipe-search-form">
 											<label for="<?php echo $course->term_id; ?>" class="pl-2 text-(--color-dark-green)"><?php echo $course->name; ?></label>
 								</div>
 								<?php } ?>
@@ -101,6 +113,11 @@ $initial_pagination = $recipe_rest->build_pagination( $total_pages, $current_pag
 			</div>
 		</div>
 	</div>
-
+<script type="text/javascript">
+    window.INITIAL_RECIPE_DATA = <?php echo wp_json_encode([
+        'result'     => $initial_results,     // The exact same HTML structure
+        'pagination' => $initial_pagination, // The exact same pagination HTML
+    ]); ?>;
+</script>
 <?php } ?>
 
