@@ -160,7 +160,7 @@ final class Recipe {
                         <ul class="flex gap-2 flex-wrap">
                             <?php foreach ( $all_terms as $term ) : ?>
                                 <li>
-                                   <a href="<?php echo esc_url( add_query_arg( $term->taxonomy, $term->term_id, '/' ) ); ?>"
+                                   <a href="<?php echo esc_url( add_query_arg( $term->taxonomy, $term->term_id ) ); ?>"
                                        data-id="<?php echo esc_attr( $term->term_id ); ?>" 
                                        data-type="<?php echo esc_attr( $term->taxonomy ); ?>" 
                                        class="filter-link p-[5px] inline-block rounded-sm border-1 border-(--color-brown) text-(--color-brown) hover:text-(--color-white) hover:bg-(--color-brown) cursor-pointer">
@@ -178,7 +178,6 @@ final class Recipe {
         // Crucial: Clean up the global post object loop after we are finished
         wp_reset_postdata(); 
         ?>
-    </div>
 
 	<?php	
 	return ob_get_clean();
@@ -230,7 +229,7 @@ final class Recipe {
             <!-- Back Button -->
             <?php if ( $active_page > 1 ) : ?>
                 <li>
-                    <a href="<?php echo esc_url( add_query_arg( 'pg', $prev_page, '/' ) ); ?>" 
+                    <a href="<?php echo esc_url( add_query_arg( 'pg', $prev_page ) ); ?>" 
                        data-page="<?php echo esc_attr($prev_page); ?>" 
                        class="filter-link cursor-pointer rounded-sm border-1 p-[5px] text-(--color-brown)">Back</a>
                 </li>
@@ -242,7 +241,7 @@ final class Recipe {
             $class = $is_current ? 'filter-link current-page cursor-pointer rounded-sm border-1 p-[5px] text-(--color-white)' : 'filter-link cursor-pointer rounded-sm border-1 p-[5px] text-(--color-brown)';
             ?>
             <li>
-                <a href="<?php echo esc_url( add_query_arg( 'pg', 1, '/' ) ); ?>" 
+                <a href="<?php echo esc_url( add_query_arg( 'pg', 1 ) ); ?>" 
                    data-page="1" 
                    class="<?php echo esc_attr( $class ); ?>"
                    <?php echo $is_current ? 'aria-current="page"' : ''; ?>>1</a>
@@ -259,7 +258,7 @@ final class Recipe {
                 $class = $is_current ? 'filter-link current-page cursor-pointer rounded-sm border-1 p-[5px] text-(--color-white)' : 'filter-link cursor-pointer rounded-sm border-1 p-[5px] text-(--color-brown)';
                 ?>
                 <li>
-                    <a href="<?php echo esc_url( add_query_arg( 'pg', $number, '/' ) ); ?>" 
+                    <a href="<?php echo esc_url( add_query_arg( 'pg', $number ) ); ?>" 
                        data-page="<?php echo esc_attr( $number ); ?>" 
                        class="<?php echo esc_attr( $class ); ?>"
                        <?php echo $is_current ? 'aria-current="page"' : ''; ?>><?php echo esc_html( $number ); ?></a>
@@ -277,7 +276,7 @@ final class Recipe {
                 $class = $is_current ? 'filter-link current-page cursor-pointer rounded-sm border-1 p-[5px] text-(--color-white)' : 'filter-link cursor-pointer rounded-sm border-1 p-[5px] text-(--color-brown)';
                 ?>
                 <li>
-                    <a href="<?php echo esc_url( add_query_arg( 'pg', $total_pages, '/' ) ); ?>" 
+                    <a href="<?php echo esc_url( add_query_arg( 'pg', $total_pages ) ); ?>" 
                        data-page="<?php echo esc_attr( $total_pages ); ?>" 
                        class="<?php echo esc_attr( $class ); ?>"
                        <?php echo $is_current ? 'aria-current="page"' : ''; ?>><?php echo esc_html( $total_pages ); ?></a>
@@ -287,7 +286,7 @@ final class Recipe {
             <!-- Next Button -->
             <?php if ( $active_page < $total_pages ) : ?>
                 <li>
-                    <a href="<?php echo esc_url( add_query_arg( 'pg', $next_page, '/' ) ); ?>" 
+                    <a href="<?php echo esc_url( add_query_arg( 'pg', $next_page ) ); ?>" 
                        data-page="<?php echo esc_attr($next_page); ?>" 
                        class="filter-link cursor-pointer rounded-sm border-1 p-[5px] text-(--color-brown)">Next</a>
                 </li>
