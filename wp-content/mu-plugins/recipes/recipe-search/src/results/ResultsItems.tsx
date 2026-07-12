@@ -22,6 +22,8 @@ export default function ResultsItems({data, updateRefiners, currentFilters}: Res
     //Each result row displays the item's taxonomy terms.
     //This list is clickable, and clicking refines the results by the taxonomy term the user clicked on.
     const handleChange = (event: React.MouseEvent<HTMLButtonElement>) => {
+        event.preventDefault();
+
         const button = event.currentTarget as HTMLButtonElement;
         const type = button.getAttribute("data-type") as RefinerKeys;
         const idAttr = button.getAttribute("data-id");
@@ -54,7 +56,7 @@ export default function ResultsItems({data, updateRefiners, currentFilters}: Res
 
                         {(result?.allergen?.length || result?.diet?.length || result?.course?.length) ? ( 
                             <ul className="flex gap-2 flex-wrap">
-                                {alphabetizeTerms([...(result?.allergen || []),...(result?.diet || []),...(result?.course || []),]).map((item) => ( <li key={item?.term_id}><button data-id={item?.term_id} data-type={item?.taxonomy} onClick={handleChange} className="p-[5px] inline-block rounded-sm border-1 border-(--color-brown) text-(--color-brown) hover:text-(--color-white) hover:bg-(--color-brown) cursor-pointer">{item?.term_name}</button></li> ))}
+                                {alphabetizeTerms([...(result?.allergen || []),...(result?.diet || []),...(result?.course || []),]).map((item) => ( <li key={item?.term_id}><a href={`?${item?.taxonomy}=${item?.term_id}`} data-id={item?.term_id} data-type={item?.taxonomy} onClick={handleChange} className="p-[5px] inline-block rounded-sm border-1 border-(--color-brown) text-(--color-brown) hover:text-(--color-white) hover:bg-(--color-brown) cursor-pointer">{item?.term_name}</a></li> ))}
                             </ul>
                          ) : null
                         }
