@@ -19,9 +19,10 @@ import { __ } from '@wordpress/i18n';
  * @see https://www.npmjs.com/package/@wordpress/scripts#using-css
  */
 import './editor.scss';
-import { useBlockProps, InnerBlocks, InspectorControls } from '@wordpress/block-editor';
-import {Panel, PanelBody, TextControl } from '@wordpress/components';
-import { useSelect } from "@wordpress/data";
+import { useBlockProps, InnerBlocks, InspectorControls, MediaUpload, MediaUploadCheck } from '@wordpress/block-editor';
+import {Button, Panel, PanelBody, Placeholder, TextControl, Notice } from '@wordpress/components';
+import { dispatch, useDispatch, useSelect } from "@wordpress/data";
+import { usePostLock } from "../../helper-functions/utils";
 
 /**
  * The edit function describes the structure of your block in the context of the
@@ -38,6 +39,20 @@ export default function Edit({attributes, setAttributes, clientId}) {
 
    const title = useSelect((select) => select('core/editor').getEditedPostAttribute('title'));
    const excerpt = useSelect((select) => select('core/editor').getEditedPostAttribute('excerpt'));
+
+   const { openGeneralSidebar } = useDispatch( 'core/edit-post' );
+   const { toggleEditorPanelOpened } = useDispatch( 'core/editor' );
+
+   const handleOpenExcerpt = () => {
+        // Step A: Force open the main settings sidebar ("Post" / "Document" tab)
+        openGeneralSidebar( 'edit-post/document' );
+        
+        // Step B: Ensure the excerpt panel folds open
+        toggleEditorPanelOpened( 'post-excerpt' );
+   };
+
+
+
    const course = useSelect( (select) => { 
    		const courseId = select('core/editor').getEditedPostAttribute('course');
    		if (courseId.length > 0) {
@@ -58,16 +73,33 @@ export default function Edit({attributes, setAttributes, clientId}) {
    		}
    }, []);
  
-   const getFeaturedMediaUrl = useSelect( ( select ) => {
-   const getFeaturedMediaId = select( 'core/editor' ).getEditedPostAttribute( 'featured_media' );
-   const getMedia = select( 'core' ).getEntityRecord( 'postType', 'attachment', getFeaturedMediaId );
+   const { featuredImageId, featuredImageUrl } = useSelect( ( select ) => {
+   	const editor = select( 'core/editor' );
+   	const id = editor.getEditedPostAttribute( 'featured_media' );
+    
+   	// If an ID exists, fetch the media object to get its source URL
+    const media = id ? select( 'core' ).getEntityRecord( 'postType', 'attachment', id ) : null;
 
-    return (
-        getMedia?.media_details?.sizes?.large?.source_url ||
-        getMedia?.source_url ||
-        ''
-    );
-}, [] );
+    return {
+        featuredImageId: id,
+        featuredImageUrl: media?.source_url,
+    };
+   }, [] );
+
+   const { editPost } = useDispatch( 'core/editor' );
+
+   // 3. Update the global post when an image is chosen
+   const onSelectFeaturedImage = ( media ) => {
+        editPost( { featured_media: media.id } );
+   };
+
+   //Validation
+   const isExcerptMissing = ! excerpt || excerpt.trim() === '';
+   const isImageMissing = ! featuredImageId || featuredImageId === 0;
+
+   // Lock the post from saving globally if *either* condition fails
+   const isInvalid = isExcerptMissing || isImageMissing;
+   usePostLock( isInvalid, `recipe-overview-${clientId}` );
 
 
 
@@ -92,18 +124,75 @@ export default function Edit({attributes, setAttributes, clientId}) {
 			</div>
 			<div className="mb-[20px]">
 				<h1 className="font-roboto-condensed mb-[5px] text-3xl md:mb-[10px] md:text-5xl uppercase text-(--color-green)">{title ? title : 'H1 Title Here' }</h1>
-				<p className="text-base md:text-2xl text-(--color-brown)">{excerpt ? excerpt : 'Recipe Excerpt Here' }</p>
+				{ isInvalid && (
+    				<Notice status="error" isDismissible={ false }>
+        				<p style={ { margin: '0 0 8px 0', fontWeight: '600' } }>
+            				{ __( 'Please fix the following issues to enable saving:', 'lw-recipes' ) }
+        				</p>
+        				<ul style={ { margin: 0, paddingLeft: '20px', listStyleType: 'disc' } }>
+            				{ isExcerptMissing && <li>{ __( 'Add a post excerpt.', 'lw-recipes' ) }</li> }
+           		 			{ isImageMissing && <li>{ __( 'Set a featured image.', 'lw-recipes' ) }</li> }
+        				</ul>
+    				</Notice>
+    			)}
+				{excerpt ? 
+					(<p className="text-base md:text-2xl text-(--color-brown)">{excerpt}</p>) 
+					: 
+					(
+					 <Placeholder 
+					 	label={__('Post Excerpt', 'lw-recipes')}
+					 	className={isExcerptMissing ? 'has-requirement-error' : undefined}
+					 	instructions={__('The post excerpt will appear here.', 'lw-recipes')}>
+					 		<Button 
+					 			onClick={handleOpenExcerpt}
+					 			isPrimary
+					 		>
+					 				{__('Add Excerpt', 'lw-recipes')}
+					 		</Button>
+					 </Placeholder>
+					)
+				}
 			</div>
 			<div className="mb-[20px] md:mb-[30px]">
-				{getFeaturedMediaUrl ? <img src={getFeaturedMediaUrl} className="w-full wp-post-image" /> : <div className="placeholder"><p>{__('Add a featured image, and it will appear here.', 'lw-recipes')}</p></div>}
-			</div>
-			{serves || prepTime || totalTime ?
+				{ featuredImageUrl ? (
+        			// State 1: Image is set. Display ONLY the image, no controls.
+        			<img 
+            			src={ featuredImageUrl } 
+            			className="w-full wp-post-image" 
+            			alt={ __( 'Featured Content', 'lw-recipes' ) } 
+        			/>
+    			  ) : (
+        			// State 2: No image set. Display the workflow placeholder.
+        			<Placeholder
+        			     className={isImageMissing ? 'has-requirement-error' : undefined} 
+            			label={ __( 'Featured Image', 'lw-recipes' ) }
+            			instructions={ __( 'The featured image will appear here.', 'lw-recipes' ) }
+        			>
+           				<MediaUploadCheck>
+                			<MediaUpload
+                    			onSelect={ onSelectFeaturedImage }
+                    			allowedTypes={ [ 'image' ] }
+                    			value={ featuredImageId }
+                    			render={ ( { open } ) => (
+                        			<Button 
+                            			onClick={ open } 
+                            			isPrimary
+                        			>
+                            			{ __( 'Set Post Featured Image', 'lw-recipes' ) }
+                        			</Button>
+                    			) }
+                			/>
+           			 	</MediaUploadCheck>
+        			</Placeholder>
+    			  ) }
+				  {serves || prepTime || totalTime ?
 					<ul className="flex flex-wrap gap-[10px] text-(--color-dark-green)">
 				 		{serves ? <li><span className="text-(--color-brown)"><strong>Serves:</strong></span> {serves}</li> : null}
 				 		{prepTime ? <li><span className="text-(--color-brown)"><strong>Prep Time:</strong></span> {prepTime}</li> : null}
 				 		{totalTime ? <li><span className="text-(--color-brown)"><strong>Total Time:</strong></span> {totalTime}</li> : null}
 					</ul>
-				: null}
+				  : null}
+			</div>
 		</div>
 	);
 }
