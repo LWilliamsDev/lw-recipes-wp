@@ -4,6 +4,7 @@
 @import "tailwindcss";
 @source "../../*.html";
 @source "../../../../../mu-plugins/recipes/recipe-search/src";
+@source "../../../../../mu-plugins/recipes/blocks/src/recipe-search/*.php";
 
 @theme {
 	--*: initial;
@@ -98,6 +99,12 @@ a {
 }
 a:hover {
 	color: var(--color-brown);
+}
+a.filter-link {
+  color: var(--color-brown);
+}
+a.filter-link:hover {
+  color: white;
 }
 .button {
 	background: var(--color-brown);
