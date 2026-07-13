@@ -9,9 +9,17 @@ if (!$is_block_editor && !defined('REST_REQUEST') && !(wp_doing_ajax())) {
 	$recipe_rest = new \Recipes\Rest\Recipe();
 
 	$mock_request = new \WP_REST_Request( 'GET', '/lw-recipes/v1/recipes' );
-	foreach ( $_GET as $key => $value ) {
-    	$mock_request->set_param( $key, sanitize_text_field( $value ) );
+
+	foreach ($_GET as $key => $value) {
+    	if (!is_array($value)) {
+        	$mock_request->set_param($key, sanitize_text_field($value));
+    	}
 	}
+
+	$current_courses = $recipe_rest->get_array_param($mock_request, 'course');
+	$current_diets = $recipe_rest->get_array_param($mock_request, 'diet');
+	$current_allergens = $recipe_rest->get_array_param($mock_request, 'allergen');
+
 	$has_active_filters = false;
 
 	$params = ['course', 'diet', 'allergen', 'search'];
@@ -33,11 +41,11 @@ $initial_pagination = $recipe_rest->build_pagination( $total_pages, $current_pag
 
 	<div id="root">
 		<div class="recipes-search mx-auto">
-			<div class="form mt-8 mb-8 md:md-12 md:mb-12">
-				<form role="search" class="grid grid-cols-[1fr_40px] gap-x-2">
+			<div class="form mt-8 mb-8 md:mt-12 md:mb-12">
+				<form role="search" class="grid grid-cols-[1fr_40px] gap-x-2" id="recipe-search-form" method="GET">
 					<label for="search" class="sr-only"><?php _e('Search', 'lw-recipes'); ?></label>
-					<input type="text" id="search" class="rounded-sm border border-(--color-mid-green) border-solid p-2" name="search" placeholder="Search Recipes...">
-					<button id="listing--search" class="button p-[10px] inline-block rounded-sm text-(--color-white font-medium cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"><?php _e('Go', 'lw-recipes'); ?></button>
+					<input type="text" id="search" class="rounded-sm border border-(--color-mid-green) border-solid p-2" name="search" placeholder="Search Recipes..." value="<?php echo esc_attr($_GET['search'] ?? ''); ?>">
+					<button id="listing--search" class="button p-[10px] inline-block rounded-sm text-(--color-white) font-medium cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"><?php _e('Go', 'lw-recipes'); ?></button>
 				</form>
 				<?php if ($has_active_filters) { ?>
 					<div class="pt-5 flex flex-wrap gap-x-5 min-h-[56px]">
@@ -58,7 +66,7 @@ $initial_pagination = $recipe_rest->build_pagination( $total_pages, $current_pag
 								<?php $courses = get_terms(array('taxonomy' => 'course')); 
 									foreach ($courses as $course) { ?>
 										<div class="refiner-checkbox">
-											<input id="<?php echo $course->term_id; ?>" data-slug="course" type="checkbox" value="<?php echo $course->term_id; ?>">
+											<input id="<?php echo $course->term_id; ?>" data-slug="course" type="checkbox" value="<?php echo $course->term_id; ?>" name="course" form="recipe-search-form"  <?php checked(in_array($course->term_id, $current_courses)); ?>>
 											<label for="<?php echo $course->term_id; ?>" class="pl-2 text-(--color-dark-green)"><?php echo $course->name; ?></label>
 								</div>
 								<?php } ?>
@@ -77,7 +85,7 @@ $initial_pagination = $recipe_rest->build_pagination( $total_pages, $current_pag
 								<?php $diets = get_terms(array('taxonomy' => 'diet'));
 								  	  foreach ($diets as $diet) { ?>
 										<div class="refiner-checkbox">
-											<input id="<?php echo $diet->term_id; ?>" data-slug="diet" type="checkbox" value="<?php echo $diet->term_id; ?>">
+											<input id="<?php echo $diet->term_id; ?>" data-slug="diet" type="checkbox" value="<?php echo $diet->term_id; ?>" form="recipe-search-form" name="diet"  <?php checked(in_array($diet->term_id, $current_diets)); ?>>
 											<label for="<?php echo $diet->term_id; ?>" class="pl-2 text-(--color-dark-green)"><?php echo $diet->name; ?></label>
 										 </div>
 							<?php } ?>
@@ -96,7 +104,7 @@ $initial_pagination = $recipe_rest->build_pagination( $total_pages, $current_pag
 								<?php $allergens = get_terms(array('taxonomy' => 'allergen'));
 								  	  foreach ($allergens as $allergen) { ?>
 								<div class="refiner-checkbox">
-									<input id="<?php echo $allergen->term_id; ?>" data-slug="allergen" type="checkbox" value="<?php echo $allergen->term_id; ?>">
+									<input id="<?php echo $allergen->term_id; ?>" data-slug="allergen" type="checkbox" value="<?php echo $allergen->term_id; ?>" form="recipe-search-form" name="allergen"  <?php checked(in_array($allergen->term_id, $current_allergens)); ?>>
 									<label for="<?php echo $allergen->term_id; ?>" class="pl-2 text-(--color-dark-green)"><?php echo $allergen->name; ?></label>
 								</div>
 							<?php } ?>

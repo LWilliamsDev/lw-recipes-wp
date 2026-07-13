@@ -1,4 +1,4 @@
-import { parseAsString, parseAsArrayOf, parseAsInteger, type inferParserType } from 'nuqs';
+import { parseAsString, parseAsNativeArrayOf, parseAsInteger, type inferParserType } from 'nuqs';
 
 export interface Term {
   term_id: number;
@@ -75,11 +75,13 @@ export interface TaxonomyItem {
 
 export type TaxonomyItems = TaxonomyItem[];
 
+
+
 export const refinersSchema = {
   search: parseAsString,
-  course: parseAsArrayOf(parseAsInteger, '+'),
-  diet: parseAsArrayOf(parseAsInteger, '+'),
-  allergen: parseAsArrayOf(parseAsInteger, '+'),
+  course: parseAsNativeArrayOf(parseAsInteger),
+  diet: parseAsNativeArrayOf(parseAsInteger),
+  allergen: parseAsNativeArrayOf(parseAsInteger),
   pg: parseAsInteger,
 };
 

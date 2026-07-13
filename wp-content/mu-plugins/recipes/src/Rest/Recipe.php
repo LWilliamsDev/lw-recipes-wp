@@ -15,7 +15,7 @@ final class Recipe {
 		'methods'  => \WP_REST_SERVER::READABLE,
 		'callback' => [$this, 'rest_response'],
 		'permission_callback' => '__return_true'
-		 ) );
+		) );
 
 	}
 
@@ -45,45 +45,37 @@ final class Recipe {
 	}
 
 	public function build_query($request) {
-		$course = $request->get_param( 'course' );
-		$diet = $request->get_param( 'diet' );
-		$allergen = $request->get_param('allergen');
+		$course = $this->get_array_param($request, 'course');
+        $diet = $this->get_array_param($request, 'diet');
+        $allergen = $this->get_array_param($request, 'allergen');
 		$search_query = $request->get_param( 'search' ); // Get the search query parameter
 
 		$tax_query = [];
 
 		if ( ! empty( $course ) ) {
-			$course = urldecode($course);
-			$course = explode(" ", $course);
-
 			$tax_query[] = array(
-				'taxonomy' => 'course',
-				'terms'    => $course
-
-			);
+                'taxonomy' => 'course',
+                'terms'    => $course,   // This is already a clean array, e.g., [5, 7]
+            );
 		}
 
 
 		if ( ! empty( $diet ) ) {
-			$diet = urldecode($diet);
-			$diet = explode(" ", $diet);
 			$tax_query[] = array(
-				'taxonomy' => 'diet',
-				'terms'    => $diet
-			);
+                'taxonomy' => 'diet',
+                'terms'    => $diet,   // This is already a clean array, e.g., [5, 7]
+            );
 		}
 
 		if ( ! empty( $allergen ) ) {
-			$allergen = urldecode($allergen);
-			$allergen = explode(" ", $allergen);
 			$tax_query[] = array(
-				'taxonomy' => 'allergen',
-				'terms'    => $allergen
-			);
+                'taxonomy' => 'allergen',
+                'terms'    => $allergen,   // This is already a clean array, e.g., [5, 7]
+            );
 		}
 
 		if (count($tax_query) > 1) {
-			$tax_query = array_merge( [ 'relation' => 'AND' ], $tax_query );
+			$tax_query['relation'] = 'AND';
 		}
 
 		if ($request->get_param( 'pg' )) {
@@ -105,9 +97,38 @@ final class Recipe {
 			$query_args['s'] = sanitize_text_field($search_query); // Add the search query parameter to the query arguments
 		}
 
+
 		return $query_args;
 
 	}
+
+    public function get_array_param($request, $key) {
+        $query_string = wp_parse_url($_SERVER['REQUEST_URI'], PHP_URL_QUERY);
+
+        if ($query_string) {
+            preg_match_all(
+                '/(?:^|&)' . preg_quote($key, '/') . '=([^&]*)/',
+                $query_string,
+                $matches
+            );
+
+            if (!empty($matches[1])) {
+                return array_map('intval', $matches[1]);
+            }
+        }   
+
+        $value = $request->get_param($key);
+
+        if (is_array($value)) {
+            return array_map('intval', $value);
+        }
+
+        if ($value !== null && $value !== '') {
+            return [(int) $value];
+        }
+
+        return [];
+    }
 
 	public function build_results($query) {
 		// If there are no posts, return early

@@ -144,18 +144,17 @@ export default function Recipes() {
     queryFn: async () => {
       const params = new URLSearchParams();
 
-      // Loop through refiners to build the string
       Object.entries(refiners).forEach(([key, value]) => {
         if (value !== null && value !== undefined) {
-          // Handle arrays with '+' and everything else normally
-          const formattedValue = Array.isArray(value) ? value.join('+') : value;
-          params.append(key, String(formattedValue));
+          if (Array.isArray(value)) {
+            value.forEach(id => params.append(key, String(id)));
+          } else {
+            params.append(key, String(value));
+          }
         }
       });
 
-      // Use .decodeURIComponent to prevent '+' from becoming '%2B' 
-      const queryString = params.toString().replaceAll('%2B', '+');
-      const fullUrl = `${queryPath}${queryString ? `?${queryString}` : ''}`;
+      const fullUrl = `${queryPath}?${params.toString()}`;
 
       const res = await fetch(fullUrl);
       if (!res.ok) throw new Error('Network response was not ok');
