@@ -56,32 +56,28 @@ $initial_pagination = $recipe_rest->build_pagination( $total_pages, $current_pag
 				<div class="refiners mb-8 md:mb-0">
 					<div class="refiner-fieldset mb-4">
 						<fieldset>
-							<legend class="w-full md:w-auto">
-								<button class="cursor-pointer text-(--color-mid-green) font-medium p-2 border-1 w-full rounded-t-sm md:border-0 md:rounded-t-none md:w-auto md:p-0" aria-label="<?php _e('Toggle Courses refiner', 'lw-recipes'); ?>" id="course--btn" aria-controls="course--container">
-									<span class="tax-name"><?php _e('Course', 'lw-recipes'); ?></span>
-									<span>+</span>
-								</button>
-							</legend>
-							<div class="checkboxes rounded-b-sm border-x border-b p-2 md:rounded-b-none md:border-none md:p-0" id="course--container">
+							<legend class="sr-only"><?php _e('Filter by Course', 'lw-recipes'); ?></legend>
+							<details class="tax-refiner">
+          						<summary class="cursor-pointer text-(--color-mid-green) font-medium p-2 border-1 w-full rounded-t-sm md:border-0 md:rounded-t-none md:w-auto md:p-0">
+            						<?php _e('Course', 'lw-recipes'); ?>
+          						</summary>
 								<?php $courses = get_terms(array('taxonomy' => 'course')); 
 									foreach ($courses as $course) { ?>
 										<div class="refiner-checkbox">
 											<input id="<?php echo $course->term_id; ?>" data-slug="course" type="checkbox" value="<?php echo $course->term_id; ?>" name="course" form="recipe-search-form"  <?php checked(in_array($course->term_id, $current_courses)); ?>>
 											<label for="<?php echo $course->term_id; ?>" class="pl-2 text-(--color-dark-green)"><?php echo $course->name; ?></label>
-								</div>
+										</div>
 								<?php } ?>
-							</div>
+							</details>
 						</fieldset>
 					</div>
 					<div class="refiner-fieldset mb-4">
 						<fieldset>
-							<legend class="w-full md:w-auto">
-								<button class="cursor-pointer text-(--color-mid-green) font-medium p-2 border-1 w-full rounded-t-sm md:border-0 md:rounded-t-none md:w-auto md:p-0" aria-label="<?php _e('Toggle Diet refiner', 'lw-recipes'); ?>" id="diet--btn" aria-controls="diet--container">
-									<span class="tax-name"><?php _e('Diet', 'lw-recipes'); ?></span>
-									<span>+</span>
-								</button>
-							</legend>
-							<div class="checkboxes rounded-b-sm border-x border-b p-2 md:rounded-b-none md:border-none md:p-0" id="diet--container">
+							<legend class="sr-only"><?php _e('Filter by Diet', 'lw-recipes'); ?></legend>
+							<details class="tax-refiner">
+								<summary class="cursor-pointer text-(--color-mid-green) font-medium p-2 border-1 w-full rounded-t-sm md:border-0 md:rounded-t-none md:w-auto md:p-0">
+									<?php _e('Diet', 'lw-recipes'); ?>
+								</summary>
 								<?php $diets = get_terms(array('taxonomy' => 'diet'));
 								  	  foreach ($diets as $diet) { ?>
 										<div class="refiner-checkbox">
@@ -89,18 +85,16 @@ $initial_pagination = $recipe_rest->build_pagination( $total_pages, $current_pag
 											<label for="<?php echo $diet->term_id; ?>" class="pl-2 text-(--color-dark-green)"><?php echo $diet->name; ?></label>
 										 </div>
 							<?php } ?>
-							</div>
+							</details>
 						</fieldset>
 					</div>
 					<div class="refiner-fieldset mb-4">
 						<fieldset>
-							<legend class="w-full md:w-auto">
-								<button class="cursor-pointer text-(--color-mid-green) font-medium p-2 border-1 w-full rounded-t-sm md:border-0 md:rounded-t-none md:w-auto md:p-0" aria-label="<?php _e('Toggle Allergen refiner', 'lw-recipes'); ?>" id="allergen--btn" aria-controls="allergen--container">
-									<span class="tax-name"><?php _e('Allergen', 'lw-recipes'); ?></span>
-									<span>+</span>
-								</button>
-							</legend>
-							<div class="checkboxes rounded-b-sm border-x border-b p-2 md:rounded-b-none md:border-none md:p-0" id="allergen--container">
+							<legend class="sr-only"><?php _e('Filter by Allergen', 'lw-recipes'); ?></legend>
+							<details class="tax-refiner">
+								<summary class="cursor-pointer text-(--color-mid-green) font-medium p-2 border-1 w-full rounded-t-sm md:border-0 md:rounded-t-none md:w-auto md:p-0">
+									<?php _e('Allergen', 'lw-recipes'); ?>
+								</summary>
 								<?php $allergens = get_terms(array('taxonomy' => 'allergen'));
 								  	  foreach ($allergens as $allergen) { ?>
 								<div class="refiner-checkbox">
@@ -108,7 +102,7 @@ $initial_pagination = $recipe_rest->build_pagination( $total_pages, $current_pag
 									<label for="<?php echo $allergen->term_id; ?>" class="pl-2 text-(--color-dark-green)"><?php echo $allergen->name; ?></label>
 								</div>
 							<?php } ?>
-							</div>
+							</details>
 						</fieldset>
 					</div>
 				</div>
