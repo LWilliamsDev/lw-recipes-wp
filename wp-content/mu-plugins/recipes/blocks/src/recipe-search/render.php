@@ -32,11 +32,51 @@ if (!$is_block_editor && !defined('REST_REQUEST') && !(wp_doing_ajax())) {
 	$query_args = $recipe_rest->build_query( $mock_request );
 	$recipes    = new \WP_Query( $query_args );
 
-// 4. Generate the initial HTML markup
-$initial_results    = $recipe_rest->build_results( $recipes );
-$current_page       = $mock_request->get_param( 'pg' ) ? intval( $mock_request->get_param( 'pg' ) ) : 1;
-$total_pages        = intval( $recipes->max_num_pages );
-$initial_pagination = $recipe_rest->build_pagination( $total_pages, $current_page );
+
+	//Build taxonomy data
+	$course_data = get_terms(array('taxonomy' => 'course'));
+	$courses = [];
+
+	foreach ($course_data as $course) {
+		$course_row['id'] = $course->term_id;
+		$course_row['name'] = $course->name;
+		$course_row['slug'] = $course->slug;
+		$course_row['taxonomy'] = 'course';
+
+		$courses[] = $course_row;
+	}
+
+	$diet_data = get_terms(array('taxonomy' => 'diet'));
+	$diets = [];
+
+	foreach ($diet_data as $diet) {
+		$diet_row['id'] = $diet->term_id;
+		$diet_row['name'] = $diet->name;
+		$diet_row['slug'] = $diet->slug;
+		$diet_row['taxonomy'] = 'diet';
+
+		$diets[] = $diet_row;
+	}
+
+	$allergen_data = get_terms(array('taxonomy' => 'allergen'));
+	$allergens = [];
+
+	foreach ($allergen_data as $allergen) {
+		$allergen_row['id'] = $allergen->term_id;
+		$allergen_row['name'] = $allergen->name;
+		$allergen_row['slug'] = $allergen->slug;
+		$allergen_row['taxonomy'] = 'allergen';
+
+		$allergens[] = $allergen_row;
+	}
+
+
+	// 4. Generate the initial HTML markup
+	$initial_results    = $recipe_rest->build_results( $recipes );
+	$current_page       = $mock_request->get_param( 'pg' ) ? intval( $mock_request->get_param( 'pg' ) ) : 1;
+	$total_pages        = intval( $recipes->max_num_pages );
+	$initial_pagination = $recipe_rest->build_pagination( $total_pages, $current_page );
+
 ?>
 
 	<div id="root">
@@ -61,13 +101,13 @@ $initial_pagination = $recipe_rest->build_pagination( $total_pages, $current_pag
           						<summary class="cursor-pointer text-(--color-mid-green) font-medium p-2 border-1 w-full rounded-t-sm md:border-0 md:rounded-t-none md:w-auto md:p-0">
             						<?php _e('Course', 'lw-recipes'); ?>
           						</summary>
-								<?php $courses = get_terms(array('taxonomy' => 'course')); 
+								<?php if (!empty($courses)) {
 									foreach ($courses as $course) { ?>
 										<div class="refiner-checkbox">
-											<input id="<?php echo $course->term_id; ?>" data-slug="course" type="checkbox" value="<?php echo $course->term_id; ?>" name="course" form="recipe-search-form"  <?php checked(in_array($course->term_id, $current_courses)); ?>>
-											<label for="<?php echo $course->term_id; ?>" class="pl-2 text-(--color-dark-green)"><?php echo $course->name; ?></label>
+											<input id="<?php echo $course['id']; ?>" data-slug="course" type="checkbox" value="<?php echo $course['id']; ?>" name="course" form="recipe-search-form"  <?php checked(in_array($course['id'], $current_courses)); ?>>
+											<label for="<?php echo $course['id'] ?>" class="pl-2 text-(--color-dark-green)"><?php echo $course['name'] ?></label>
 										</div>
-								<?php } ?>
+								<?php } } ?>
 							</details>
 						</fieldset>
 					</div>
@@ -78,13 +118,13 @@ $initial_pagination = $recipe_rest->build_pagination( $total_pages, $current_pag
 								<summary class="cursor-pointer text-(--color-mid-green) font-medium p-2 border-1 w-full rounded-t-sm md:border-0 md:rounded-t-none md:w-auto md:p-0">
 									<?php _e('Diet', 'lw-recipes'); ?>
 								</summary>
-								<?php $diets = get_terms(array('taxonomy' => 'diet'));
+								<?php if (!empty($diets)) {
 								  	  foreach ($diets as $diet) { ?>
 										<div class="refiner-checkbox">
-											<input id="<?php echo $diet->term_id; ?>" data-slug="diet" type="checkbox" value="<?php echo $diet->term_id; ?>" form="recipe-search-form" name="diet"  <?php checked(in_array($diet->term_id, $current_diets)); ?>>
-											<label for="<?php echo $diet->term_id; ?>" class="pl-2 text-(--color-dark-green)"><?php echo $diet->name; ?></label>
+											<input id="<?php echo $diet['id']; ?>" data-slug="diet" type="checkbox" value="<?php echo $diet['id']; ?>" form="recipe-search-form" name="diet"  <?php checked(in_array($diet['id'], $current_diets)); ?>>
+											<label for="<?php echo $diet['id']; ?>" class="pl-2 text-(--color-dark-green)"><?php echo $diet['name']; ?></label>
 										 </div>
-							<?php } ?>
+							<?php } } ?>
 							</details>
 						</fieldset>
 					</div>
@@ -95,13 +135,13 @@ $initial_pagination = $recipe_rest->build_pagination( $total_pages, $current_pag
 								<summary class="cursor-pointer text-(--color-mid-green) font-medium p-2 border-1 w-full rounded-t-sm md:border-0 md:rounded-t-none md:w-auto md:p-0">
 									<?php _e('Allergen', 'lw-recipes'); ?>
 								</summary>
-								<?php $allergens = get_terms(array('taxonomy' => 'allergen'));
+								<?php if (!empty($allergens)) {
 								  	  foreach ($allergens as $allergen) { ?>
 								<div class="refiner-checkbox">
-									<input id="<?php echo $allergen->term_id; ?>" data-slug="allergen" type="checkbox" value="<?php echo $allergen->term_id; ?>" form="recipe-search-form" name="allergen"  <?php checked(in_array($allergen->term_id, $current_allergens)); ?>>
-									<label for="<?php echo $allergen->term_id; ?>" class="pl-2 text-(--color-dark-green)"><?php echo $allergen->name; ?></label>
+									<input id="<?php echo $allergen['id']; ?>" data-slug="allergen" type="checkbox" value="<?php echo $allergen['id']; ?>" form="recipe-search-form" name="allergen"  <?php checked(in_array($allergen['id'], $current_allergens)); ?>>
+									<label for="<?php echo $allergen['id']; ?>" class="pl-2 text-(--color-dark-green)"><?php echo $allergen['name']; ?></label>
 								</div>
-							<?php } ?>
+							<?php } } ?>
 							</details>
 						</fieldset>
 					</div>
@@ -119,6 +159,9 @@ $initial_pagination = $recipe_rest->build_pagination( $total_pages, $current_pag
     window.INITIAL_RECIPE_DATA = <?php echo wp_json_encode([
         'result'     => $initial_results,     // The exact same HTML structure
         'pagination' => $initial_pagination, // The exact same pagination HTML
+        'course' => $courses,
+        'diet' => $diets,
+        'allergen' => $allergens
     ]); ?>;
 </script>
 <?php } ?>
