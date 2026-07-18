@@ -6,6 +6,7 @@
 import {useState, useEffect, useRef} from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useQueryStates } from 'nuqs';
+import DOMPurify from 'dompurify';
 
 import Skeleton from 'react-loading-skeleton';
 
@@ -288,9 +289,9 @@ export default function Recipes() {
           </div>
           ) : ( 
           <>
-            <div className="results" dangerouslySetInnerHTML={{__html: resultsData.result}} onClick={clickResultLinks}>
+            <div className="results" dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(resultsData.result)}} onClick={clickResultLinks}>
             </div>
-            <div className="pagination md:col-start-2 pb-5" dangerouslySetInnerHTML={{__html: resultsData.pagination}} onClick={handlePageChange}>
+            <div className="pagination md:col-start-2 pb-5" dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(resultsData.pagination)}} onClick={handlePageChange}>
             </div>
           </>
           )}

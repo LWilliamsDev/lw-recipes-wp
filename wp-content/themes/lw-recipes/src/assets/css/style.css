@@ -105,6 +105,10 @@ a.filter-link {
 }
 a.filter-link:hover {
   color: white;
+  background: var(--color-brown);
+}
+a.filter-link.current-page {
+  color: white;
 }
 .button {
 	background: var(--color-brown);
