@@ -157,11 +157,13 @@ if (!$is_block_editor && !defined('REST_REQUEST') && !(wp_doing_ajax())) {
 	</div>
 <script type="text/javascript">
     window.INITIAL_RECIPE_DATA = <?php echo wp_json_encode([
-        'result'     => $initial_results,     // The exact same HTML structure
-        'pagination' => $initial_pagination, // The exact same pagination HTML
-        'course' => $courses,
-        'diet' => $diets,
-        'allergen' => $allergens
+        'result'     => $initial_results, 
+        'pagination' => $initial_pagination,
+        'taxonomies' => [
+        	'course' => $courses,
+        	'diet' => $diets,
+        	'allergen' => $allergens
+        ]
     ]); ?>;
 </script>
 <?php } ?>

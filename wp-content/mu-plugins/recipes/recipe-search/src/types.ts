@@ -43,21 +43,20 @@ export interface Results {
   total_pages: number;
 }
 
-export interface TaxonomyTargetHints {
-  allow: string[];
+export interface InitialRecipeData {
+  result: string;
+  pagination: string;
+  taxonomies: {
+    course: TaxonomyItem[];
+    diet: TaxonomyItem[];
+    allergen: TaxonomyItem[];
+  };
 }
 
-export interface TaxonomyLink {
-  href: string;
-  targetHints?: TaxonomyTargetHints;
-}
-
-export interface TaxonomyLinks {
-  self: TaxonomyLink[];
-  collection: TaxonomyLink[];
-  about: TaxonomyLink[];
-  'wp:post_type': TaxonomyLink[];
-  curies: { name: string; href: string; templated: boolean }[];
+declare global {
+  interface Window {
+    INITIAL_RECIPE_DATA?: InitialRecipeData;
+  }
 }
 
 export interface TaxonomyItem {
@@ -68,7 +67,6 @@ export interface TaxonomyItem {
 }
 
 export type TaxonomyItems = TaxonomyItem[];
-
 
 
 export const refinersSchema = {

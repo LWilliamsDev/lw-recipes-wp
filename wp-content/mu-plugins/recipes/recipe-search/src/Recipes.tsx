@@ -11,7 +11,7 @@ import DOMPurify from 'dompurify';
 import Skeleton from 'react-loading-skeleton';
 
 import { buildArray, hasVisibleFilters } from './utils';
-import { RefinerKeys, refinersSchema, TaxonomyItems } from "./types";
+import { RefinerKeys, refinersSchema } from "./types";
 
 import ChosenRefiners from "./chosen-refiners/ChosenRefiners";
 import ResultItemSkeleton from './results/ResultItemSkeleton';
@@ -22,19 +22,30 @@ import TaxonomyFieldset from './form/search-refiners/TaxonomyFieldset';
 
 /* Reusable function to fetch taxonomy data. We assume that the data does not
    change frequently, therefore we give a high cache time of 30 mins. */
-export const fetchTaxonomyData = (queryKey: string, url: string) => {
-  const { isLoading, error, data, refetch } = useQuery<TaxonomyItems>({
-    queryKey: [queryKey],
-    queryFn: () => fetch(url).then((res) => res.json()),
-    staleTime: 1000 * 60 * 30, // Cache data for 30 minutes
-    gcTime: 1000 * 60 * 30, // Cache time before data is garbage collected
-    refetchOnWindowFocus: false, // Don't refetch when window is focused
+const fetchTaxonomyData = (hostname: string) => {
+  return useQuery({
+    queryKey: ['taxonomyOptions'],
+    queryFn: async () => {
+      const [courses, diets, allergens] = await Promise.all([
+        fetch(`https://${hostname}/wp-json/wp/v2/course?per_page=100`).then(res => res.json()),
+        fetch(`https://${hostname}/wp-json/wp/v2/diet?per_page=100`).then(res => res.json()),
+        fetch(`https://${hostname}/wp-json/wp/v2/allergen?per_page=100`).then(res => res.json()),
+      ]);
+
+      return {
+        course: courses,
+        diet: diets,
+        allergen: allergens,
+      };
+    },
+    initialData: () => {
+      return window.INITIAL_RECIPE_DATA?.taxonomies;
+    },
+    staleTime: 1000 * 60 * 60 * 24,
+    gcTime: 1000 * 60 * 60 * 24,
+    refetchOnWindowFocus: false,
   });
-
-  return { isLoading, error, data, refetch };
-
 };
-
 
 /* Main Recipes component */
 
@@ -100,9 +111,7 @@ export default function Recipes() {
       })
   };
 
-
-
-  //**-- Fetch URL setup --**//
+    //**-- Fetch URL setup --**//
   //Todo: Replace with WP apiFetch package
 
   // Build the query string for fetch requests
@@ -116,27 +125,14 @@ export default function Recipes() {
     hostname = currentHostname;
   }
 
+
   const endpoint: string = '/wp-json/lw-recipes/v1/recipes';
   const queryPath: string = `https://${hostname}${endpoint}`;
 
   //**-- Run Queries --**// 
   
   // Get all taxonomy term data to pass into the refiners
-  const { isLoading: isCourseOptionsLoading, data: courseOptionsData, error: courseOptionsError } = fetchTaxonomyData('courseOptions', `https://${hostname}/wp-json/wp/v2/course?per_page=100`);
-  const { isLoading: isDietOptionsLoading, data: dietOptionsData, error: dietOptionsError } = fetchTaxonomyData('dietOptions', `https://${hostname}/wp-json/wp/v2/diet?per_page=100`);
-  const { isLoading: isAllergenOptionsLoading, data: allergenOptionsData, error: allergenOptionsError } = fetchTaxonomyData('allergenOptions', `https://${hostname}/wp-json/wp/v2/allergen?per_page=100`);
-
-  const isFormLoading = isCourseOptionsLoading || isDietOptionsLoading || isAllergenOptionsLoading;
-  const formError = courseOptionsError || dietOptionsError || allergenOptionsError;
-
-  // Create a lookup map for taxonomy options for each category
-  const taxonomyMap: Partial<Record<RefinerKeys, TaxonomyItems>> | null  = (courseOptionsData && dietOptionsData && allergenOptionsData)
-    ? {
-      course: courseOptionsData,
-      diet: dietOptionsData,
-      allergen: allergenOptionsData,
-    }
-  : null;
+  const { isLoading: isTaxonomyLoading, data: taxonomyMap, error: taxonomyError } = fetchTaxonomyData(hostname);
 
 
   // Get results
@@ -162,10 +158,13 @@ export default function Recipes() {
       return res.json();
     },
     initialData: () => {
-      if (typeof window !== 'undefined' && (window as any).INITIAL_RECIPE_DATA) {
-        return (window as any).INITIAL_RECIPE_DATA;
-      }
-      return undefined;
+       const data = window.INITIAL_RECIPE_DATA;
+        if (!data) return undefined;
+
+        return {
+          result: data.result,
+          pagination: data.pagination,
+        };
     }
   });
 
@@ -242,7 +241,7 @@ export default function Recipes() {
     <div className="recipes-search mx-auto" ref={listingContainer}>
       <div className="form mt-8 mb-8 md:mt-12 md:mb-12">
         <form role="search" className="grid grid-cols-[1fr_40px] gap-x-2" onSubmit={handleSearchSubmit}>
-          <SearchInput id="search" label="Search" machineName="search" placeholder="Search Recipes..." searchInputValue={searchInputValue} onChange={searchInputChange} buttonText="Go" disabled={isFormLoading} />
+          <SearchInput id="search" label="Search" machineName="search" placeholder="Search Recipes..." searchInputValue={searchInputValue} onChange={searchInputChange} buttonText="Go" disabled={isTaxonomyLoading} />
         </form>
           {
           (taxonomyMap && 
@@ -251,13 +250,13 @@ export default function Recipes() {
       </div>
       <div className="results-container md:grid md:grid-cols-[0.5fr_2fr] md:gap-4">
         <div className="refiners mb-8 md:mb-0">
-              <TaxonomyFieldset name="Courses" slug="course" data={courseOptionsData} onChange={updateRefiners} paramValue={refiners.course} />
-              <TaxonomyFieldset name="Diet" slug="diet" data={dietOptionsData} onChange={updateRefiners} paramValue={refiners.diet} />
-              <TaxonomyFieldset name="Allergen" slug="allergen" data={allergenOptionsData} onChange={updateRefiners} paramValue={refiners.allergen} />
+              <TaxonomyFieldset name="Courses" slug="course" data={taxonomyMap?.course ?? []} onChange={updateRefiners} paramValue={refiners.course} />
+              <TaxonomyFieldset name="Diet" slug="diet" data={taxonomyMap?.diet ?? []} onChange={updateRefiners} paramValue={refiners.diet} />
+              <TaxonomyFieldset name="Allergen" slug="allergen" data={taxonomyMap?.allergen ?? []} onChange={updateRefiners} paramValue={refiners.allergen} />
         </div>
         <div className="sr-only" role="status" aria-live="polite" aria-atomic="true">
-          {formError || resultsError ? "There was an error loading the page content." : 
-          isFormLoading ? "Loading filters..." :
+          {taxonomyError || resultsError ? "There was an error loading the page content." : 
+          isTaxonomyLoading ? "Loading filters..." :
           isResultsPending ? "Updating recipe results..." : 
           resultsData ? "Recipe list updated." : ""}
         </div>
