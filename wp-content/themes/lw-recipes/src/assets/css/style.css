@@ -107,6 +107,15 @@ a.filter-link:hover {
   color: white;
   background: var(--color-brown);
 }
+.tax-refiner summary::marker {
+  content: none;
+}
+.tax-refiner summary:after {
+  content: "+"
+}
+details.tax-refiner[open] summary:after {
+  content: "-";
+}
 a.filter-link.current-page {
   color: white;
 }

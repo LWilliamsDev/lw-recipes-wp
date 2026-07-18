@@ -5,8 +5,6 @@
  * Allows multiple values for a single taxonomy.
  */
 
-import { useState } from 'react';
-
 import {decode} from 'html-entities';
 
 import type { RefinerKeys, TaxonomyItems } from '../../types';
@@ -21,8 +19,6 @@ interface TaxonomyFieldSetProps {
 }
 
 export default function TaxonomyFieldset({name, slug, data, onChange, paramValue}: TaxonomyFieldSetProps) {
-
-  const [accordionIsActive, setAccordionIsActive] = useState<boolean>(false);
 
   // Handling checkbox changes
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -63,14 +59,17 @@ export default function TaxonomyFieldset({name, slug, data, onChange, paramValue
 	return (
 		<div className="refiner-fieldset mb-4">
       <fieldset>
-			  <legend className="w-full md:w-auto">
-          <button className="cursor-pointer text-(--color-mid-green) font-medium p-2 border-1 w-full rounded-t-sm md:border-0 md:rounded-t-none md:w-auto md:p-0" aria-label={`Toggle ${name} refiner`} id={`${slug}--btn`} aria-controls={`${slug}--container`} onClick={() => setAccordionIsActive(!accordionIsActive)}><span className="tax-name">{ name }</span> <span>{accordionIsActive ? '-' : '+'}</span></button>
+			  <legend className="sr-only">
+          Filter by { name }
         </legend>
-        {accordionIsActive &&
-          <div className="checkboxes rounded-b-sm border-x border-b p-2 md:rounded-b-none md:border-none md:p-0" id={`${slug}--container`}>
-				  { data?.map((tax) => <div className="refiner-checkbox" key={tax?.id}><input id={tax?.id?.toString()} data-slug={slug} value={tax?.id} type="checkbox" checked={!!paramValue?.includes(tax.id)} onChange={handleCheckboxChange} />
+        <details className="tax-refiner">
+          <summary className="cursor-pointer text-(--color-mid-green) font-medium p-2 border-1 w-full rounded-t-sm md:border-0 md:rounded-t-none md:w-auto md:p-0">
+            { name }
+          </summary>
+              { data?.map((tax) => <div className="refiner-checkbox" key={tax?.id}><input id={tax?.id?.toString()} data-slug={slug} value={tax?.id} type="checkbox" checked={!!paramValue?.includes(tax.id)} onChange={handleCheckboxChange} />
           <label htmlFor={tax?.id?.toString()} className="pl-2 text-(--color-dark-green)">{decode(tax?.name)}</label></div>) }
-          </div> }
+        </details>
+		
       </fieldset>
 	  </div>
 	)
