@@ -102,6 +102,12 @@ final class Recipe {
 
 	}
 
+    /*
+    * PHP collapses duplicate non-array query parameters in $_GET.
+    * Parse the raw query string so React-style URLs like course=7&course=5
+    * preserve all selected taxonomy IDs.
+    */
+
     public function get_array_param($request, $key) {
         $query_string = wp_parse_url($_SERVER['REQUEST_URI'], PHP_URL_QUERY);
 
