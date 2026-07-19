@@ -31,7 +31,7 @@ final class Protein {
 		'description' => __('Proteins like beef, chicken, beans, etc.', 'lw_recipes'),
 		'public' => true,
 		'publicly_queryable' => false,
-		'hierarchical' => true,
+		'hierarchical' => false,
 		'show_admin_column' => true,
 		'show_in_nav_menus' => false,
 		'capabilities' => [

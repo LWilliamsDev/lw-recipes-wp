@@ -31,7 +31,7 @@ final class Allergen {
 		'description' => __('Allergens like gluten free, dairy free, nut free, etc.', 'lw_recipes'),
 		'public' => true,
 		//'publicly_queryable' => false,
-		'hierarchical' => true,
+		'hierarchical' => false,
 		'show_admin_column' => true,
 		'show_in_nav_menus' => false,
 		'capabilities' => [
