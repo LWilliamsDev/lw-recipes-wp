@@ -5,7 +5,16 @@
  */
 
 .wp-block-lw-recipes-recipe-overview {
-	border: 1px dotted #f00;
+	border: 1px dotted black;
+	padding: 10px;
+
+	.components-notice {
+		margin-bottom: 10px;
+	}
+
+	.components-placeholder:has(+ ul) {
+		margin-bottom: 10px;
+	}
 
 	.placeholder {
 		background: gray;

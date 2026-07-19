@@ -19,7 +19,7 @@ import { __ } from '@wordpress/i18n';
  * @see https://www.npmjs.com/package/@wordpress/scripts#using-css
  */
 import './editor.scss';
-import { useBlockProps, InnerBlocks, InspectorControls, MediaUpload, MediaUploadCheck } from '@wordpress/block-editor';
+import { useBlockProps, InnerBlocks, InspectorControls, MediaUpload, MediaUploadCheck, RichText } from '@wordpress/block-editor';
 import {Button, Panel, PanelBody, Placeholder, TextControl, Notice } from '@wordpress/components';
 import { dispatch, useDispatch, useSelect } from "@wordpress/data";
 import { usePostLock } from "../../helper-functions/utils";
@@ -106,15 +106,6 @@ export default function Edit({attributes, setAttributes, clientId}) {
 
 	return (
 		<div { ...blockProps }>
-			<InspectorControls key="setting">
-				<PanelBody title={__('Recipe Data', 'lw-recipes')}>
-					<div className="recipes-group">
-						<TextControl label={__('Serves', 'lw-recipes')} value={serves} onChange={serves => setAttributes({serves})} />
-						<TextControl label={__('Prep Time', 'lw-recipes')} value={prepTime} onChange={prepTime => setAttributes({prepTime})} />
-						<TextControl label={__('Total Time', 'lw-recipes')} value={totalTime} onChange={totalTime => setAttributes({totalTime})} />
-					</div>
-				</PanelBody>
-				</InspectorControls>
 			<div className="mb-[10px] md:mb-[20px] pt-[5px] border-t border-solid border-(--color-mid-green)">
 				<ul class="flex flex-wrap breadcrumbs gap-[10px]">
 					<li><a href="#">Recipes</a></li>
@@ -185,13 +176,47 @@ export default function Edit({attributes, setAttributes, clientId}) {
            			 	</MediaUploadCheck>
         			</Placeholder>
     			  ) }
-				  {serves || prepTime || totalTime ?
 					<ul className="flex flex-wrap gap-[10px] text-(--color-dark-green)">
-				 		{serves ? <li><span className="text-(--color-brown)"><strong>Serves:</strong></span> {serves}</li> : null}
-				 		{prepTime ? <li><span className="text-(--color-brown)"><strong>Prep Time:</strong></span> {prepTime}</li> : null}
-				 		{totalTime ? <li><span className="text-(--color-brown)"><strong>Total Time:</strong></span> {totalTime}</li> : null}
+				 		 <li>
+				 		 	<span className="text-(--color-brown)">
+				 		 		<strong>{__('Serves: ', 'lw-recipes')}</strong>
+				 		 	</span>
+				 		 	<RichText 
+				 		 		identifier="serves" 
+				 		 		tagName="span" 
+				 		 		allowedFormats={[]} 
+				 		 		value={serves} 
+				 		 		onChange={ ( serves ) => setAttributes( { serves } ) } 
+				 		 		placeholder={__('6', 'lw-recipes')}
+				 		 	/>
+				 		 </li>
+				 		  <li>
+				 		  	<span className="text-(--color-brown)">
+				 		  		<strong>{__('Prep Time: ', 'lw-recipes')}</strong>
+				 		  	</span>	
+				 		 	<RichText 
+				 		 		identifier="prepTime" 
+				 		 		tagName="span" 
+				 		 		allowedFormats={[]} 
+				 		 		value={prepTime} 
+				 		 		onChange={ ( prepTime ) => setAttributes( { prepTime } ) } 
+				 		 		placeholder={__('10 mins', 'lw-recipes')}
+				 		 	/>
+				 		 </li>
+						  <li>
+						  <span className="text-(--color-brown)">
+						  	<strong>{__('Total Time: ', 'lw-recipes')}</strong>
+						  </span>
+				 		  <RichText 
+				 		 	identifier="totalTime" 
+				 		 	tagName="span" 
+				 		 	allowedFormats={[]} 
+				 		 	value={prepTime} 
+				 		 	onChange={ ( totalTime ) => setAttributes( { totalTime } ) } 
+				 		 	placeholder={__('30 mins', 'lw-recipes')}
+				 		 	/>
+				 		 </li>
 					</ul>
-				  : null}
 			</div>
 		</div>
 	);
