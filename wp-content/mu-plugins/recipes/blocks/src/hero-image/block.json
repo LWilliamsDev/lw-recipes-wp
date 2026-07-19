@@ -19,6 +19,20 @@
 		"imageUrl" : {
 			"type" : "string",
 			"default" : ""
+		},
+		"heading": {
+			"type": "string",
+			"default" : "My Hero Title"
+		},
+		"headingLevel" : {
+			"type": "number",
+			"default" : 1
+		},
+		"subtitle" : {
+			"type": "string"
+		},
+		"cta" : {
+			"type": "string"
 		}
 	},
 	"textdomain": "lw-recipes",

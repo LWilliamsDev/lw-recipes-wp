@@ -13,8 +13,7 @@ import { __ } from '@wordpress/i18n';
  * @see https://www.npmjs.com/package/@wordpress/scripts#using-css
  */
 import './editor.scss';
-import { useBlockProps, InspectorControls, RichText } from '@wordpress/block-editor';
-import {Panel, PanelBody, PanelRow, TextControl } from '@wordpress/components';
+import { useBlockProps, RichText } from '@wordpress/block-editor';
 import { useSelect } from '@wordpress/data';
 import { decodeEntities } from '@wordpress/html-entities';
 
@@ -58,13 +57,15 @@ export default function Edit({attributes, setAttributes}) {
         
 	return (
 		<div { ...blockProps }>
-				<InspectorControls key="setting">
-				<PanelBody title={__('Latest Recipes', 'lw-recipes')}>
-					<TextControl label={__('Title', 'lw-recipes')} help={ __('Section Title; will default to Latest Recipes if left blank', 'lw-recipes')} value={title} onChange={ title => setAttributes({title})} />
-				</PanelBody>
-			</InspectorControls>
 			<section className="px-4 py-8 md:px-12 md:py-12">
-				<h2 className="font-roboto-condensed text-5xl color-green text-(--color-green) mb-8 uppercase">{ title ? title : __('Latest Recipes', 'lw-recipes') }</h2>
+			    <RichText 
+			    	identifier="title"
+			    	className="font-roboto-condensed text-5xl color-green text-(--color-green) mb-8 uppercase"
+			    	value={title}
+			    	onChange={(title) => setAttributes({title})}
+			    	tagName="h2"
+			    	allowedFormats={[]}
+			    />
 				{isLoading && <p>{__('Loading latest recipes...', 'lw-recipes')}</p>}
 			   {hasPosts && hasTermData ? (
 			   	   <div className="cards sm:grid sm:grid-cols-[1fr_1fr_1fr] sm:gap-x-5">

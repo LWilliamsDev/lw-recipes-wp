@@ -19,7 +19,7 @@ import { __ } from '@wordpress/i18n';
  * @see https://www.npmjs.com/package/@wordpress/scripts#using-css
  */
 import './editor.scss';
-import { useBlockProps, InnerBlocks, InspectorControls, MediaUpload, MediaUploadCheck, RichText } from '@wordpress/block-editor';
+import { useBlockProps, InnerBlocks, MediaUpload, MediaUploadCheck, RichText } from '@wordpress/block-editor';
 import {Button, Panel, PanelBody, Placeholder, TextControl, Notice } from '@wordpress/components';
 import { dispatch, useDispatch, useSelect } from "@wordpress/data";
 import { usePostLock } from "../../helper-functions/utils";

@@ -13,6 +13,9 @@
 	font-weight: bold;
 	font-size: 18px;
 }
+.has-requirement-error {
+	border: 1px solid red;
+}
 /*Adjustment for page title*/
 .editor-styles-wrapper .wp-block-post-title  {
 	max-width: 1024px;

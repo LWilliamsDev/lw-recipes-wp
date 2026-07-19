@@ -7,7 +7,7 @@ $is_block_editor = BlockHelper::is_in_block_editor();
 if (!$is_block_editor && !defined('REST_REQUEST') && !(wp_doing_ajax())) {
 
 	$tax = empty($attributes['taxonomy']) ? 'diet' : $attributes['taxonomy'];
-	$title = empty($attributes['title']) ? 'Browse by Diet' : $attributes['title'];
+	$title = empty($attributes['title']) ? 'Browse by ' . ucwords($tax) : $attributes['title'];
 
 
 $terms = get_terms(array( 'taxonomy' => $tax));

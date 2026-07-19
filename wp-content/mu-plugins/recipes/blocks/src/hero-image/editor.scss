@@ -5,6 +5,10 @@
  */
 
 .wp-block-lw-recipes-hero-image{
-	border: 1px dotted #f00;
+	border: 1px dotted black;
+
+	.components-notice {
+		margin-bottom: 10px;
+	}
 
 }

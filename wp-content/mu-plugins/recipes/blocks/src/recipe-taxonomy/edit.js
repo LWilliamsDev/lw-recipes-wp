@@ -14,7 +14,7 @@ import { __ } from '@wordpress/i18n';
  */
 import './editor.scss';
 import { useBlockProps, InspectorControls, RichText } from '@wordpress/block-editor';
-import {Panel, PanelBody, PanelRow, TextControl, SelectControl } from '@wordpress/components';
+import {Panel, PanelBody, PanelRow, ComboboxControl } from '@wordpress/components';
 import { useSelect } from '@wordpress/data';
 import { store as coreDataStore } from '@wordpress/core-data';
 import { useEffect } from '@wordpress/element';
@@ -54,12 +54,25 @@ export default function Edit({attributes, setAttributes}) {
 		<div { ...blockProps }>
 				<InspectorControls key="setting">
 				<PanelBody title={__('Recipe Taxonomy', 'lw-recipes')}>
-					<TextControl label={__('Title', 'lw-recipes')} help={ __('Section Title; will default to Browse {selected taxonomy} if left blank', 'lw-recipes')} value={title} onChange={ title => setAttributes({title})} />
-					<SelectControl label={__('Taxonomy', 'lw-recipes')} options={options} value={taxonomy} help={__('If no taxonomy is selected, it will default to diet.', 'lw-recipes')} onChange={ taxonomy => setAttributes({taxonomy})} />
+					<ComboboxControl 
+						label={__('Taxonomy', 'lw-recipes')} 
+						options={options} 
+						value={taxonomy} 
+						help={__('If no taxonomy is selected, it will default to diet.', 'lw-recipes')} 
+						onChange={ taxonomy => setAttributes({taxonomy})} 
+						/>
 				</PanelBody>
 			</InspectorControls>
 			<section className="px-4 py-8 md:px-12 md:py-12">
-				<h2 className="font-roboto-condensed text-5xl color-green text-(--color-green) mb-8 uppercase">{ title ? title : __(`Browse by ${decodeEntities(taxonomy)}`, 'lw-recipes') }</h2>
+			 <RichText 
+			    	identifier="title"
+			    	className="font-roboto-condensed text-5xl color-green text-(--color-green) mb-8 uppercase"
+			    	value={title}
+			    	onChange={(title) => setAttributes({title})}
+			    	tagName="h2"
+			    	allowedFormats={[]}
+			    	placeholder={__(`Browse by ${decodeEntities(taxonomy)}`, 'lw-recipes')}
+			    />
 				<div className="cards sm:grid sm:grid-cols-[1fr_1fr] sm:gap-x-5">
 					{ terms && terms.map((term) => (
 						<div className="card mb-8" key={term.id}>

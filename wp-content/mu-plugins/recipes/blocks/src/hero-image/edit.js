@@ -19,10 +19,11 @@ import { __ } from '@wordpress/i18n';
  * @see https://www.npmjs.com/package/@wordpress/scripts#using-css
  */
 import './editor.scss';
-import { useBlockProps, InspectorControls, InnerBlocks, MediaUpload, MediaUploadCheck } from '@wordpress/block-editor';
-import {BaseControl, Panel, PanelBody, Button } from '@wordpress/components';
-import { useSelect, dispatch, useDispatch } from '@wordpress/data';
-import { useEffect, useState } from '@wordpress/element';
+import { BlockControls, useBlockProps, MediaUpload, MediaUploadCheck, RichText, HeadingLevelDropdown } from '@wordpress/block-editor';
+import { Button, Notice, Placeholder, ToolbarGroup, ToolbarButton } from '@wordpress/components';
+import { useDispatch } from '@wordpress/data';
+import { useState } from '@wordpress/element';
+import { usePostLock } from "../../helper-functions/utils";
 
 /**
  * The edit function describes the structure of your block in the context of the
@@ -33,34 +34,18 @@ import { useEffect, useState } from '@wordpress/element';
  * @return {Element} Element to render.
  */
 export default function Edit({attributes, setAttributes, clientId}) {
-		const { imageID, imageUrl } = attributes;
+		const { imageID, imageUrl, heading, headingLevel, subtitle, cta } = attributes;
 
 	
 
 	const blockProps = useBlockProps();
 
-	const [isValid, setIsValid] = useState(false);
 
+	const isImageMissing = ! imageID || imageID === 0;
 
-	useEffect(() => {
-
-			 if (imageID) {
-			 	setIsValid(true);
-			 	dispatch('core/editor').unlockPostSaving(`hero-image-${clientId}`);
-				dispatch('core/editor').unlockPostAutosaving(`hero-image-${clientId}`);
-			 }
-			 else {
-			 	setIsValid(false);
-			 	dispatch('core/editor').lockPostSaving(`hero-image-${clientId}`);
-				dispatch('core/editor').lockPostAutosaving(`hero-image-${clientId}`);
-			 }
-
-		
-			return () => {
-				dispatch('core/editor').unlockPostSaving(`hero-image-${clientId}`);
-				dispatch('core/editor').unlockPostAutosaving(`hero-image-${clientId}`);
-		}
-	}, [imageID]);
+   // Lock the post from saving globally if *either* condition fails
+   const isInvalid = isImageMissing;
+   usePostLock( isInvalid, `hero-image-${clientId}` );
 
 
 
@@ -73,66 +58,122 @@ export default function Edit({attributes, setAttributes, clientId}) {
 
 	}
 
-	const removeMedia = () => {
-		setAttributes({imageID: 0});
-		setAttributes({imageUrl: ""});
 
-	}
+	const tagName = 'h' + headingLevel;
+	const headingOptions = [ 1, 2, 3, 4, 5, 6 ];
 
-	const ALLOWED_BLOCKS = ['lw-recipes/hero-image-heading', 'lw-recipes/hero-image-subtitle', 'lw-recipes/hero-image-cta'];
-	const template = [
-		['lw-recipes/hero-image-heading'],
-		['lw-recipes/hero-image-subtitle'],
-		['lw-recipes/hero-image-cta']
-	];
-
+	const [activeRichText, setActiveRichText ] = useState(null);
 
 
 
 
 	return (
 		<div { ...blockProps }>
-				<InspectorControls key="setting">
-				<PanelBody title={__('Hero Image', 'lw-recipes')}>
-					<BaseControl label={__('Image', 'lw-recipes')} className="recipes-required">
-					<MediaUploadCheck>
-						<MediaUpload
-							onSelect={onSelectMedia}
-							label={__('Upload image', 'lw-recipes') }
-							render={({open}) => (
-								<Button
-									className={imageID ? 'recipes-media-btn editor-post-featured-image__toggle' : 'recipes-media-btn editor-post-featured-image__preview'}
-									onClick={open}
-								>
-									{!imageID ? __('Choose or upload file', 'lw-recipes') : <img src={imageUrl} /> }
-								</Button>
-							)}
-						/>
-					</MediaUploadCheck>
-						{imageID ?
-							<MediaUploadCheck>
-								<Button onClick={removeMedia} isLink isDestructive>{__('Remove image', 'lw-recipes')}</Button>
-							</MediaUploadCheck> : null
-						}
-					</BaseControl>
-				</PanelBody>
-				</InspectorControls>
-				{!isValid && ( 
-					<div className="recipes-error">
-						{ (__('The image field is required.', 'lw-recipes')) }
-					</div>
-				)}
-				
-					<section className="hero grid h-[358px] md:h-[717px]">
-						<div className="hero row-span-full col-span-full relative">
-							{imageID ? <img src={imageUrl} className="col-span-full row-span-full absolute top-0 left-0 w-full h-full object-cover"/> : null }
-							<div className="bg-(--color-tan) block w-full h-full opacity-80 absolute left-0 top-0"></div>
+				<BlockControls group="default">
+					<ToolbarGroup>
+						{imageID > 0 && (
+					 		<MediaUploadCheck>
+					 			<MediaUpload
+					 				onSelect={onSelectMedia}
+					 				allowedTypes={['image']}
+					 				value={imageID}
+					 				render={({open}) => (
+					 					<ToolbarButton
+					 						icon="format-image"
+					 						label={__('Replace Image', 'lw-recipes')}
+					 						onClick={open}>
+					 						{__('Replace', 'lw-recipes')}
+					 					</ToolbarButton>
+					 				)}	
+					 			/>
+					 	 	</MediaUploadCheck>
+					  )}	
+					   {activeRichText === 'title' && (
+        					<HeadingLevelDropdown
+								value={ headingLevel }
+								options={ headingOptions }
+								onChange={ ( newLevel ) => setAttributes( { headingLevel: newLevel } )}
+							/>
+						)}
+					</ToolbarGroup>
+				</BlockControls>
+			    { isInvalid && (
+    				<Notice status="error" isDismissible={ false }>
+        				<p style={ { margin: '0 0 8px 0', fontWeight: '600' } }>
+            				{ __( 'Please fix the following issues to enable saving:', 'lw-recipes' ) }
+        				</p>
+        				<ul style={ { margin: 0, paddingLeft: '20px', listStyleType: 'disc' } }>
+           		 			{ isImageMissing && <li>{ __( 'Add a hero image.', 'lw-recipes' ) }</li> }
+        				</ul>
+    				</Notice>
+    			)}
+				<section className="hero grid h-[358px] md:h-[717px]">
+					<div className="hero row-span-full col-span-full relative">
+						{ imageUrl ? (
+        					// State 1: Image is set. Display ONLY the image, no controls.
+        					<>
+        						<img 
+            						src={ imageUrl } 
+            						className="col-span-full row-span-full absolute top-0 left-0 w-full h-full object-cover" 
+            						alt={ __( 'Featured Content', 'lw-recipes' ) } 
+        						/>
+        						<div className="bg-(--color-tan) block w-full h-full opacity-80 absolute left-0 top-0"></div>
+        					</>
+    			  		   ) : (
+        					// State 2: No image set. Display the workflow placeholder.
+        					<Placeholder
+        			     		className={isImageMissing ? 'has-requirement-error' : undefined} 
+            					label={ __( 'Hero Image', 'lw-recipes' ) }
+            					instructions={ __( 'Please upload an image sized 1438x717 pixels.', 'lw-recipes' ) }
+        					>
+           						<MediaUploadCheck>
+                					<MediaUpload
+                    					onSelect={ onSelectMedia }
+                    					allowedTypes={ [ 'image' ] }
+                    					value={ imageID }
+                    					render={ ( { open } ) => (
+                        					<Button 
+                            					onClick={ open } 
+                            					isPrimary
+                        					>
+                            					{ __( 'Add Hero Image', 'lw-recipes' ) }
+                        					</Button>
+                    					) }
+                					/>
+           			 			</MediaUploadCheck>
+        					</Placeholder>
+        				)}
 						</div>
 						<div className="row-span-full col-span-full relative z-2 text-center self-center">
-							<InnerBlocks allowedBlocks={ALLOWED_BLOCKS} template={template} templateLock="all" />
+							<RichText 
+								identifier="title" 
+								className="font-roboto-condensed text-4xl md:text-6xl uppercase text-(--color-green) mb-[10px] md:mb-[20px] is-layout-flow wp-block-lw-recipes-hero-image-heading-is-layout-flow" 
+								tagName={tagName} 
+								value={heading} 
+								onChange={ heading => setAttributes({heading})} placeholder={__('My Hero Title', 'lw-recipes')} 
+								onFocus={() => setActiveRichText('title')}
+							/>
+							<RichText 
+								tagName="p" 
+								identifier="subtitle"
+								className="text-color(--color-dark-green) text-sm md:text-2xl mb-[15px] md:mb-[20px]" 
+								allowedFormats={['core/bold', 'core/italic', 'core/subscript', 'core/superscript', 'core/strikethrough', 'core/underline']} 
+								value={subtitle} 
+								onChange={(newContent) => setAttributes({subtitle: newContent})} 
+								placeholder={__('Subtitle', 'lw-recipes')} 
+								onFocus={() => setActiveRichText('subtitle')}
+							/>
+							<RichText 
+								tagName="p" 
+								identifier="cta"
+								className="hero-image__cta" 
+								allowedFormats={['core/link', 'core/subscript', 'core/superscript', 'core/italic', 'core/strikethrough']} 
+								value={cta} onChange={cta => setAttributes({cta})}  
+								placeholder={__('CTA', 'lw-recipes')} 
+								onFocus={() => setActiveRichText('cta')}
+							/>		
 						</div>
-					</section>
-			
+				</section>
 		</div>
 	);
 }

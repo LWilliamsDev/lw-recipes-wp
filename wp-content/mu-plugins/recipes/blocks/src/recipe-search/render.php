@@ -81,7 +81,7 @@ if (!$is_block_editor && !defined('REST_REQUEST') && !(wp_doing_ajax())) {
 
 ?>
 
-	<div id="root">
+	<div id="root" class="px-4 pb-8 md:px-12 md:pb-12">
 		<div class="recipes-search mx-auto">
 			<div class="form mt-8 mb-8 md:mt-12 md:mb-12">
 				<form role="search" class="grid grid-cols-[1fr_40px] gap-x-2" id="recipe-search-form" method="GET">
