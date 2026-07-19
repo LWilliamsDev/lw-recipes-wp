@@ -176,7 +176,8 @@ export default function Edit({attributes, setAttributes, clientId}) {
            			 	</MediaUploadCheck>
         			</Placeholder>
     			  ) }
-					<ul className="flex flex-wrap gap-[10px] text-(--color-dark-green)">
+			</div>
+			<ul className="flex flex-wrap gap-[10px] text-(--color-dark-green)">
 				 		 <li>
 				 		 	<span className="text-(--color-brown)">
 				 		 		<strong>{__('Serves: ', 'lw-recipes')}</strong>
@@ -217,7 +218,6 @@ export default function Edit({attributes, setAttributes, clientId}) {
 				 		 	/>
 				 		 </li>
 					</ul>
-			</div>
 		</div>
 	);
 }

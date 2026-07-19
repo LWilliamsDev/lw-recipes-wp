@@ -50,7 +50,8 @@ const relatedPosts = useSelect((select) => {
 			exclude: currentPostId,
 		});
 
-		if (!posts) return null;
+
+		if (!posts?.length) return null;
 
 		// Add featured media data
 		const postsWithImages = posts.map((post) => {
