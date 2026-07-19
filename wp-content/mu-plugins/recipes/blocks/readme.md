@@ -9,9 +9,6 @@ All custom blocks are available in the mu-plugins/recipes/blocks folder. Below i
 - [Page Template](src/page-template/readme.md)
   - [Homepage Template](src/home-template/readme.md)
     - Hero Image
-      - Hero Image Heading
-      - Hero Image Subtitle
-      - Hero Image CTA
     - Latest Recipes
     - Recipe Taxonomy
   - [Recipe Listing Template](src/recipe-listing/readme.md)

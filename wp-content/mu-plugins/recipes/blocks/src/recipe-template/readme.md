@@ -2,6 +2,9 @@
 
 This block represents the recipe post template, which is locked to every recipe post.
 
+## Custom Metabox
+The recipe post type requires that the user selects a taxonomy term in the diet and course taxonomies. For more information, please see the [custom metabox documentation](../../metabox/readme.md).
+
 ## Child Blocks
 - Recipe Content
   - Recipe Overview
@@ -26,11 +29,13 @@ The Recipe Overview block contains:
 
 - Breadcrumbs
 - H1 page title
-- Excerpt (optional; comes from the_excerpt)
-- Featured Image (optional)
+- Excerpt (required; comes from the_excerpt)
+- Featured Image (required)
 - Summary data: number of people the recipe will serve, prep time, total time to cook
 
-The Summary data can be added via fields in the block settings panel.
+If the post lacks an excerpt and featured image, a notice will display at the top of this block noting the missing requirements. Additionally, when these things are missing, placeholder elements appear for each missing item. The Excerpt placeholder element contains a button that opens the sidebar panel so that the user can add the excerpt. The Featured Image placeholder element contains a button to set the featured image.
+
+Additionally, although the Summary data is optional, all fields always appear in the block preview area so that the user can fill them out if they need to. Only the fields that are filled out appear on the front end.
 
 #### Recipe
 The Recipe Block allows you to add either the Complex Recipe or Simple Recipe block. If you add more than 1 block, a notice will appear in the block editor that notes that you can only add 1 block. Post saving and auto-saving are locked until the user complies with the requirement.
