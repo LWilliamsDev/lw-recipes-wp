@@ -1,7 +1,10 @@
+import { __, sprintf } from '@wordpress/i18n';
 import { useSelect, useDispatch } from '@wordpress/data';
-import { SelectControl } from '@wordpress/components';
+import { useEffect, useRef } from '@wordpress/element';
+import { ComboboxControl } from '@wordpress/components';
 import { PluginDocumentSettingPanel } from '@wordpress/editor';
 import { registerPlugin } from '@wordpress/plugins';
+import { usePostLock } from '../../blocks/helper-functions/utils';
 
 const SingleSelectTaxonomyControl = ({ taxonomySlug }) => {
   const terms = useSelect((select) =>
@@ -22,11 +25,10 @@ const SingleSelectTaxonomyControl = ({ taxonomySlug }) => {
   };
 
   return (
-    <SelectControl
+    <ComboboxControl
       label={`Select ${taxonomySlug}`}
       value={selected}
       options={[
-        { label: '— Select —', value: 0 },
         ...(terms || []).map((term) => ({
           label: term.name,
           value: term.id,
@@ -37,57 +39,106 @@ const SingleSelectTaxonomyControl = ({ taxonomySlug }) => {
   );
 };
 
-const CourseSingleSelectPanel = () => {
+wp.domReady(() => {
+    wp.data.dispatch('core/editor').removeEditorPanel(
+        'taxonomy-panel-course'
+    );
 
-  const postType = useSelect((select) =>
-    select('core/editor').getCurrentPostType()
-  );
-
-  if (postType !== 'recipe') {
-    return null;
-  }
-
-  return (
-    <PluginDocumentSettingPanel
-      name="single-select-taxonomies"
-      title="Course"
-      className="single-select-taxonomies"
-    >
-      <SingleSelectTaxonomyControl taxonomySlug="course" />
-    </PluginDocumentSettingPanel>
-  );
-};
-
-const DietSingleSelectPanel = () => {
-
-  const postType = useSelect((select) =>
-    select('core/editor').getCurrentPostType()
-  );
-
-  if (postType !== 'recipe') {
-    return null;
-  }
-
-  return (
-    <PluginDocumentSettingPanel
-      name="single-select-taxonomies"
-      title="Diet"
-      className="single-select-taxonomies"
-    >
-      <SingleSelectTaxonomyControl taxonomySlug="diet" />
-    </PluginDocumentSettingPanel>
-  );
-};
-
-wp.data.dispatch( 'core/editor' ).removeEditorPanel( 'taxonomy-panel-course' );
-wp.data.dispatch( 'core/editor' ).removeEditorPanel( 'taxonomy-panel-diet' );
-
-registerPlugin('course-single-select', {
-  render: CourseSingleSelectPanel,
-  icon: null,
+    wp.data.dispatch('core/editor').removeEditorPanel(
+        'taxonomy-panel-diet'
+    );
 });
 
-registerPlugin('diet-single-select', {
-  render: DietSingleSelectPanel,
-  icon: null,
+const RecipeDetailsPanel = () => {
+    const { hasCourse, hasDiet } = useSelect((select) => {
+        const editor = select('core/editor');
+
+        const course = editor.getEditedPostAttribute('course') || [];
+        const diet = editor.getEditedPostAttribute('diet') || [];
+
+        return {
+            hasCourse: course.length > 0,
+            hasDiet: diet.length > 0,
+        };
+    });
+
+    //Validation
+
+    const missing = [];
+
+    if (!hasCourse) {
+      missing.push(__('Course', 'lw-recipes'));
+    }
+
+    if (!hasDiet) {
+      missing.push(__('Diet', 'lw-recipes'));
+    }
+
+    const message = sprintf(
+      __('Recipe Details are incomplete. Please select: %s.', 'lw-recipes'),
+      missing.join(', ')
+    );
+
+    const { createNotice, removeNotice } = useDispatch( 'core/notices' );
+
+    const isInvalid = ! hasCourse || ! hasDiet;
+    const noticeId = 'lw-recipes-taxonomy-validation-error';
+    const isNoticeDisplayedRef = useRef( false );
+
+    // 2. Lock saving capabilities via your performant hook
+    usePostLock( isInvalid, 'lw-recipes-sidebar-lock' );
+
+    // 3. Side-effect to manage the global sliding notice at the top of the screen
+    useEffect( () => {
+        if ( isInvalid && ! isNoticeDisplayedRef.current ) {
+            createNotice('error', message, {
+              id: noticeId,
+              isDismissible: false,
+              actions: [
+              {
+                label: __('Open Recipe Details', 'lw-recipes'),
+                onClick: () => {
+                  wp.data.dispatch('core/edit-post').openGeneralSidebar(
+                    'edit-post/document'
+                  );
+                  wp.data.dispatch('core/editor').toggleEditorPanelOpened(
+                    'recipe-custom-sidebar/recipe-details'
+                  );
+              },
+        },
+    ],
+            });
+            isNoticeDisplayedRef.current = true;
+        } else if ( ! isInvalid && isNoticeDisplayedRef.current ) {
+            removeNotice( noticeId );
+            isNoticeDisplayedRef.current = false;
+        }
+
+        // Cleanup notice if plugin unmounts
+        return () => {
+            removeNotice( noticeId );
+        };
+    }, [ isInvalid, createNotice, removeNotice ] );
+
+    return (
+        <PluginDocumentSettingPanel
+            name="recipe-details"
+            title={__('Recipe Details', 'lw-recipes')}
+            className="recipe-details-panel"
+        >
+            <div>
+              <p style={{ fontSize: '13px' }}>Select the required classifications for this recipe.</p>
+                <SingleSelectTaxonomyControl taxonomySlug="course" />
+            </div>
+
+            <div>
+                <SingleSelectTaxonomyControl taxonomySlug="diet" />
+            </div>
+        </PluginDocumentSettingPanel>
+    );
+};
+
+
+registerPlugin('recipe-custom-sidebar', {
+    render: () => <RecipeDetailsPanel />,
 });

@@ -18,3 +18,6 @@ label:has(+ *:required):after, .recipes-required .components-base-control__label
 .components-base-control:has(label[for="social-icon-selector"]) .components-button.is-primary {
  background: rgb(254, 250, 224);
 }
+.recipe-details-panel div:has(.components-combobox-control) + div:has(.components-combobox-control) {
+	margin-top: 24px;
+}
