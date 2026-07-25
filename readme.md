@@ -1,21 +1,54 @@
-# LW Recipes Project (WordPress)
+<p align="center">
+  <a href="https://roots.io/bedrock/">
+    <img alt="Bedrock" src="https://cdn.roots.io/app/uploads/logo-bedrock.svg" height="100">
+  </a>
+</p>
 
-This repo was set up for a fictional recipes website named "Fit & Flavor", with the goal of providing code samples.
+<p align="center">
+  <a href="https://packagist.org/packages/roots/bedrock"><img alt="Packagist Installs" src="https://img.shields.io/packagist/dt/roots/bedrock?label=projects%20created&colorB=2b3072&colorA=525ddc&style=flat-square"></a>
+  <a href="https://packagist.org/packages/roots/wordpress"><img alt="roots/wordpress Packagist Downloads" src="https://img.shields.io/packagist/dt/roots/wordpress?label=roots%2Fwordpress%20downloads&logo=roots&logoColor=white&colorB=2b3072&colorA=525ddc&style=flat-square"></a>
+  <img src="https://img.shields.io/badge/dynamic/json.svg?url=https://raw.githubusercontent.com/roots/bedrock/master/composer.json&label=wordpress&logo=roots&logoColor=white&query=$.require[%22roots/wordpress%22]&colorB=2b3072&colorA=525ddc&style=flat-square">
+  <a href="https://github.com/roots/bedrock/actions/workflows/ci.yml"><img alt="Build Status" src="https://img.shields.io/github/actions/workflow/status/roots/bedrock/ci.yml?branch=master&logo=github&label=CI&style=flat-square"></a>
+  <a href="https://twitter.com/rootswp"><img alt="Follow Roots" src="https://img.shields.io/badge/follow%20@rootswp-1da1f2?logo=twitter&logoColor=ffffff&message=&style=flat-square"></a>
+  <a href="https://github.com/sponsors/roots"><img src="https://img.shields.io/badge/sponsor%20roots-525ddc?logo=github&style=flat-square&logoColor=ffffff&message=" alt="Sponsor Roots"></a>
+</p>
 
-## Editorial Requirements
-In this fictional scenario\*, the Fit & Flavor Content Team have strict brand guidelines and standards regarding what components can go on which pages. Due to this, the editorial experience is restricted. Pages and/or post types have blocks that act like templates. Users are only allowed to add the specific blocks that are allowed in that context. This website does not use block patterns because as of this writing, there is no way to require that certain blocks are used in certain circumstances. 
+<p align="center">WordPress boilerplate with Composer, easier configuration, and an improved folder structure</p>
 
-\*Although this is a fictional website, I have regularly encountered clients that require a restricted editing experience. I have also worked with companies that needed maximum flexibility (and hence we planned to use block patterns in that case).
- 
-## Features
-- [Recipes Theme](wp-content/themes/lw-recipes/readme.md)
-   - Contains an accessible main menu that supports keyboard navigation
-   - Being a Block Theme, it supports the WordPress Site Editor
-- [Recipes Plugin](wp-content/mu-plugins/recipes/readme.md)
-   - [Custom blocks](wp-content/mu-plugins/recipes/blocks/readme.md)
-   	 - Contains examples for enforcing requirements in custom blocks like required fields, requiring that certain blocks are used in certain contexts, etc.
-   	 - Demonstrates how to create a system for a restricted editing experience.
-   - [Metabox customization (Gutenberg)](wp-content/mu-plugins/recipes/metabox/README.md)
-     - Contains an example for changing the default taxonomy panels when editing posts
-   - [Recipe Listing React App](wp-content/mu-plugins/recipes/recipe-search/README.md)
-     - Decoupled component that is a filterable list of recipes on the front end
+<p align="center">
+  <a href="https://roots.io/bedrock/">Website</a> &nbsp;&nbsp; <a href="https://roots.io/bedrock/docs/installation/">Documentation</a> &nbsp;&nbsp; <a href="https://github.com/roots/bedrock/releases">Releases</a> &nbsp;&nbsp; <a href="https://discourse.roots.io/">Community</a>
+</p>
+
+## Support us
+
+Roots is an independent open source org, supported only by developers like you. Your sponsorship funds [WP Packages](https://wp-packages.org/) and the entire Roots ecosystem, and keeps them independent. Support us by purchasing [Radicle](https://roots.io/radicle/) or [sponsoring us on GitHub](https://github.com/sponsors/roots) — sponsors get access to our private Discord.
+
+### Sponsors
+
+<a href="https://carrot.com/"><img src="https://cdn.roots.io/app/uploads/carrot.svg" alt="Carrot" height="90"></a> <a href="https://wordpress.com/"><img src="https://cdn.roots.io/app/uploads/wordpress.svg" alt="WordPress.com" height="90"></a> <a href="https://www.itineris.co.uk/"><img src="https://cdn.roots.io/app/uploads/itineris.svg" alt="Itineris" height="90"></a> <a href="https://kinsta.com/?kaid=OFDHAJIXUDIV"><img src="https://cdn.roots.io/app/uploads/kinsta.svg" alt="Kinsta" height="90"></a>
+
+## Overview
+
+Bedrock is a WordPress boilerplate for developers that want to manage their projects with Git and Composer. Much of the philosophy behind Bedrock is inspired by the [Twelve-Factor App](http://12factor.net/) methodology, including the [WordPress specific version](https://roots.io/twelve-factor-wordpress/).
+
+- Better folder structure
+- Dependency management with [Composer](https://getcomposer.org)
+  - [`roots/wordpress`](https://wp-packages.org/wordpress-core) package for WordPress core
+  - [WP Packages](https://wp-packages.org/) repository for WordPress plugins and themes
+- Easy WordPress configuration with environment specific files
+- Environment variables with [Dotenv](https://github.com/vlucas/phpdotenv)
+- Autoloader for mu-plugins (use regular plugins as mu-plugins)
+
+## Getting Started
+
+See the [Bedrock installation documentation](https://roots.io/bedrock/docs/installation/).
+
+## Community
+
+Keep track of development and community news.
+
+- Join us on Discord by [sponsoring us on GitHub](https://github.com/sponsors/roots)
+- Join us on [Roots Discourse](https://discourse.roots.io/)
+- Follow [@rootswp on Twitter](https://twitter.com/rootswp)
+- Follow the [Roots Blog](https://roots.io/blog/)
+- Subscribe to the [Roots Newsletter](https://roots.io/subscribe/)
