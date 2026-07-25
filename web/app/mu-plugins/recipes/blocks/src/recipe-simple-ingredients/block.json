@@ -1,0 +1,19 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "lw-recipes/recipe-simple-ingredients",
+	"version": "0.1.0",
+	"title": "Simple Recipe: Ingredients",
+	"category": "theme",
+	"icon": "editor-ul",
+	"description": "Display ingredients for a simple recipe",
+	"parent": ["lw-recipes/recipe-simple"],
+	"example": {},
+	"supports": {
+		"html": false
+	},
+	"textdomain": "lw-recipes",
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"render": "file:./render.php"
+}

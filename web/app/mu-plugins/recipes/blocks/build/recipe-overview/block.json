@@ -1,0 +1,33 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "lw-recipes/recipe-overview",
+  "version": "0.1.0",
+  "title": "Recipe Overview",
+  "category": "theme",
+  "icon": "cover-image",
+  "description": "Display a recipe overview",
+  "example": {},
+  "attributes": {
+    "serves": {
+      "type": "string"
+    },
+    "prepTime": {
+      "type": "string"
+    },
+    "totalTime": {
+      "type": "string"
+    }
+  },
+  "parent": [
+    "lw-recipes/recipe-content"
+  ],
+  "supports": {
+    "html": false,
+    "inserter": false
+  },
+  "textdomain": "lw-recipes",
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "render": "file:./render.php"
+}

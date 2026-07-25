@@ -1,0 +1,42 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "lw-recipes/hero-image",
+  "version": "0.1.0",
+  "title": "Hero Image",
+  "category": "theme",
+  "icon": "cover-image",
+  "description": "Display a hero image",
+  "example": {},
+  "supports": {
+    "html": false
+  },
+  "attributes": {
+    "imageID": {
+      "type": "number",
+      "default": 0
+    },
+    "imageUrl": {
+      "type": "string",
+      "default": ""
+    },
+    "heading": {
+      "type": "string",
+      "default": "My Hero Title"
+    },
+    "headingLevel": {
+      "type": "number",
+      "default": 1
+    },
+    "subtitle": {
+      "type": "string"
+    },
+    "cta": {
+      "type": "string"
+    }
+  },
+  "textdomain": "lw-recipes",
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "render": "file:./render.php"
+}

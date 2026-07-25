@@ -1,0 +1,21 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "lw-recipes/recipe-complex-instructions",
+  "version": "0.1.0",
+  "title": "Complex Recipe: Instructions",
+  "category": "theme",
+  "icon": "editor-ol",
+  "description": "Display instructions for a complex recipe",
+  "parent": [
+    "lw-recipes/recipe-complex"
+  ],
+  "example": {},
+  "supports": {
+    "html": false
+  },
+  "textdomain": "lw-recipes",
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "render": "file:./render.php"
+}

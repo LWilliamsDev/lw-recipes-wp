@@ -1,0 +1,45 @@
+/**
+ * The following styles get applied inside the editor only.
+ *
+ * Replace them with your own styles or remove the file completely.
+ */
+
+.wp-block-lw-recipes-recipe-related  {
+	font-family: 'Roboto', sans-serif;
+	margin-top: 48px;
+	padding-left: 10px;
+	padding-right: 10px;
+
+	h2 {
+		font-family: 'Roboto Condensed', sans-serif;
+		text-transform: uppercase;
+		color: #008000;
+		font-size: 30px;
+	}
+	
+	a {
+			text-decoration: none;
+			color: #606C38;
+		}
+
+	h3 {
+		font-size: 20px;
+
+	}
+
+	ul {
+		list-style-type: none;
+		display: flex;
+		padding-left: 0;
+		column-gap: 10px;
+
+		> li {
+			width: 33%;
+
+			img {
+				width: 100%;
+				height: auto;
+			}
+		}
+	}
+}
