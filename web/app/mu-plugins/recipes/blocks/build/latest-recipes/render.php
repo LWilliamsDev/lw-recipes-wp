@@ -14,8 +14,8 @@ $context = Timber::context();
 
 
 $query = Timber::get_posts([
-	'post_type' => 'recipe',
-	'posts_per_page' => 3 
+    'post_type' => 'recipe',
+    'posts_per_page' => 3 
 ]);
 
 $options = get_option('lw_recipes_settings');
@@ -26,10 +26,10 @@ $link = $listing_page_id ? untrailingslashit(get_permalink($listing_page_id)) : 
 $context['posts'] = $query;
 
 if (empty($attributes['title'])) {
-	$title = _('Latest Recipes', 'lw-recipes');
+    $title = _('Latest Recipes', 'lw-recipes');
 }
 else {
-	$title = $attributes['title'];
+    $title = $attributes['title'];
 }
 
 $context['title'] = $title;

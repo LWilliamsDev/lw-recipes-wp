@@ -1,6 +1,6 @@
-<div class="mb-[10px] md:mb-[20px] pt-[5px] border-t border-solid border-(--color-mid-green)">
+<div>
 		{% if breadcrumbs %}
-			<ul class="flex flex-wrap breadcrumbs gap-[10px]">
+			<ul>
 				{% for link in breadcrumbs %}
 					<li>
 						<a href="{{ link.link }}">{{ link.title}}</a>
@@ -9,36 +9,35 @@
 			</ul>
 		{% endif %}
 	</div>
-	<div class="mb-[20px]">
-		<h1 class="font-roboto-condensed mb-[5px] text-3xl md:mb-[10px] md:text-5xl uppercase text-(--color-green)">{{ post.title }}</h1>
+	<div>
+		<h1>{{ post.title }}</h1>
 		{% if post.excerpt %}
-			<p class="text-base md:text-2xl text-(--color-brown)">{{ post.excerpt({read_more: ''}) }}</p>
+			<p>{{ post.excerpt }}</p>
 		{% endif %}
 	</div>
 	{% if post.thumbnail %}
-		<div class="mb-[20px] md:mb-[30px]">
+		<div>
 			 <img
 					src="{{ post.thumbnail.src('full') }}"
             		alt="{{ post.thumbnail.alt }}"
-            		class="w-full"
              >
 		</div>
 	{% endif %}
 	{% if overviewData %}
-		<ul class="flex flex-wrap gap-[10px] text-(--color-dark-green)">
+		<ul>
 			{% if overviewData.serves %}
 				<li>
-					<span class="text-(--color-brown)"><strong>Serves:</strong></span> {{ overviewData.serves }} 
+					<span><strong>Serves:</strong></span> {{ overviewData.serves }} 
 				</li>
 			{% endif %}
 			{% if overviewData.prepTime %}
 				<li>
-					<span class="text-(--color-brown)"><strong>Prep Time:</strong></span> {{ overviewData.prepTime }}
+					<span><strong>Prep Time:</strong></span> {{ overviewData.prepTime }}
 					</li>
 			{% endif %}
 			{% if totalTime %}
 				<li>
-					<span class="text-(--color-brown)"><strong>Total Time:</strong></span> {{ overviewData.totalTime }}
+					<span><strong>Total Time:</strong></span> {{ overviewData.totalTime }}
 				</li>
 			{% endif %}
 		</ul>

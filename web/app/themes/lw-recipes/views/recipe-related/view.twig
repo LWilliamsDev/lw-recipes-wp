@@ -1,0 +1,23 @@
+	{% if posts %}
+		<aside class="px-4 pt-8 md:px-12 md:pt-12">
+			<div class="w-3/4">
+				<h2 class="text-3xl font-roboto-condensed uppercase text-(--color-green) mb-[10px]">{{__('You Might Also Like', 'lw-recipes') }}</h2>
+				<ul class="md:grid md:grid-cols-[1fr_1fr_1fr] md:gap-x-5">
+					{% for post in posts %}
+						<li class="mb-5 md:mb-0">
+						<a href="{{ post.link }}">
+							{% if post.thumbnail %}
+								<img
+						 			src="{{ post.thumbnail.src('full') }}"
+            						alt="{{ post.thumbnail.alt }}"
+            						class="w-full"
+            				  	>
+							{% endif %}
+							<h3 class="text-xl font-medium mt-2">{{ post.title }}</h3>
+						</a>
+					</li>
+					{% endfor %}
+				</ul>
+			</div>
+		</aside>
+	{% endif %}

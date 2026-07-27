@@ -1,0 +1,32 @@
+<section class="px-4 py-8 md:px-12 md:py-12">
+	<h2 class="font-roboto-condensed text-5xl color-green text-(--color-green) mb-8 uppercase">{{ title }}</h2>
+	<div class="cards sm:grid sm:grid-cols-[1fr_1fr] sm:gap-x-5">
+		{% for term in terms %}
+			<div class="card mb-8">
+				<h3>
+					{% if term.link %}
+						<a href="{{ term.link }}" class="grid block">
+					{% else %}
+						<span class="grid block">
+					{% endif %}
+						{% if term.image %}
+							<img
+       	 						src="{{ term.image.src('full') }}"
+        						alt="{{ term.image.alt }}"
+        						class="w-full h-auto col-start-1 row-start-1 rounded-sm"
+    						>
+						{% endif %}
+						<div class="bg-(--color-tan) col-start-1 row-start-1 opacity-90 self-end p-4">
+							<span class="text-2xl font-medium text-(--color-brown) hover:text-(--color-mid-green)">
+								{{ term.name }}</span>
+						</div>
+					{% if term.link %}
+						</a>
+					{% else %}
+						</span>
+					{% endif %}
+				</h3>
+			</div>
+		{% endfor %}
+	</div>
+</section>

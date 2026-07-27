@@ -1,32 +1,31 @@
-<section class="px-4 py-8 md:px-12 md:py-12">
-			<h2 class="font-roboto-condensed text-5xl color-green text-(--color-green) mb-8 uppercase">
+<section>
+			<h2>
 				{{ title }}
 			</h2>
 
 			{% if posts %}
-				<div class="cards sm:grid sm:grid-cols-[1fr_1fr_1fr] sm:gap-x-5">
+				<div>
 				{% for post in posts %}
-				<div class="card mb-8">
+				<div>
 				    {% if post.thumbnail %}
 				    	<a href="{{post.link}}">
 				    		 <img
 						 		src="{{ post.thumbnail.src('full') }}"
             					alt="{{ post.thumbnail.alt }}"
-            					class="mb-5 w-full h-auto"
             				  >
 				    	</a>
 				    {% endif %}
-					<h3 class="text-2xl font-medium text-(--color-brown)"><a href="{{ post.link }}">{{ post.title }}</a></h3>
+					<h3>{{ post.title }}</a></h3>
 					{% if post.excerpt %}
-						<p class="text-(--color-dark-green)">{{ post.excerpt }}</p>
+						<p>{{ post.excerpt }}</p>
 					{% endif %}
 					{% if post.diet %}
-					<ul class="categories mt-5 flex flex-wrap gap-[10px]">
+					<ul>
 						{% for term in post.diet %}
 						{% if term.link %}
-							<li><a href="{{ term.link }}?diet={{ term.id }}" class="button p-[10px] inline-block rounded-sm text-(--color-white) font-medium">{{ term.name }}</a></li>
+							<li><a href="{{ term.link }}?diet={{ term.id }}">{{ term.name }}</a></li>
 						{% else %}
-							<li><span class="button p-[10px] inline-block rounded-sm text-(--color-white) font-medium">{{ term.name }}</span></li>
+							<li><span>{{ term.name }}</span></li>
 						{% endif %}
 					{% endfor %}
 					</ul>
