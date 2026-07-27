@@ -111,7 +111,9 @@ a.filter-link:hover {
   content: none;
 }
 .tax-refiner summary:after {
-  content: "+"
+  content: "+";
+  display: inline-block;
+  margin-left: 3px;
 }
 details.tax-refiner[open] summary:after {
   content: "-";

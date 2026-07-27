@@ -164,7 +164,7 @@ final class Recipe {
 
                 foreach ($all_terms as $term) {
                     $all_terms_data[] = [
-                        'link' => add_query_arg($term->taxonomy, $term->term_id),
+                        'link' => '?' . $term->taxonomy . '=' . $term->term_id,
                         'id' => $term->term_id,
                         'taxonomy' => $term->taxonomy,
                         'name' => $term->name

@@ -3,6 +3,7 @@
 namespace Recipes\Blocks\RecipeSearch;
 
 use Recipes\Blocks\BlockHelper;
+use Timber\Timber;
 
 $is_block_editor = BlockHelper::is_in_block_editor();
 
@@ -46,6 +47,7 @@ if (!$is_block_editor && !defined('REST_REQUEST') && !(wp_doing_ajax())) {
 		$course_row['name'] = $course->name;
 		$course_row['slug'] = $course->slug;
 		$course_row['taxonomy'] = 'course';
+		$course_row['checked'] = in_array($course->term_id, $current_courses, true);
 
 		$courses[] = $course_row;
 	}
@@ -58,6 +60,7 @@ if (!$is_block_editor && !defined('REST_REQUEST') && !(wp_doing_ajax())) {
 		$diet_row['name'] = $diet->name;
 		$diet_row['slug'] = $diet->slug;
 		$diet_row['taxonomy'] = 'diet';
+		$diet_row['checked'] = in_array($diet->term_id, $current_diets, true);
 
 		$diets[] = $diet_row;
 	}
@@ -70,10 +73,27 @@ if (!$is_block_editor && !defined('REST_REQUEST') && !(wp_doing_ajax())) {
 		$allergen_row['name'] = $allergen->name;
 		$allergen_row['slug'] = $allergen->slug;
 		$allergen_row['taxonomy'] = 'allergen';
+		$allergen_row['checked'] = in_array($allergen->term_id, $current_allergens, true);
 
 		$allergens[] = $allergen_row;
 	}
 
+	$courses_non_js = [
+		'name' => 'Course',
+		'terms' => $courses
+	];
+
+	$diet_non_js = [
+		'name' => 'Diet',
+		'terms' => $diets
+	];
+
+	$allergen_non_js = [
+		'name' => 'Allergen',
+		'terms' => $allergens
+	];
+
+	$non_js_filters = [$courses_non_js, $diet_non_js, $allergen_non_js];
 
 	// 4. Generate the initial HTML markup
 	$initial_results    = $recipe_rest->build_results( $recipes );
@@ -81,84 +101,21 @@ if (!$is_block_editor && !defined('REST_REQUEST') && !(wp_doing_ajax())) {
 	$total_pages        = intval( $recipes->max_num_pages );
 	$initial_pagination = $recipe_rest->build_pagination( $total_pages, $current_page );
 
+	Timber::render('recipe-search/non-js.twig',
+    	[
+        	'results' => $initial_results,
+        	'pagination' => $initial_pagination,
+        	'filters' => $non_js_filters,
+        	'param_search' => sanitize_text_field($mock_request->get_param('search')),
+        	'has_active_filters' => $has_active_filters
+
+    	]
+);
+
+
 ?>
 
-	<div id="root" class="px-4 pb-8 md:px-12 md:pb-12">
-		<div class="recipes-search mx-auto">
-			<div class="form mt-8 mb-8 md:mt-12 md:mb-12">
-				<form role="search" class="grid grid-cols-[1fr_40px] gap-x-2" id="recipe-search-form" method="GET">
-					<label for="search" class="sr-only"><?php _e('Search', 'lw-recipes'); ?></label>
-					<input type="text" id="search" class="rounded-sm border border-(--color-mid-green) border-solid p-2" name="search" placeholder="Search Recipes..." value="<?php echo esc_attr($mock_request->get_param('search') ?? ''); ?>">
-					<button id="listing--search" class="button p-[10px] inline-block rounded-sm text-(--color-white) font-medium cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"><?php _e('Go', 'lw-recipes'); ?></button>
-				</form>
-				<?php if ($has_active_filters) { ?>
-					<div class="pt-5 flex flex-wrap gap-x-5 min-h-[56px]">
-					</div>
-				<?php } ?>
-			</div>
-			<div class="results-container md:grid md:grid-cols-[0.5fr_2fr] md:gap-4">
-				<div class="refiners mb-8 md:mb-0">
-					<div class="refiner-fieldset mb-4">
-						<fieldset>
-							<legend class="sr-only"><?php _e('Filter by Course', 'lw-recipes'); ?></legend>
-							<details class="tax-refiner">
-          						<summary class="cursor-pointer text-(--color-mid-green) font-medium p-2 border-1 w-full rounded-t-sm md:border-0 md:rounded-t-none md:w-auto md:p-0">
-            						<?php _e('Course', 'lw-recipes'); ?>
-          						</summary>
-								<?php if (!empty($courses)) {
-									foreach ($courses as $course) { ?>
-										<div class="refiner-checkbox">
-											<input id="<?php echo esc_attr($course['id']); ?>" data-slug="course" type="checkbox" value="<?php echo esc_attr($course['id']); ?>" name="course" form="recipe-search-form" <?php checked(in_array($course['id'], $current_courses)); ?>>
-											<label for="<?php echo esc_attr($course['id']); ?>" class="pl-2 text-(--color-dark-green)"><?php echo esc_html($course['name']); ?></label>
-										</div>
-								<?php } } ?>
-							</details>
-						</fieldset>
-					</div>
-					<div class="refiner-fieldset mb-4">
-						<fieldset>
-							<legend class="sr-only"><?php _e('Filter by Diet', 'lw-recipes'); ?></legend>
-							<details class="tax-refiner">
-								<summary class="cursor-pointer text-(--color-mid-green) font-medium p-2 border-1 w-full rounded-t-sm md:border-0 md:rounded-t-none md:w-auto md:p-0">
-									<?php _e('Diet', 'lw-recipes'); ?>
-								</summary>
-								<?php if (!empty($diets)) {
-								  	  foreach ($diets as $diet) { ?>
-										<div class="refiner-checkbox">
-											<input id="<?php echo esc_attr($diet['id']); ?>" data-slug="diet" type="checkbox" value="<?php echo esc_attr($diet['id']); ?>" form="recipe-search-form" name="diet"  <?php checked(in_array($diet['id'], $current_diets)); ?>>
-											<label for="<?php echo esc_attr($diet['id']); ?>" class="pl-2 text-(--color-dark-green)"><?php echo esc_html($diet['name']); ?></label>
-										 </div>
-							<?php } } ?>
-							</details>
-						</fieldset>
-					</div>
-					<div class="refiner-fieldset mb-4">
-						<fieldset>
-							<legend class="sr-only"><?php _e('Filter by Allergen', 'lw-recipes'); ?></legend>
-							<details class="tax-refiner">
-								<summary class="cursor-pointer text-(--color-mid-green) font-medium p-2 border-1 w-full rounded-t-sm md:border-0 md:rounded-t-none md:w-auto md:p-0">
-									<?php _e('Allergen', 'lw-recipes'); ?>
-								</summary>
-								<?php if (!empty($allergens)) {
-								  	  foreach ($allergens as $allergen) { ?>
-								<div class="refiner-checkbox">
-									<input id="<?php echo esc_attr($allergen['id']); ?>" data-slug="allergen" type="checkbox" value="<?php echo esc_attr($allergen['id']); ?>" form="recipe-search-form" name="allergen"  <?php checked(in_array($allergen['id'], $current_allergens)); ?>>
-									<label for="<?php echo esc_attr($allergen['id']); ?>" class="pl-2 text-(--color-dark-green)"><?php echo esc_html($allergen['name']); ?></label>
-								</div>
-							<?php } } ?>
-							</details>
-						</fieldset>
-					</div>
-				</div>
-				<div class="results">
-					<?php echo $initial_results; ?>
-				</div>
-				<div class="pagination md:col-start-2 pb-5">
-					<?php echo $initial_pagination; ?>
-				</div>
-			</div>
-		</div>
-	</div>
+
 <script type="text/javascript">
     window.INITIAL_RECIPE_DATA = <?php echo wp_json_encode([
         'result'     => $initial_results, 

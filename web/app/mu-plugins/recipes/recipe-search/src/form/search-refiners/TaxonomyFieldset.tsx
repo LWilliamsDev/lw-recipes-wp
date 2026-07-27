@@ -64,10 +64,10 @@ export default function TaxonomyFieldset({name, slug, data, onChange, paramValue
         </legend>
         <details className="tax-refiner">
           <summary className="cursor-pointer text-(--color-mid-green) font-medium p-2 border-1 w-full rounded-t-sm md:border-0 md:rounded-t-none md:w-auto md:p-0">
-            { name }
+            { name }  
           </summary>
-              { data?.map((tax) => <div className="refiner-checkbox" key={tax?.id}><input id={tax?.id?.toString()} data-slug={slug} value={tax?.id} type="checkbox" checked={!!paramValue?.includes(tax.id)} onChange={handleCheckboxChange} />
-          <label htmlFor={tax?.id?.toString()} className="pl-2 text-(--color-dark-green)">{decode(tax?.name)}</label></div>) }
+              { data?.map((tax) => <div className="refiner-checkbox" key={tax?.id}><input id={`${slug}--${tax?.id?.toString()}`} data-slug={slug} value={tax?.id} type="checkbox" checked={!!paramValue?.includes(tax.id)} onChange={handleCheckboxChange} />
+          <label htmlFor={`${slug}--${tax?.id?.toString()}`} className="pl-2 text-(--color-dark-green)">{decode(tax?.name)}</label></div>) }
         </details>
 		
       </fieldset>

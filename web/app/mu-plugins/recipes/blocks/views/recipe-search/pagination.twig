@@ -4,7 +4,7 @@
         {% if active_page > 1 %}
             <li>
                 <a
-                    href="{{ function('add_query_arg', 'pg', prev_page) }}"
+                    href="?pg={{prev_page}}"
                     data-page="{{ prev_page }}"
                     class="filter-link cursor-pointer rounded-sm border-1 p-[5px] text-(--color-brown)">
                     {{ __('Back', 'lw-recipes') }}
@@ -14,7 +14,7 @@
 
         <li>
             <a
-                href="{{ function('add_query_arg', 'pg', 1) }}"
+                href="?pg=1"
                 data-page="1"
                 class="filter-link{% if active_page == 1 %} current-page text-(--color-white){% else %} text-(--color-brown){% endif %} cursor-pointer rounded-sm border-1 p-[5px]"
                 {% if active_page == 1 %}aria-current="page"{% endif %}>
@@ -31,7 +31,7 @@
         {% for number in numbers %}
             <li>
                 <a
-                    href="{{ function('add_query_arg', 'pg', number) }}"
+                    href="?pg={{number}}"
                     data-page="{{ number }}"
                     class="filter-link{% if number == active_page %} current-page text-(--color-white){% else %} text-(--color-brown){% endif %} cursor-pointer rounded-sm border-1 p-[5px]"
                     {% if number == active_page %}aria-current="page"{% endif %}>
@@ -49,7 +49,7 @@
         {% if total_pages > 1 %}
             <li>
                 <a
-                    href="{{ function('add_query_arg', 'pg', total_pages) }}"
+                    href="?pg={{total_pages }}"
                     data-page="{{ total_pages }}"
                     class="filter-link{% if active_page == total_pages %} current-page text-(--color-white){% else %} text-(--color-brown){% endif %} cursor-pointer rounded-sm border-1 p-[5px]"
                     {% if active_page == total_pages %}aria-current="page"{% endif %}>
@@ -61,7 +61,7 @@
         {% if active_page < total_pages %}
             <li>
                 <a
-                    href="{{ function('add_query_arg', 'pg', next_page) }}"
+                    href="?pg={{next_page}}"
                     data-page="{{ next_page }}"
                     class="filter-link cursor-pointer rounded-sm border-1 p-[5px] text-(--color-brown)">
                     {{ __('Next', 'lw-recipes') }}
