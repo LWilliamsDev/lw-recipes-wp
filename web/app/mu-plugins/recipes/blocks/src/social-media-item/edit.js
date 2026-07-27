@@ -1,9 +1,10 @@
 import { registerBlockType } from '@wordpress/blocks';
-import { useBlockProps, InspectorControls } from '@wordpress/block-editor';
-import { BaseControl, Button, Tooltip, TextControl, PanelBody } from '@wordpress/components';
+import { useBlockProps, BlockControls} from '@wordpress/block-editor';
+import { Button, Tooltip, TextControl, ToolbarButton, Popover, Notice } from '@wordpress/components';
 import { dispatch } from '@wordpress/data';
-import { useEffect, useState } from '@wordpress/element';
+import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
+import { usePostLock } from "../../helper-functions/utils";
 
 
 const ICON_OPTIONS = [
@@ -27,9 +28,19 @@ const ICON_OPTIONS = [
 
 
 export default function Edit({ attributes, setAttributes, clientId }) {
-        const { item } = attributes;
+    const { item } = attributes;
 
-        const blockProps = useBlockProps();
+    const [isEditing, setIsEditing] = useState(false);
+
+    const blockProps = useBlockProps();
+
+    const isUrlMissing = !item?.site?.trim();
+    const isIconMissing = !item?.icon?.trim();
+
+
+    const isInvalid = isUrlMissing || isIconMissing;
+
+    usePostLock( isInvalid, `social-media-icon-${clientId}` );
 
     const updateItem = (key, value) => {
         setAttributes({
@@ -40,84 +51,109 @@ export default function Edit({ attributes, setAttributes, clientId }) {
         });
     };
 
-    // Helper to find current icon data
-    const selectedIcon = ICON_OPTIONS.find(opt => opt.value === item.icon);
-    
+    const selectedIcon = ICON_OPTIONS.find(
+        opt => opt.value === item.icon
+    );
 
-    const [isValid, setIsValid] = useState(false);
+    return (
+        <li {...blockProps}>
+
+            { isInvalid && (
+                    <Notice status="error" isDismissible={ false }>
+                        <p style={ { margin: '0 0 8px 0', fontWeight: '600' } }>
+                            { __( 'Please fix the following issues to enable saving:', 'lw-recipes' ) }
+                        </p>
+                        <ul style={ { margin: 0, paddingLeft: '20px', listStyleType: 'disc' } }>
+                            { isUrlMissing && <li>{ __( 'Add a social media page URL.', 'lw-recipes' ) }</li> }
+                            { isIconMissing && <li>{ __( 'Add a social media icon.', 'lw-recipes' ) }</li> }
+                        </ul>
+                    </Notice>
+             )}
+
+            <BlockControls>
+                <ToolbarButton
+                    label={__('Edit Social Media Item', 'lw-recipes')}
+                    onClick={() => setIsEditing(!isEditing)}
+                >
+                    {__('Edit', 'lw-recipes')}
+                </ToolbarButton>
+            </BlockControls>
 
 
-    useEffect(() => {
-        if (item?.icon && item?.site) {
-            setIsValid(true);
-            dispatch('core/editor').unlockPostSaving(`recipe-social-media-item-${clientId}`);
-            dispatch('core/editor').unlockPostAutosaving(`recipe-social-media-item-${clientId}`);
-        }
-        else {
-            setIsValid(false);
-            dispatch('core/editor').lockPostSaving(`recipe-social-media-item-${clientId}`);
-            dispatch('core/editor').lockPostAutosaving(`recipe-social-media-item-${clientId}`);
-        }
-
-        
-        return () => {
-            dispatch('core/editor').unlockPostSaving(`recipe-social-media-item-${clientId}`);
-            dispatch('core/editor').unlockPostAutosaving(`recipe-social-media-item-${clientId}`);
-        }
-    }, [item]);
+            {selectedIcon ? (
+                <Button
+                    onClick={() => setIsEditing(true)}
+                    className="social-media-item-preview"
+                >
+                    {selectedIcon.svg}
+                </Button>
+            ) : (
+                <Button
+                    onClick={() => setIsEditing(true)}
+                >
+                    {__('Select icon', 'lw-recipes')}
+                </Button>
+            )}
 
 
-        return (
-            <li { ...blockProps}>
-                <InspectorControls key="setting">
-                    <PanelBody title={__('Social Media Item', 'lw-recipes')}>
-                       <TextControl label={__('Website Link', 'lw-recipes')} value={item.site || ''} onChange={(val) => updateItem('site', val)} />
-                       <BaseControl label={__('Select Icon', 'lw-recipes')} id="social-icon-selector">
-                        <div style={{ 
-                            display: 'grid', 
-                            gridTemplateColumns: 'repeat(4, 1fr)', 
-                            gap: '10px',
-                            marginTop: '8px' // Space between label and grid
-                        }}>
-                            {ICON_OPTIONS.map((opt) => {
-                                const isActive = item.icon === opt.value;
-                                return (
-                                    <Tooltip text={opt.label} key={opt.value}>
-                                        <Button
-                                            isPrimary={isActive}
-                                            isSecondary={!isActive}
-                                            onClick={() => updateItem('icon', opt.value)}
-                                            style={{ 
-                                                padding: '10px', 
-                                                height: 'auto', 
-                                                display: 'flex', 
-                                                justifyContent: 'center',
-                                                border: isActive ? 'none' : '1px solid #ccc'
-                                            }}
-                                        >
-                                            <span style={{ width: '20px', height: '20px', display: 'block' }}>
-                                                {opt.svg}
-                                            </span>
-                                        </Button>
-                                    </Tooltip>
-                                );
-                            })}
+            {isEditing && (
+                <Popover
+                    onClose={() => setIsEditing(false)}
+                    className="social-media-item"
+                 
+                >
+
+                    <div style={{ padding: '16px', width: '300px' }}>
+
+                        <TextControl
+                            label={__('Website Link', 'lw-recipes')}
+                            value={item.site || ''}
+                            onChange={(value) =>
+                                updateItem('site', value)
+                            }
+                        />
+
+                        <p>
+                            {__('Select Icon', 'lw-recipes')}
+                        </p>
+
+                        <div
+                            style={{
+                                display: 'grid',
+                                gridTemplateColumns: 'repeat(4, 1fr)',
+                                gap: '8px'
+                            }}
+                        >
+                            {ICON_OPTIONS.map((opt) => (
+                                <Tooltip
+                                    text={opt.label}
+                                    key={opt.value}
+                                >
+                                    <Button
+                                        key={opt.value}
+                                        isPrimary={
+                                            item.icon === opt.value
+                                        }
+                                        onClick={() =>
+                                            updateItem(
+                                                'icon',
+                                                opt.value
+                                            )
+                                        }
+                                    >
+                                        {opt.svg}
+                                    </Button>
+                                </Tooltip>
+                            ))}
                         </div>
-                     </BaseControl>
-                    </PanelBody>
-                </InspectorControls>
 
-              {!isValid && ( 
-                    <div className="recipes-error">
-                        { (__('The Website Link and Icon fields are required.', 'lw-recipes')) }
                     </div>
-              )}      
-              {/* Editor Preview */}
-                {item.site && selectedIcon ? (
-                        <span style={{ width: '24px' }}>{selectedIcon.svg}</span>
-                ) : null}
-            </li>
-        );
+
+                </Popover>
+            )}
+
+        </li>
+    );
 }
 
 

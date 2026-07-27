@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import { useDispatch } from '@wordpress/data';
 
 /**
@@ -11,30 +11,20 @@ export function usePostLock( shouldLock, lockId ) {
     // 1. Grab the lock/unlock actions directly without using selectors that trigger re-renders
     const { lockPostSaving, unlockPostSaving } = useDispatch( 'core/editor' );
     
-    // 2. Track the lock state with a ref to prevent race conditions during fast toggles
-    const isLockedRef = useRef( false );
 
-    useEffect( () => {
-        // Guard clause: ensure we have a valid unique lock identifier string
-        if ( ! lockId ) {
-            return;
-        }
+    useEffect(() => {
+    if (!lockId) {
+        return;
+    }
 
-        if ( shouldLock && ! isLockedRef.current ) {
-            // Lock the post and flip our local tracking flag
-            lockPostSaving( lockId );
-            isLockedRef.current = true;
-        } else if ( ! shouldLock && isLockedRef.current ) {
-            // Unlock the post and reset our local tracking flag
-            unlockPostSaving( lockId );
-            isLockedRef.current = false;
-        }
+    if (shouldLock) {
+        lockPostSaving(lockId);
+    } else {
+        unlockPostSaving(lockId);
+    }
 
-        // 3. Cleanup: If the block unmounts while locked, release the lock automatically
-        return () => {
-            if ( isLockedRef.current ) {
-                unlockPostSaving( lockId );
-            }
-        };
-    }, [ shouldLock, lockId, lockPostSaving, unlockPostSaving ] );
+    return () => {
+        unlockPostSaving(lockId);
+    };
+}, [shouldLock, lockId, lockPostSaving, unlockPostSaving]);
 }

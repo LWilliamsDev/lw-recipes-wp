@@ -21,3 +21,16 @@ label:has(+ *:required):after, .recipes-required .components-base-control__label
 .recipe-details-panel div:has(.components-combobox-control) + div:has(.components-combobox-control) {
 	margin-top: 24px;
 }
+
+/* Needed for styling the popover for the social media item block, as popover styles are outside of the 
+   Gutenberg iframe */
+.social-media-item .components-button.is-primary {
+	background: #FEFAE0;
+}
+.social-media-item .components-button {
+	justify-content: center;
+}
+.social-media-item .components-button:hover,
+.social-media-item .components-button.is-primary:hover {
+	background: #FEFAE0;
+}

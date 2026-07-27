@@ -71,10 +71,11 @@ export default function Edit({attributes, setAttributes, clientId}) {
 				<InnerBlocks
 					allowedBlocks={ALLOWED_BLOCKS}
 					template={template}
+					templateLock="all"
 				/>
 			</div>
 			<div className="md:justify-self-end">
-				{ menuItems ? <ul className="nav md:flex md:gap-x-24">{ menuItems.map((item) => <li key={item.id}><a href="#">{item.title}</a></li>)}</ul>
+				{ menuItems ? <ul className="nav md:flex md:gap-x-24">{ menuItems.map((item) => <li key={item.ID}><a href="#">{item.title}</a></li>)}</ul>
 				: <p>Menu not found</p>}
 			</div>
 		</footer>
