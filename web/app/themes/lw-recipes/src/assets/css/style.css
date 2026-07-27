@@ -3,8 +3,7 @@
 
 @import "tailwindcss";
 @source "../../*.html";
-@source "../../../../../mu-plugins/recipes/recipe-search/src";
-@source "../../../../../mu-plugins/recipes/blocks/src/recipe-search/*.php";
+@source "../../../views/**/*.twig";
 
 @theme {
 	--*: initial;
