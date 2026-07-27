@@ -65,7 +65,7 @@ export default function Edit({attributes, setAttributes, clientId}) {
 		<header { ...blockProps}>
 		    <div className="w-1/2 md:w-49">
 		    	<a href="#">
-		    		<img src={`${protocol}//${domain}/wp-content/themes/lw-recipes/assets/img/recipes-logo.svg`} alt="Fit and Flavor Logo" />
+		    		<img src={`${protocol}//${domain}/app/themes/lw-recipes/assets/img/recipes-logo.svg`} alt="Fit and Flavor Logo" />
 		    	</a>
 		    </div>
 			<div className="col-span-full row-start-3 mt-[15px] md:row-start-1 md:col-start-2 md:justify-self-end md:flex">
@@ -74,7 +74,7 @@ export default function Edit({attributes, setAttributes, clientId}) {
 				: <p>Menu not found</p>}
 				</nav>
 				<button className="search-btn cursor-pointer hidden md:block p-4 ml-4">
-					<img src={`${protocol}//${domain}/wp-content/themes/lw-recipes/assets/img/search-icon.svg`} className="w-[24px] h-[24px" />
+					<img src={`${protocol}//${domain}/app/themes/lw-recipes/assets/img/search-icon.svg`} className="w-[24px] h-[24px" />
 				</button>
 			</div>
 		</header>

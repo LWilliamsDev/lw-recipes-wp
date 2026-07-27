@@ -67,7 +67,7 @@ export default function Edit({attributes, setAttributes, clientId}) {
 	return (
 		<footer { ...blockProps}>
 			<div>
-				<a href="#"><img src={`${protocol}//${domain}/wp-content/themes/lw-recipes/assets/img/recipes-logo.svg`} alt="Fit and Flavor Logo" className="w-1/2 sm:w-1/3" /></a>
+				<a href="#"><img src={`${protocol}//${domain}/app/themes/lw-recipes/assets/img/recipes-logo.svg`} alt="Fit and Flavor Logo" className="w-1/2 sm:w-1/3" /></a>
 				<InnerBlocks
 					allowedBlocks={ALLOWED_BLOCKS}
 					template={template}

@@ -1,63 +1,60 @@
 <?php
 
+namespace Recipes\Blocks\LatestRecipes;
+
 use Recipes\Blocks\BlockHelper;
+use Timber\Timber;
+
 
 $is_block_editor = BlockHelper::is_in_block_editor();
 
 if (!$is_block_editor && !defined('REST_REQUEST') && !(wp_doing_ajax())) {
-//Get latest recipes from WP_Query
 
-$query = new WP_Query( array(
-	'post_type' => 'recipe',
-	'posts_per_page' => 3
-));
+$context = Timber::context();
+
+
+$query = Timber::get_posts([
+    'post_type' => 'recipe',
+    'posts_per_page' => 3 
+]);
 
 $options = get_option('lw_recipes_settings');
 $listing_page_id = $options['listing_page_id'] ?? 0;
 
 $link = $listing_page_id ? untrailingslashit(get_permalink($listing_page_id)) : null;
-?>
 
-<section class="px-4 py-8 md:px-12 md:py-12">
-			<h2 class="font-roboto-condensed text-5xl color-green text-(--color-green) mb-8 uppercase">
-				<?php if (empty($attributes['title'])) : ?>
-					Latest Recipes
-				<?php else : echo $attributes['title']; ?>
-				<?php endif; ?>
-			</h2>
+$context['posts'] = $query;
 
-			<?php if ($query->have_posts()) : ?>
-				<div class="cards sm:grid sm:grid-cols-[1fr_1fr_1fr] sm:gap-x-5">
-				<?php while ($query->have_posts()) :  $query->the_post(); ?>
-				<div class="card mb-8">
-					<?php if (has_post_thumbnail()) : ?>
-						<a href="<?php the_permalink(); ?>"><?php the_post_thumbnail('full', array('class' => 'mb-5 w-full h-auto')); ?></a>
-					<?php endif; ?>
-					<h3 class="text-2xl font-medium text-(--color-brown)"><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h3>
-					<?php if (has_excerpt()) : ?>
-						<p class="text-(--color-dark-green)"><?php echo get_the_excerpt(); ?></p>
-					<?php endif; ?>
-					<?php $terms = get_the_terms(get_the_ID(), 'diet'); 
-					if (!empty($terms)) : ?>
-					<ul class="categories mt-5 flex flex-wrap gap-[10px]">
-						<?php foreach ($terms as $term) : ?>
-						<?php if (!empty($link)) : ?>
-							<li><a href="<?php echo $link;?>?diet=<?php echo $term->term_id; ?>" class="button p-[10px] inline-block rounded-sm text-(--color-white) font-medium"><?php echo $term->name; ?></a></li>
-						<?php else : ?>
-							<li><span class="button p-[10px] inline-block rounded-sm text-(--color-white) font-medium"><?php echo $term->name; ?></span></li>
-						<?php endif; ?>
-					<?php endforeach; ?>
-					</ul>
-				<?php endif; ?>
-				</div>
-				<?php wp_reset_postdata(); ?>
+if (empty($attributes['title'])) {
+    $title = _('Latest Recipes', 'lw-recipes');
+}
+else {
+    $title = $attributes['title'];
+}
 
-			<?php endwhile; ?>
-			</div>
-			<?php else : ?>
-			<?php endif; ?>
-			
-		</section>
+$context['title'] = $title;
 
-<?php } ?>
+$context['posts'] = array_map(function ($post) use ($link) {
+    return [
+        'title'     => $post->title(),
+        'link'      => $post->link(),
+        'thumbnail' => $post->thumbnail(),
+        'excerpt'   => get_the_excerpt($post),
+        'diet'      => array_map(
+            function ($term) use ($link) {
+                return [
+                    'name' => $term->name,
+                    'id' => $term->term_id,
+                    'link' => $link
+                        ? $link . '?diet=' . $term->term_id
+                        : null,
+                ];
+            },
+            get_the_terms($post->ID, 'diet') ?: []
+        ),
+    ];
+}, $query->to_array());
+
+Timber::render('latest-recipes/view.twig', $context);
+} ?>
 

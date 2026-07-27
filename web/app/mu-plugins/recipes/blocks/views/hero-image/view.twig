@@ -1,0 +1,20 @@
+<section>
+			<div>
+				{{ image }}
+				<div></div>
+			</div>
+			<div>
+				<{{ headingLevel }}>
+					{{ heading }}
+				</{{- headingLevel -}}>
+				{% if subtitle %}
+					<p>
+						{{- subtitle -}}
+					</p>
+
+				{% endif %}
+				{% if cta %}
+				<p{{ cta }}</p>
+				{% endif %}
+			</div>
+</section>

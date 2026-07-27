@@ -1,0 +1,20 @@
+<section class="hero grid h-[358px] md:h-[717px]">
+			<div class="hero row-span-full col-span-full relative">
+				{{ image }}
+				<div class="bg-(--color-tan) block w-full h-full opacity-80 absolute left-0 top-0"></div>
+			</div>
+			<div class="row-span-full col-span-full relative z-2 text-center self-center">
+				<{{ headingLevel }} class="font-roboto-condensed text-4xl md:text-6xl uppercase text-(--color-green) mb-[10px] md:mb-[20px]">
+					{{ heading }}
+				</{{- headingLevel -}}>
+				{% if subtitle %}
+					<p class="text-color(--color-dark-green) text-sm md:text-2xl mb-[15px] md:mb-[20px]">
+						{{- subtitle -}}
+					</p>
+
+				{% endif %}
+				{% if cta %}
+				<p class="hero-image__cta">{{ cta }}</p>
+				{% endif %}
+			</div>
+</section>

@@ -1,0 +1,12 @@
+	<footer>
+		<div>
+			{{ content }}
+		</div>
+		<div class="md:justify-self-end">
+				<ul>
+					{% for item in menu.items %}
+						<li><a href="{{item.link}}" {{ item.is_target_blank ? 'target="_blank"' }}>{{ item.title }}</a></li>
+					{% endfor %}
+				</ul>	
+		</div>
+	</footer>

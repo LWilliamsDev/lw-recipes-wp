@@ -1,5 +1,7 @@
 <?php
 
+namespace Recipes\Blocks\RecipeSearch;
+
 use Recipes\Blocks\BlockHelper;
 
 $is_block_editor = BlockHelper::is_in_block_editor();

@@ -38,6 +38,7 @@ final class Blocks {
 		add_action('init', [$this, 'register_blocks']);
 		add_filter( 'render_block_core/template-part', [$this, 'remove_core_template_part_wrapper'], 10, 2 );
 		add_action( 'init', [$this, 'add_page_template'], 20 );
+		add_filter('timber/locations', [$this, 'timber_locations']);
 	}
 
 	public function register_blocks(): void {
@@ -113,5 +114,15 @@ final class Blocks {
          	 */
         	$post_type_object->template_lock = 'all';
     	}
+	}
+
+	  /**
+ 	 * Add Timber Location
+ 	 */ 
+
+	public function timber_locations($locations) {
+		$locations[] = [WPMU_PLUGIN_DIR . '/recipes/blocks/views'];
+
+    	return $locations;
 	}
 }

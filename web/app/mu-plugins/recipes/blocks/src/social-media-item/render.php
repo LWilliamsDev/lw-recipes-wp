@@ -1,5 +1,7 @@
 <?php
 
+namespace Recipes\Blocks\SocialMediaItem;
+
 use Recipes\Blocks\BlockHelper;
 
 $is_block_editor = BlockHelper::is_in_block_editor();

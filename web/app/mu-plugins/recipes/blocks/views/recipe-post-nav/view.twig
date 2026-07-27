@@ -1,0 +1,14 @@
+	{% if post.prev or post.next %}
+		<aside class="px-4 md:px-12">
+			<div class="w-3/4 border-t border-b border-solid border-(--color-mid-green)">
+				<ul class="flex flex-wrap justify-between pt-2 pb-2">
+					{% if post.prev %}
+						<li><a href="{{ post.prev.link }}">{{__('&laquo; Previous', 'lw-recipes') }}</a></li>
+					{% endif %}
+					{% if post. next %}
+						<li><a href="{{ post.next.link }}">{{__('Next &raquo;', 'lw-recipes') }}</a></li>
+					{% endif %}
+				</ul>
+			</div>
+		</aside>
+	{% endif %}

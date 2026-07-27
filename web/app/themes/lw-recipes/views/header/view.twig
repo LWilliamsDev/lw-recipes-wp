@@ -1,0 +1,52 @@
+<nav aria-label="{{__('Skip Links', 'lw-recipes') }}"><a href="#main" class="skip-link sr-only">{{__('Skip to main content', 'lw-recipes') }}</a></nav>
+	<header class="grid grid-cols-[3fr_1fr] md:grid-cols-[0.5fr_1fr] items-center px-4 py-8 md:px-12 md:py-8">
+		<div class="w-1/2 md:w-49"><a href="/"><img src="{{ function('get_stylesheet_directory_uri') }}/assets/img/recipes-logo.svg" alt="{{__('Fit & Flavor Logo', 'lw-recipes') }}" /></a></div>
+		<div class="md:hidden flex items-center justify-end">
+			<button aria-label="{{__('Toggle mobile menu', 'lw-recipes')}}" class="mobile-menu-icon px-[10px] w-auto cursor-pointer h-[24px]" id="toggle-mobile-menu" aria-controls="primary-nav" aria-expanded="false">
+				<img src="{{ function('get_stylesheet_directory_uri') }}/assets/img/mobile-menu-icon.svg" alt="{{__('Open mobile menu icon', 'lw-recipes')}}" class="mobile-menu-open">
+				<img src="{{ function('get_stylesheet_directory_uri') }}/assets/img/close.svg" alt="{{__('Close mobile menu icon', 'lw-recipes')}}" class="mobile-menu-close">
+			</button>
+			<button aria-label="{{__('Toggle search', 'lw-recipes')}}" id="search-btn-mobile" aria-controls="search-form" aria-expanded="false" class="search-btn cursor-pointer p-2">
+				<img src="{{ function('get_stylesheet_directory_uri') }}/assets/img/search-icon.svg" alt="{{__('Open Search icon', 'lw-recipes')}}" class="w-[24px] h-[24px] open-search">
+				<img src="{{ function('get_stylesheet_directory_uri') }}/assets/img/close.svg" alt="{{__('Close search icon', 'lw-recipes')}}" class="close-search">
+			</button>
+		</div>
+		<div id="search-form" class="hidden row-start-2 col-span-full justify-self-end mt-0 relative z-1 p-0">
+			<form class="absolute -top-[9px] right-0 bg-(--color-tan) rounded-sm p-2 w-[241px] md:top-0">
+				<div class="search-form">
+					<input type="text" key="search" placeholder="{{__('Search...', 'lw-recipes')}}" class="rounded-sm border border-(--color-mid-green) border-solid p-2" id="search-input" />
+					<button type="submit" class="rounded-sm bg-(--color-brown) p-2 text-(--color-white) font-medium" id="search-submit">{{__('Go', 'lw-recipes')}}</button>
+				</div>
+			</form>
+		</div>
+		<div class="col-span-full row-start-3 mt-[15px] md:row-start-1 md:col-start-2 md:justify-self-end md:flex">
+				<nav class="-mx-4 md:md-0">
+					<ul id="primary-nav" class="nav hidden md:flex text-left md:gap-x-8">
+						{% for item in menu.items %}
+							<li class="py-1 flex flex-wrap border-b border-solid border-(--color-mid-green) md:border-b-0 md:p-4 {% if item.children %}md:relative md:hover:bg-(--color-tan) menu-item-has-children{% endif %}">
+								<a href="{{item.link}}" {{ item.is_target_blank ? 'target="_blank"' }} class="px-4 inline-block md:px-0">{{ item.title }}</a>
+
+								{% if item.children %}
+									<button class="cursor-pointer ml-auto mr-4 open-toggle md:pointer-events-none md:mr-0" aria-label="{{ __('Expand or collapse the %s submenu', 'lw-recipes')|format(item.title)}}" id="{{item.id}}-toggle" aria-controls="menu-item-{{item.id}}-submenu" aria-expanded="false">
+										<img decoding="async" src="{{ function('get_stylesheet_directory_uri') }}/assets/img/expand.svg" alt="{{ __('Expand the %s submenu', 'lw-recipes')|format(item.title)}}" class="menu-expand">
+										<img decoding="async" src="{{ function('get_stylesheet_directory_uri') }}/assets/img/collapse.svg" alt="{{__('Collapse the %s submenu', 'lw-recipes')|format(item.title)}}" class="menu-collapse"></button>
+
+									<ul class="submenu pl-4 w-full md:p-1 md:absolute md:z-1 md:top-12 md:shadow-2xl md:rounded-sm md:w-max md:left-0" id="menu-item-{{item.id}}-submenu">
+										{% for child in item.children %}
+											<li class="py-1 md:py-2">
+												<a href="{{child.link}}" {{ child.is_target_blank ? 'target="_blank"' }} class="px-4 md:py-5">{{ child.title }}</a>
+											</li>
+										{% endfor %}
+									</ul>
+
+								{% endif %}
+							</li>
+						{% endfor %}
+					</ul>
+				</nav>
+			<button aria-label="{__('Toggle search' ,'lw-recipes')}}" id="search-btn-desktop" aria-controls="search-form" aria-expanded="false" class="search-btn cursor-pointer hidden md:block p-4 ml-4">
+				<img src="{{ function('get_stylesheet_directory_uri') }}/assets/img/search-icon.svg" alt="{{__('Open Search icon', 'lw-recipes')}}" class="w-[24px] h-[24px] open-search">
+				<img src="{{ function('get_stylesheet_directory_uri') }}/assets/img/close.svg" alt="{{__('Close search icon', 'lw-recipes')}}" class="close-search">
+			</button>
+		</div>
+	</header>
