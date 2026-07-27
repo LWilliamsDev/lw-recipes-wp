@@ -1,25 +1,25 @@
-<div id="root" class="px-4 pb-8 md:px-12 md:pb-12">
-		<div class="recipes-search mx-auto">
-			<div class="form mt-8 mb-8 md:mt-12 md:mb-12">
-				<form role="search" class="grid grid-cols-[1fr_40px] gap-x-2" id="recipe-search-form" method="GET">
+<div id="root">
+		<div>
+			<div>
+				<form role="search" id="recipe-search-form" method="GET">
 					<label for="search" class="sr-only">{{__('Search', 'lw-recipes')}}</label>
-					<input type="text" id="search" class="rounded-sm border border-(--color-mid-green) border-solid p-2" name="search" placeholder="{{__('Search Recipes...', 'lw-recipes')}}" value="{{ param_search }}">
-					<button id="listing--search" class="button p-[10px] inline-block rounded-sm text-(--color-white) font-medium cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">{{__('Go', 'lw-recipes') }}</button>
+					<input type="text" id="search" name="search" placeholder="{{__('Search Recipes...', 'lw-recipes')}}" value="{{ param_search }}">
+					<button id="listing--search">{{__('Go', 'lw-recipes') }}</button>
 				</form>
 				{% if has_active_filters %}
-					<div class="pt-5 flex flex-wrap gap-x-5 min-h-[56px]">
+					<div>
 					</div>
 				{% endif %}
 			</div>
-			<div class="results-container md:grid md:grid-cols-[0.5fr_2fr] md:gap-4">
-				<div class="refiners mb-8 md:mb-0">
+			<div>
+				<div>
 					{% for filter in filters %}
 					{% if filter.terms %}
-						<div class="refiner-fieldset mb-4">
+						<div>
 						<fieldset>
-							<legend class="sr-only">{{ __('Filter by %s', 'lw-recipes')|format(filter.name)}}</legend>
+							<legend>{{ __('Filter by %s', 'lw-recipes')|format(filter.name)}}</legend>
 							<details class="tax-refiner">
-          						<summary class="cursor-pointer text-(--color-mid-green) font-medium p-2 border-1 w-full rounded-t-sm md:border-0 md:rounded-t-none md:w-auto md:p-0">
+          						<summary>
             						{{ filter.name }}
           						</summary>
 									{% for term in filter.terms %}
@@ -34,12 +34,12 @@
 					{% endif %}
 					{% endfor %}
 				</div>
-				<div class="results">
+				<div>
 					{% if results %}
 						{{ results }}
 					{% endif %}
 				</div>
-				<div class="pagination md:col-start-2 pb-5">
+				<div>
 					{% if pagination %}
 						{{ pagination }}
 					{% endif %}

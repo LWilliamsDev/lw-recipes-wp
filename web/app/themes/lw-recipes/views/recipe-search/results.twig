@@ -1,34 +1,34 @@
 {% if posts %}
 {% for post in posts %}
- <div>               
+ <div class="result-item mb-12 lg:mb-20 lg:flex lg:flex-wrap">               
                 <!-- Featured Image -->
-                <div>
+                <div class="lg:order-2 result-image lg:ml-auto mb-5 lg:mb-0">
                     {% if post.thumbnail %}
                         {{ post.thumbnail }}
                     {% endif %}
                 </div>
                 
                 <!-- Result Details -->
-                <div>
-                    <h2>
+                <div class="lg:order-1 result-details">
+                    <h2 class="text-2xl color-green text-(--color-green) mb-2">
                         <a href="{{post.link}}">{{ post.title }}</a>
                     </h2>
                     
                     {% if post.excerpt %}
-                        <p>
+                        <p class="mb-4 text-(--color-dark-green)">
                             {{ post.excerpt }}
                         </p>
                     {% endif %}
                     
                     <!-- Taxonomy Badges -->
                     {% if post.terms %}
-                        <ul>
+                        <ul class="flex gap-2 flex-wrap">
                             {% for term in post.terms %}
                                 <li>
                                    <a href="{{ term.link }}"
                                        data-id="{{ term.id }}" 
                                        data-type="{{ term.taxonomy }}" 
-                                    >
+                                       class="filter-link p-[5px] inline-block rounded-sm border-1 border-(--color-brown) text-(--color-brown) hover:text-(--color-white) hover:bg-(--color-brown) cursor-pointer">
                                         {{ term.name }}
                                     </a>
                                 </li>

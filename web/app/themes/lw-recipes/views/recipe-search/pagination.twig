@@ -1,12 +1,12 @@
-<nav aria-label="{{ __('Pagination', 'lw-recipes') }}">
-    <ul>
+<nav class="pagination" aria-label="{{ __('Pagination', 'lw-recipes') }}">
+    <ul class="pagination-numbers flex gap-2">
 
         {% if active_page > 1 %}
             <li>
                 <a
                     href="?pg={{prev_page}}"
                     data-page="{{ prev_page }}"
-                >
+                    class="filter-link cursor-pointer rounded-sm border-1 p-[5px] text-(--color-brown)">
                     {{ __('Back', 'lw-recipes') }}
                 </a>
             </li>
@@ -16,13 +16,14 @@
             <a
                 href="?pg=1"
                 data-page="1"
+                class="filter-link{% if active_page == 1 %} current-page text-(--color-white){% else %} text-(--color-brown){% endif %} cursor-pointer rounded-sm border-1 p-[5px]"
                 {% if active_page == 1 %}aria-current="page"{% endif %}>
                 1
             </a>
         </li>
 
         {% if numbers and numbers|first > 2 %}
-            <li>
+            <li class="p-[5px] text-(--color-mid-green)">
                 <span>…</span>
             </li>
         {% endif %}
@@ -32,6 +33,7 @@
                 <a
                     href="?pg={{number}}"
                     data-page="{{ number }}"
+                    class="filter-link{% if number == active_page %} current-page text-(--color-white){% else %} text-(--color-brown){% endif %} cursor-pointer rounded-sm border-1 p-[5px]"
                     {% if number == active_page %}aria-current="page"{% endif %}>
                     {{ number }}
                 </a>
@@ -39,7 +41,7 @@
         {% endfor %}
 
         {% if numbers and numbers|last < total_pages - 1 %}
-            <li>
+            <li class="p-[5px] text-(--color-mid-green)">
                 <span>…</span>
             </li>
         {% endif %}
@@ -49,6 +51,7 @@
                 <a
                     href="?pg={{total_pages }}"
                     data-page="{{ total_pages }}"
+                    class="filter-link{% if active_page == total_pages %} current-page text-(--color-white){% else %} text-(--color-brown){% endif %} cursor-pointer rounded-sm border-1 p-[5px]"
                     {% if active_page == total_pages %}aria-current="page"{% endif %}>
                     {{ total_pages }}
                 </a>
@@ -60,7 +63,7 @@
                 <a
                     href="?pg={{next_page}}"
                     data-page="{{ next_page }}"
-                >
+                    class="filter-link cursor-pointer rounded-sm border-1 p-[5px] text-(--color-brown)">
                     {{ __('Next', 'lw-recipes') }}
                 </a>
             </li>
