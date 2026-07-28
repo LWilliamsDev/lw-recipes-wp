@@ -5,6 +5,7 @@ namespace Recipes\Blocks;
 final class Blocks {
 
 	private const BLOCKS = [
+		'page-not-found',
 		'global-search',
 		'hero-image',
 		'home-template',

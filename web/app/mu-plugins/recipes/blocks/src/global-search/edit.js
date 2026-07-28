@@ -20,7 +20,6 @@ import { __ } from '@wordpress/i18n';
  */
 import './editor.scss';
 import { useBlockProps } from '@wordpress/block-editor';
-import { useEffect, useState } from '@wordpress/element';
 
 /**
  * The edit function describes the structure of your block in the context of the

@@ -1,0 +1,25 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "lw-recipes/page-not-found",
+  "version": "0.1.0",
+  "title": "404",
+  "category": "theme",
+  "icon": "smiley",
+  "description": "404 template",
+  "example": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "default": "Page Not Found"
+    }
+  },
+  "supports": {
+    "html": false,
+    "inserter": false
+  },
+  "textdomain": "lw-recipes",
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "render": "file:./render.php"
+}

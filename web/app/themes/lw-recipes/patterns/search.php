@@ -3,6 +3,7 @@
  * Title: Search
  * Slug: lw-recipes/search
  * Description: Global site search.
+ * Inserter: no
  *
  * @package WordPress
  * @subpackage LW_Recipes
