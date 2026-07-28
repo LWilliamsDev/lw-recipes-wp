@@ -2,9 +2,11 @@
 		{% if breadcrumbs %}
 			<ul class="flex flex-wrap breadcrumbs gap-[10px]">
 				{% for link in breadcrumbs %}
-					<li>
-						<a href="{{ link.link }}">{{ link.title}}</a>
-					</li>
+					{% if link.link and link.title %}
+						<li>
+							<a href="{{ link.link }}">{{ link.title}}</a>
+						</li>
+					{% endif %}
 				{% endfor %}
 			</ul>
 		{% endif %}

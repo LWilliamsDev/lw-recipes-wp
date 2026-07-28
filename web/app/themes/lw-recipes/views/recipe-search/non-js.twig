@@ -1,6 +1,6 @@
-<div id="root" class="px-4 pb-8 md:px-12 md:pb-12">
+<div id="root" class="px-4 md:px-12">
 		<div class="recipes-search mx-auto">
-			<div class="form mt-8 mb-8 md:mt-12 md:mb-12">
+			<div class="form mt-8 md:mt-12">
 				<form role="search" class="grid grid-cols-[1fr_40px] gap-x-2" id="recipe-search-form" method="GET">
 					<label for="search" class="sr-only">{{__('Search', 'lw-recipes')}}</label>
 					<input type="text" id="search" class="rounded-sm border border-(--color-mid-green) border-solid p-2" name="search" placeholder="{{__('Search Recipes...', 'lw-recipes')}}" value="{{ param_search }}">

@@ -22,7 +22,7 @@ if (!$is_block_editor && !defined('REST_REQUEST') && !(wp_doing_ajax())) {
 
 	$context['breadcrumbs'] = [];
 
-	$context['breadcrumbs'][] = ['link' => get_the_permalink($postId), 'title' => get_the_title($postId)];
+	$context['breadcrumbs'][] = ['link' => $link, 'title' => get_the_title($listing_page_id)];
 
 	$course = get_the_terms($postId, 'course');
 
@@ -65,7 +65,10 @@ if (!$is_block_editor && !defined('REST_REQUEST') && !(wp_doing_ajax())) {
 		if (!empty($totalTime)) {
 			$overviewData['totalTime'] = $totalTime;
 		}
+
+		$context['overviewData'] = $overviewData;
 	}
+
 
 	Timber::render('recipe-overview/view.twig', $context);
 

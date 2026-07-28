@@ -20,7 +20,7 @@
 			</form>
 		</div>
 		<div class="col-span-full row-start-3 mt-[15px] md:row-start-1 md:col-start-2 md:justify-self-end md:flex">
-				<nav class="-mx-4 md:md-0">
+				<nav class="-mx-4 md:mx-0">
 					<ul id="primary-nav" class="nav hidden md:flex text-left md:gap-x-8">
 						{% for item in menu.items %}
 							<li class="py-1 flex flex-wrap border-b border-solid border-(--color-mid-green) md:border-b-0 md:p-4 {% if item.children %}md:relative md:hover:bg-(--color-tan) menu-item-has-children{% endif %}">
@@ -44,7 +44,7 @@
 						{% endfor %}
 					</ul>
 				</nav>
-			<button aria-label="{__('Toggle search' ,'lw-recipes')}}" id="search-btn-desktop" aria-controls="search-form" aria-expanded="false" class="search-btn cursor-pointer hidden md:block p-4 ml-4">
+			<button aria-label="{{__('Toggle search' ,'lw-recipes')}}" id="search-btn-desktop" aria-controls="search-form" aria-expanded="false" class="search-btn cursor-pointer hidden md:block p-4 ml-4">
 				<img src="{{ function('get_stylesheet_directory_uri') }}/assets/img/search-icon.svg" alt="{{__('Open Search icon', 'lw-recipes')}}" class="w-[24px] h-[24px] open-search">
 				<img src="{{ function('get_stylesheet_directory_uri') }}/assets/img/close.svg" alt="{{__('Close search icon', 'lw-recipes')}}" class="close-search">
 			</button>
