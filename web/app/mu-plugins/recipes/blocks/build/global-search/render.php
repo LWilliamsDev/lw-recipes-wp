@@ -14,7 +14,7 @@ if (!$is_block_editor && !defined('REST_REQUEST') && !(wp_doing_ajax())) {
 	$context = Timber::context();
 
 	$context['search_query'] = get_search_query();
-
+	$context['results'] = $wp_query->posts;
 
 	$context['pagination'] = Timber::get_pagination();
 

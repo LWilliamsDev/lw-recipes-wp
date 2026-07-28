@@ -39,8 +39,25 @@ export default function Edit({attributes, setAttributes, clientId}) {
 
 
 	return (
-		<header { ...blockProps}>
-		</header>
+		<div { ...blockProps}>
+			<h1 className="font-roboto-condensed mb-[5px] text-3xl md:mb-[10px] md:text-5xl uppercase text-(--color-green)">
+			{__('Search Results', 'lw-recipes')}
+			</h1>
+			<form role="search" className="search-form mt-8">
+				<div className="grid grid-cols-[1fr_85px] gap-x-2">
+					<input
+						id="search-input"
+						type="search"
+						name="s"
+						placeholder="Search..."
+						className="rounded-sm border border-(--color-mid-green) border-solid p-2" />
+
+					<button type="submit" className="button p-[10px] inline-block rounded-sm text-(--color-white) font-medium cursor-pointer" disabled>
+						Search
+					</button>
+				</div>
+			</form>
+		</div>
 				
 	);
 }

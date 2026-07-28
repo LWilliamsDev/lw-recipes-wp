@@ -88,7 +88,6 @@ if (submenu) {
 		if (thisSubmenu && thisParentMenu && button) {
 
 			const allFocusableElements = thisParentMenu.querySelectorAll('a, button, input, [tabindex="0"]');
-			console.log(allFocusableElements);
 
 			//Add open/close behavior to submenu toggle button (appears only if submenu has children)
 			//Should work for both desktop and mobile
