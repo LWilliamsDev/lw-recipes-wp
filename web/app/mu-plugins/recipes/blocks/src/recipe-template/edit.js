@@ -20,6 +20,8 @@ import { __ } from '@wordpress/i18n';
  */
 import './editor.scss';
 import { useBlockProps, InnerBlocks } from '@wordpress/block-editor';
+import { useEffect } from '@wordpress/element';
+import { dispatch } from '@wordpress/data';
 
 /**
  * The edit function describes the structure of your block in the context of the
@@ -42,6 +44,12 @@ export default function Edit({attributes, setAttributes, clientId}) {
 		['lw-recipes/recipe-post-nav'],
 		['lw-recipes/recipe-related']
 	];
+
+		// Force template to appear valid
+	// See https://github.com/WordPress/gutenberg/issues/11681
+	useEffect( () => {
+		dispatch('core/block-editor').setTemplateValidity(true);
+	}, [])
 
 
 

@@ -23,6 +23,7 @@ import { useBlockProps, InnerBlocks } from '@wordpress/block-editor';
 import { useSelect, dispatch } from '@wordpress/data';
 import { usePostLock } from "../../helper-functions/utils";
 import { Notice } from '@wordpress/components';
+import { useEffect } from '@wordpress/element';
 
 /**
  * The edit function describes the structure of your block in the context of the
@@ -45,7 +46,6 @@ export default function Edit({attributes, setAttributes, clientId}) {
 
 	const hasMoreThanOneBlock = innerBlockCount > 1;
 
-	console.log(hasMoreThanOneBlock);
 
 	const isInvalid = hasMoreThanOneBlock;
 
@@ -53,6 +53,12 @@ export default function Edit({attributes, setAttributes, clientId}) {
 
 
 	const ALLOWED_BLOCKS = ['lw-recipes/home-template', 'lw-recipes/recipe-listing-template'];
+
+	// Force template to appear valid
+	// See https://github.com/WordPress/gutenberg/issues/11681
+	useEffect( () => {
+		dispatch('core/block-editor').setTemplateValidity(true);
+	}, [])
 
 
 
