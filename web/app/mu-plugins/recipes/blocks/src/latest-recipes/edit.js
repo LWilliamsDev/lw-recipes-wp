@@ -75,7 +75,7 @@ export default function Edit({attributes, setAttributes}) {
                     		return (
                         		<div key={post.id} className="card mb-8">
                         		     {imageUrl ? (
-                    					<img src={imageUrl} alt={post.title.rendered} className="mb-5 w-full h-auto wp-post-image" />
+                    					<img src={imageUrl} alt={post.title.rendered} className="mb-5 w-full h-auto wp-post-image rounded-lg" />
                 					) : null}
                             		<h3 className="text-2xl font-medium text-(--color-brown)">{post.title.rendered}</h3>
                             		<p className="text-(--color-dark-green)">{post.excerpt.raw}</p>

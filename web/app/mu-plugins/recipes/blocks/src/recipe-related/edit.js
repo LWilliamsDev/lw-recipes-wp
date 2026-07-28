@@ -82,7 +82,7 @@ const relatedPosts = useSelect((select) => {
 						{ relatedPosts.map((post) => (
 							<li key={post.id} className="mb-5 md:mb-0">
 								<a href="#">
-									{post.imageUrl && <img src={post.imageUrl} className="w-full wp-post-image" />}
+									{post.imageUrl && <img src={post.imageUrl} className="w-full wp-post-image rounded-lg" />}
 									<h3 className="text-xl font-medium mt-2">{decodeEntities(post.title)}</h3>
 								</a>
 							</li>

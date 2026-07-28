@@ -149,7 +149,7 @@ export default function Edit({attributes, setAttributes, clientId}) {
         			// State 1: Image is set. Display ONLY the image, no controls.
         			<img 
             			src={ featuredImageUrl } 
-            			className="w-full wp-post-image" 
+            			className="w-full wp-post-image rounded-lg" 
             			alt={ __( 'Featured Content', 'lw-recipes' ) } 
         			/>
     			  ) : (

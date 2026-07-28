@@ -78,7 +78,7 @@ export default function Edit({attributes, setAttributes}) {
 						<div className="card mb-8" key={term.id}>
 							<h3>
 								<a href="#" className="grid block">
-						   			{ term?.acf?.featured_image ? <img src={term.acf.featured_image.url} className="w-full h-auto col-start-1 row-start-1 rounded-sm" /> : null }
+						   			{ term?.acf?.featured_image ? <img src={term.acf.featured_image.url} className="w-full h-auto col-start-1 row-start-1 rounded-lg" /> : null }
 						    		<div className="bg-(--color-tan) col-start-1 row-start-1 opacity-90 self-end p-4">
 										<span className="text-2xl font-medium text-(--color-brown) hover:text-(--color-mid-green)">
 											{decodeEntities(term.name)}

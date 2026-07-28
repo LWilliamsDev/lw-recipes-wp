@@ -178,7 +178,7 @@ final class Recipe {
                 'title' => get_the_title($recipe),
                 'link' => get_permalink($recipe),
                 'excerpt' => get_the_excerpt($recipe),
-                'thumbnail' => get_the_post_thumbnail($recipe, 'medium'),
+                'thumbnail' => get_the_post_thumbnail($recipe, 'medium', ['class' => 'rounded-lg']),
                 'terms' => $all_terms_data
             ];
         
