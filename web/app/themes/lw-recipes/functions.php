@@ -1,5 +1,22 @@
 <?php
 
+// Note dependency on the Recipes mu-plugin
+if ( ! class_exists( '\Recipes\Plugin' ) ) {
+	add_action( 'admin_notices', function () {
+		?>
+		<div class="notice notice-error">
+			<p>
+				<strong>LW Recipes Theme:</strong>
+				The required <strong>LW Recipes</strong> mu-plugin could not be found.
+				Please install it in <code>wp-content/mu-plugins</code>.
+			</p>
+		</div>
+		<?php
+	} );
+
+	return;
+}
+
 // Enqueues global theme CSS and JS
 if ( ! function_exists( 'lw_recipes_enqueue' ) ) :
 	/**
@@ -14,6 +31,7 @@ if ( ! function_exists( 'lw_recipes_enqueue' ) ) :
 		wp_enqueue_style('tailwind-defaults', get_template_directory_uri() . '/assets/css/style.css', [], '1.0', 'all');
 		wp_enqueue_style('global', get_stylesheet_uri(), [], '1.0.0');
 		wp_enqueue_script('global', get_template_directory_uri() . '/assets/js/global.js', [], '1.0.0', true);
+		
 		wp_dequeue_style('wp-block-library' );
 		wp_dequeue_style('global-styles');
 		wp_dequeue_style('core-block-supports');
@@ -23,7 +41,9 @@ if ( ! function_exists( 'lw_recipes_enqueue' ) ) :
 
 	}
 endif;
+
 add_action( 'wp_enqueue_scripts', 'lw_recipes_enqueue' );
+
 remove_action( 'wp_footer', 'the_block_template_skip_link' );
 
 // Add menus
@@ -42,7 +62,6 @@ if ( ! function_exists( 'lw_recipes_menus' ) ) :
 endif;
 add_action( 'init', 'lw_recipes_menus' );
 
-require_once('MainMenuWalker.php');
 
 if ( ! function_exists( 'recipes_editor_iframe_assets' ) ) :
 
