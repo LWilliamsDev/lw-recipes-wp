@@ -1,0 +1,78 @@
+<h1>
+	Search results for "{{ search_query }}"
+</h1>
+
+<form role="search" method="get" action="{{ site.url }}" class="search-form">
+	<label for="search-input" class="sr-only">
+		Search for:
+	</label>
+
+	<div class="flex gap-2">
+		<input
+			id="search-input"
+			type="search"
+			name="s"
+			value="{{ function('get_search_query') }}"
+			placeholder="Search..."
+			class="..."
+		>
+
+		<button type="submit" class="...">
+			Search
+		</button>
+	</div>
+</form>
+
+{% if results %}
+	<ul>
+		{% for post in results %}
+			<li>
+				<a href="{{ post.link }}">
+					{{ post.post_title }}
+				</a>
+
+				<p>
+					{{ post.post_excerpt }}
+				</p>
+			</li>
+		{% endfor %}
+	</ul>
+{% else %}
+	<p>No results found.</p>
+{% endif %}
+
+{% if pagination %}
+	<nav aria-label="Search results pagination">
+		<ul class="flex gap-2">
+			{% if pagination.prev %}
+				<li>
+					<a href="{{ pagination.prev.link }}">
+						Previous
+					</a>
+				</li>
+			{% endif %}
+
+			{% for page in pagination.pages %}
+				<li>
+					{% if page.current %}
+						<span aria-current="page">
+							{{ page.title }}
+						</span>
+					{% else %}
+						<a href="{{ page.link }}">
+							{{ page.title }}
+						</a>
+					{% endif %}
+				</li>
+			{% endfor %}
+
+			{% if pagination.next %}
+				<li>
+					<a href="{{ pagination.next.link }}">
+						Next
+					</a>
+				</li>
+			{% endif %}
+		</ul>
+	</nav>
+{% endif %}

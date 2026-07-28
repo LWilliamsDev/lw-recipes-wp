@@ -4,7 +4,8 @@
 @import "tailwindcss";
 @source "../../*.html";
 @source "../../../../../mu-plugins/recipes/recipe-search/src"
-@source "../../../views/**/*.twig";
+@source "../../../views";
+
 
 @theme {
 	--*: initial;

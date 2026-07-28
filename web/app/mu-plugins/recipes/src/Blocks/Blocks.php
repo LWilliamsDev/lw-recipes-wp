@@ -5,10 +5,8 @@ namespace Recipes\Blocks;
 final class Blocks {
 
 	private const BLOCKS = [
+		'global-search',
 		'hero-image',
-		'hero-image-heading',
-		'hero-image-subtitle',
-		'hero-image-cta',
 		'home-template',
 		'latest-recipes',
 		'page-template',

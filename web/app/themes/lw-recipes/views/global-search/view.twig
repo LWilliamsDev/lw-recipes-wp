@@ -1,0 +1,81 @@
+<h1 class="font-roboto-condensed mb-[5px] text-3xl md:mb-[10px] md:text-5xl uppercase text-(--color-green)">
+	Search results for "{{ search_query }}"
+</h1>
+
+<form role="search" method="get" action="{{ site.url }}" class="search-form mt-8">
+	<label for="search-input" class="sr-only">
+		Search for:
+	</label>
+
+	<div class="grid grid-cols-[1fr_85px] gap-x-2">
+		<input
+			id="search-input"
+			type="search"
+			name="s"
+			value="{{ function('get_search_query') }}"
+			placeholder="Search..."
+			class="rounded-sm border border-(--color-mid-green) border-solid p-2"
+		>
+
+		<button type="submit" class="button p-[10px] inline-block rounded-sm text-(--color-white) font-medium cursor-pointer">
+			Search
+		</button>
+	</div>
+</form>
+
+{% if posts %}
+	<ul class="mt-8">
+		{% for post in posts %}
+			<li class="mb-8">
+				<h2 class="text-2xl color-green text-(--color-green) mb-2"><a href="{{ post.link }}">
+					{{ post.post_title }}
+				</a>
+				</h2>
+
+				{% if post.post_excerpt %}	
+				<p class="mb-4 text-(--color-dark-green)">
+					{{ post.post_excerpt }}
+				</p>
+				{% endif %}
+			</li>
+		{% endfor %}
+	</ul>
+{% else %}
+	<p class="mt-8">No results found.</p>
+{% endif %}
+
+{% if pagination %}
+	<nav aria-label="Search results pagination">
+		<ul class="pagination-numbers flex gap-2">
+			{% if pagination.prev %}
+				<li>
+					<a href="{{ pagination.prev.link }}" class="filter-link text-(--color-brown) cursor-pointer rounded-sm border-1 p-[5px]">
+						{{__('Back', 'lw-recipes')}}
+					</a>
+				</li>
+			{% endif %}
+
+			{% for page in pagination.pages %}
+				<li>
+					{% if page.current %}
+						<span aria-current="page" class="current-page text-(--color-white) rounded-sm border-1 p-[5px]">
+							{{ page.title }}
+						</span>
+					{% else %}
+						<a href="{{ page.link }}" class="filter-link text-(--color-brown) cursor-pointer rounded-sm border-1 p-[5px]">
+							{{ page.title }}
+						</a>
+					{% endif %}
+				</li>
+			{% endfor %}
+
+			{% if pagination.next %}
+				<li>
+					<a href="{{ pagination.next.link }}" class="filter-link text-(--color-brown) cursor-pointer rounded-sm border-1 p-[5px]">
+						{{__('Next', 'lw-recipes')}}
+					</a>
+				</li>
+			{% endif %}
+		</ul>
+	</nav>
+{% endif %}
