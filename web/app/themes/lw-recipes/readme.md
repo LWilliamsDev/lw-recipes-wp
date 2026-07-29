@@ -8,28 +8,25 @@ Since the templates reference custom blocks from the Recipes plugin, this theme 
 Additionally, the Recipes Theme uses TailwindCSS.
 
 ## Templates
-- Header
-- Footer
+- 404
 - Index
+- Search
 
 ## Accessibility
-- Keyboard navigation is available in the main menu. Due to this, the theme contains a Main Menu Walker function (MainMenuWalker.php) that adds open/close buttons after each top level menu item that has children. On desktop, these buttons appear only when focused. On mobile, these buttons serve as accordions.
+- Keyboard navigation is available in the main menu. Due to this, there are open/close buttons after each top level menu item that has children. On desktop, these buttons appear only when focused. On mobile, these buttons serve as accordions. There are also focus traps for the main menu on mobile, and focus traps for the search pop-up on all devices.
 - The WordPress default skip links were removed in favor of manually added skip links. 
 
 ## Build Tools
 This theme uses Vite to build the CSS and JavaScript. The src folder contains flat files with full page layouts and dummy content. 
 
 ### Developing with the Build Tools
-To watch for CSS changes, use the following command:
-````npx @tailwindcss/cli -i ./assets/css/style.css -o ../assets/css/style.css --watch````
-
-If you need to make other CSS changes, the correct file to edit is: src/assets/css/style.css
+If you need to make CSS changes, the correct file to edit is: src/assets/css/style.css
 
 If you need to make JavaScript changes, the correct file to edit is: src/assets/js/global-js.js.
 
 The production builds for both files will be loaded throughout the entire site.
 
-Although Vite comes with a "dev" mode, generally it was not used in developing the theme. 
+Although Vite comes with a "dev" mode, generally it was not used in developing the theme. At this time, there is no command for watching the source files and then automatically updating the final files. To update the final files, one must do a production build.
 
 ### Production Builds
 To do a production build, use the following command:
