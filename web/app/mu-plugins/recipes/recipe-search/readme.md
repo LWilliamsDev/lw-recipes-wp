@@ -66,20 +66,6 @@ When you view the app in your browser, it will load /index.html.
 #### CSS
 Since the CSS uses Tailwind, all CSS compilation for the entire site goes through the theme's build tools. This was done to avoid issues where multiple stylesheets repeat the same Tailwind CSS classes.
 
-Generally to view CSS changes, you should go through the following steps:
-1. Run the app in dev mode
-2. Open a new window in your CLI. Navigate to wp-content/themes/lw-recipes/src. Then run the command: ````npx @tailwindcss/cli -i ./assets/css/style.css -o ../assets/css/style.css --watch````
-3. Add a new Tailwind CSS class to the app. You may need to refresh your browser to see the change.
-
-##### How This Works
-The index.html file that the browser loads also loads the theme stylesheet from the Recipes theme. 
-
-The [theme's Tailwind stylesheet](../../../themes/lw-recipes/src/assets/css/style.css) includes the files in the /src folder of this app:
-````
-@source "../../../../../mu-plugins/recipes/recipe-search/src";
-````
-
-That means that when the theme's TailwindCSS watch command is active, it will also be watching the files in the src folder of this app. If it detects a new CSS class, it will automatically add the appropriate rules to the stylesheet. You may then need to refresh after the stylesheet has been updated in order to see the change.
 
 ### Production Build
 Use the following command to run a production build:
