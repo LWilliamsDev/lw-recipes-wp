@@ -6,6 +6,6 @@ This block represents the recipe listing page, available on the page post type.
 - Recipe Search
 
 ### Recipe Search
-This block adds the recipe listing to the page. In the block editor, it displays a static image as a preview along with a note to view the front end to see the listing. I chose to provide a static image because the amount of work to replicate an interactive listing, solely for the purpose of an editor preview, does not make sense. 
+This block adds the recipe listing to the page. In the block editor, it displays a message that there is no editor preview and a post preview button, which opens the front end preview in a new tab.
 
-The block adds the listing JavaScript via its viewScript property. The CSS is included in the front end theme.
+[Recipes\Assets](../../../src/Assets/Assets.php) adds the JavaScript to the front end if the Recipe Search block is on the page. The CSS is included in the front end theme.
