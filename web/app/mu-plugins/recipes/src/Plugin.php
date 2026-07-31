@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Recipes;
 
 use Recipes\Assets\Assets;

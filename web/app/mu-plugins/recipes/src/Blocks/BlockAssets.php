@@ -1,5 +1,7 @@
 <?php 
 
+declare(strict_types=1);
+
 namespace Recipes\Blocks;
 
 final class BlockAssets {
@@ -11,7 +13,7 @@ final class BlockAssets {
 		add_action('enqueue_block_assets', [$this, 'enqueue_iframe_assets']);
 	}
 
-	public function enqueue_editor_assets() {
+	public function enqueue_editor_assets(): void {
 		 wp_enqueue_style('recipes-block-editor-styles', RECIPES_URL . 'blocks/assets/block-sidebar.css');
 
   		//Only load the Recipes metabox script on the recipe post type edit page
@@ -28,7 +30,7 @@ final class BlockAssets {
      * (needed to load validation error styles)
      */
 
-	public function enqueue_iframe_assets() {
+	public function enqueue_iframe_assets(): void {
 
 		if (is_admin()) {
 			wp_enqueue_style('recipes-editor-iframe-styles', RECIPES_URL . 'blocks/assets/block-editor.css', [], '1.0.0', 'all');

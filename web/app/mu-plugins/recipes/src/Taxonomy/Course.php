@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Recipes\Taxonomy;
 
 final class Course {
@@ -9,7 +11,7 @@ final class Course {
 
 	}
 
-	public function register_taxonomy()  {
+	public function register_taxonomy(): void  {
 
     $labels = array(
 		'name'                       => _x('Course', 'Taxonomy general name', 'lw_recipes'),

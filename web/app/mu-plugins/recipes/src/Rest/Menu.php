@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Recipes\Rest;
 
 final class Menu {
@@ -19,7 +21,7 @@ final class Menu {
 
 	}
 
-	public function rest_response($response) {
+	public function rest_response(\WP_REST_Request $response): array {
 		// Get all menu items
     	$menu_items = wp_get_nav_menu_items('Main Menu');
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Recipes\Assets;
 
 /**
@@ -14,10 +16,10 @@ final class Assets {
 
 	public function __construct() {
 		add_action('wp_enqueue_scripts', [$this, 'enqueue_frontend_assets']);
-		add_action('script_loader_tag', [$this, 'add_module_to_scripts'], 10, 3);
+		add_action('script_loader_tag', [$this, 'add_module_to_scripts'], 10, 2);
 	}
 
-	public function enqueue_frontend_assets() {
+	public function enqueue_frontend_assets(): void {
 		if (has_block('lw-recipes/recipe-search')) {
 			wp_enqueue_script('recipe-search', RECIPES_URL . '/blocks/assets/recipe-search.js', [], '1.0.0', true);
 		}
@@ -27,7 +29,7 @@ final class Assets {
  	 * Add type="module" to specific Vite-compiled scripts.
  	 */
 	
-	public function add_module_to_scripts( $tag, $handle, $src ) {
+	public function add_module_to_scripts(string $tag, string $handle ): string {
     	// Define the script handles you want to load as ES Modules
 
 

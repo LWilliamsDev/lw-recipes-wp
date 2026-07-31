@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Recipes\Rest;
 
 use Timber\Timber;
@@ -21,7 +23,7 @@ final class Recipe {
 
 	}
 
-	public function rest_response($request) {
+	public function rest_response(\WP_REST_Request $request): array {
 
 		$query_args = $this->build_query($request);
 
@@ -38,7 +40,7 @@ final class Recipe {
 
 		$total_pages = intval( $recipes->max_num_pages );
 
-		$pagination = $this->build_pagination($total_pages, $page);
+		$pagination = $this->build_pagination($total_pages, (int) $page);
 
 		return array(
 			'result'     => $result,
@@ -46,7 +48,7 @@ final class Recipe {
 		);
 	}
 
-	public function build_query($request) {
+	public function build_query(\WP_REST_Request $request): array {
 		$course = $this->get_array_param($request, 'course');
         $diet = $this->get_array_param($request, 'diet');
         $allergen = $this->get_array_param($request, 'allergen');
@@ -110,7 +112,7 @@ final class Recipe {
     * preserve all selected taxonomy IDs.
     */
 
-    public function get_array_param($request, $key) {
+    public function get_array_param(\WP_REST_Request $request, string $key): array {
         $query_string = wp_parse_url($_SERVER['REQUEST_URI'], PHP_URL_QUERY);
 
         if ($query_string) {
@@ -138,7 +140,7 @@ final class Recipe {
         return [];
     }
 
-	public function build_results($query) {
+	public function build_results(\WP_Query $query): string {
 		// If there are no posts, return early
     	if ( empty($query->posts) ) {
         	return '<p>No recipes found.</p>';
@@ -190,7 +192,7 @@ final class Recipe {
         
 	}
 
-	public function build_pagination($total_pages, $current_page = 1)
+	public function build_pagination(int $total_pages, int $current_page = 1): string
 {
     if ($total_pages <= 1) {
         return '';

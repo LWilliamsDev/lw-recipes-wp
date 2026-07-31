@@ -1,5 +1,7 @@
 <?php 
 
+declare(strict_types=1);
+
 namespace Recipes\Blocks;
 
 final class Blocks {
@@ -59,7 +61,7 @@ final class Blocks {
  	 * function. Removes the wrapper, div.wp-site-blocks, from the front end	
  	 */
 	
-	public function remove_core_template_part_wrapper( $block_content, $block ) {
+	public function remove_core_template_part_wrapper( string $block_content, array $block ): string {
 
 		$proc = new \WP_HTML_Tag_Processor( $block_content );
 
@@ -91,7 +93,7 @@ final class Blocks {
  	 * Add Page template block to Page post type
  	 */ 
 	
-	public function add_page_template() {
+	public function add_page_template(): void {
 		// Get the existing post type object for 'page'
     	$post_type_object = get_post_type_object( 'page' );
 
@@ -119,7 +121,7 @@ final class Blocks {
  	 * Add Timber Location
  	 */ 
 
-	public function timber_locations($locations) {
+	public function timber_locations(array $locations): array {
 		$locations[] = [WPMU_PLUGIN_DIR . '/recipes/blocks/views'];
 
     	return $locations;

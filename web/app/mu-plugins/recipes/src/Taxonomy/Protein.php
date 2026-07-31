@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Recipes\Taxonomy;
 
 final class Protein {
@@ -9,7 +11,7 @@ final class Protein {
 
 	}
 
-	public function register_taxonomy()  {
+	public function register_taxonomy(): void  {
 
     $labels = array(
 		'name'                       => _x('Protein', 'Taxonomy general name', 'lw_recipes'),

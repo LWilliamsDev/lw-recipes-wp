@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Recipes\PostType;
 
 final class Recipe {
@@ -9,7 +11,7 @@ final class Recipe {
 
 	}
 
-	public function register_cpt()  {
+	public function register_cpt(): void  {
 
     // Set UI labels for Custom Post Type
 	$labels = array(

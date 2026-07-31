@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Recipes\Settings;
 
 final class RecipeSettings {
@@ -11,7 +13,7 @@ final class RecipeSettings {
 		add_action('admin_init', [$this, 'register_settings']);
 	}
 
-	public function add_settings_page() {
+	public function add_settings_page(): void {
 		add_options_page(
 			__('Recipes Settings', 'lw_recipes'),
 			__('Recipes', 'lw_recipes'),
@@ -21,7 +23,7 @@ final class RecipeSettings {
 		);
 	}
 
-	public function register_settings() {
+	public function register_settings(): void {
 
 		register_setting(
 			'lw_recipes_settings_group',
@@ -32,7 +34,7 @@ final class RecipeSettings {
 		add_settings_section(
 			'lw_recipes_main_section',
 			__('General Settings', 'lw_recipes'),
-			function () {
+			function (): void {
 				echo '<p>' . esc_html__('Main configuration for Recipes.', 'lw_recipes') . '</p>';
 			},
 			'lw-recipes-settings'
@@ -47,7 +49,7 @@ final class RecipeSettings {
 		);
 	}
 
-	public function render_settings_page() {
+	public function render_settings_page(): void {
 		?>
 		<div class="wrap">
 			<h1><?php esc_html_e('Recipes Settings', 'lw_recipes'); ?></h1>
@@ -63,7 +65,7 @@ final class RecipeSettings {
 		<?php
 	}
 
-	public function render_listing_page_field() {
+	public function render_listing_page_field(): void {
 
 		$options = get_option(self::OPTION_KEY);
 		$selected = isset($options['listing_page_id']) ? (int) $options['listing_page_id'] : 0;
@@ -89,7 +91,7 @@ final class RecipeSettings {
 		echo '</select>';
 	}
 
-	public function sanitize_settings($input) {
+	public function sanitize_settings(mixed $input): array {
 
 		$sanitized = [];
 
