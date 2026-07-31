@@ -8,6 +8,11 @@ In this fictional scenario\*, the Fit & Flavor Content Team have strict brand gu
 \*Although this is a fictional website, I have regularly encountered clients that require a restricted editing experience. I have also worked with companies that needed maximum flexibility (and hence we planned to use block patterns in that case).
  
 ## Features
+- Homepage Template
+- Recipe Detail template
+- Recipe Listing (decoupled React component for searching/filtering just recipes)
+
+## Organization
 - [Recipes Theme](web/app/themes/lw-recipes/readme.md)
    - Contains an accessible main menu that supports keyboard navigation
    - Being a Block Theme, it supports the WordPress Site Editor
