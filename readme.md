@@ -10,7 +10,7 @@ In this fictional scenario\*, the Fit & Flavor Content Team have strict brand gu
 ## Features
 - Homepage Template
 - Recipe Detail template
-- Recipe Listing (decoupled React component for searching/filtering just recipes)
+- Recipe Listing (decoupled React application consuming a custom WordPress REST API with filtering, search, sorting, and pagination)
 
 ## Organization
 - [Recipes Theme](web/app/themes/lw-recipes/readme.md)
