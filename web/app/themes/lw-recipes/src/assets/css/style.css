@@ -218,7 +218,9 @@ header nav li.active .menu-expand {
     margin-left: 5px;
     display: inline-block
 }
-
+.social-icons li:first-child a {
+  @apply ml-[-12px];
+}
 .react-loading-skeleton {
     --base-color: #ebebeb;
     --highlight-color: #f5f5f5;
